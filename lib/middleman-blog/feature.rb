@@ -66,7 +66,7 @@ module Middleman
               data["url"] = article.gsub(app.views, "").split(".html").first + ".html"
 
               all_content = Tilt.new(article).render
-              data["body"] = all_content.gsub!(app.settings.blog_summary_separator, "")
+              data["body"] = all_content.gsub(app.settings.blog_summary_separator, "")
 
               sum = if data["raw"] =~ app.settings.blog_summary_separator
                 data["raw"].split(app.settings.blog_summary_separator).first
