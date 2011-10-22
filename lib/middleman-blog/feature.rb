@@ -49,8 +49,10 @@ module Middleman
                 :layout_engine => app.blog_layout_engine
               })
 
+              current_body = body
+              current_body = current_body.first if current_body.class == Array
               # No need for separator on permalink page
-              body body.gsub!(app.blog_summary_separator, "")
+              body current_body.gsub(app.blog_summary_separator, "")
             end
           end
           
