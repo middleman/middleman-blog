@@ -4,3 +4,4 @@ Gemfile.lock
 pkg/*
 .rvmrc
 .DS_Store
+.rbenv-version
