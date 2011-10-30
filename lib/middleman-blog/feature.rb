@@ -62,7 +62,7 @@ module Middleman
             articles = Dir[articles_glob].map do |article|
               template_content = File.read(article)
               data, content = app.parse_front_matter(template_content)
-              data["date"] = Date.parse(data["date"])
+              data["date"] = Date.parse("#{data['date']}")
 
               data["raw"] = content
               data["url"] = article.gsub(app.views, "").split(".html").first + ".html"
@@ -117,7 +117,7 @@ module Middleman
         end
 
         def current_article_date
-          DateTime.parse(current_article_metadata.date)
+          DateTime.parse("#{current_article_metadata.date}")
         end
 
         def current_article_title
