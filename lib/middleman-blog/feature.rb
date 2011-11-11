@@ -108,7 +108,9 @@ module Middleman
         
         def sorted_articles
           @sorted_articles ||= begin
-            @articles.values.sort { |a, b| b.date <=> a.date }
+            @articles.values.sort do |a, b|
+              b.date <=> a.date
+            end
           end
         end
         
@@ -152,7 +154,7 @@ module Middleman
           @sorted_articles = false
           @tags = false
           
-          @app.data_content("blog", { 
+          @app.data_content("blog", {
             :articles => self.sorted_articles.map { |a| a.to_h }, 
             :tags     => self.tags
           })
@@ -169,12 +171,14 @@ module Middleman
           path   = file.sub(source, "")
           data, content = app.frontmatter.data(path)
           
-          begin
-            self.date = Date.strptime(data["date"], '%Y/%m/%d')
-          rescue
-            self.date = Date.strptime(data["date"], '%m/%d/%Y')
+          if data["date"] && data["date"].is_a?(String)
+            if data["date"].match(/\d{4}\/\d{2}\/\d{2}/)
+              self.date = Date.strptime(data["date"], '%Y/%m/%d')
+            elsif data["date"].match(/\d{2}\/\d{2}\/\d{4}/)
+              self.date = Date.strptime(data["date"], '%d/%m/%Y')
+            end
           end
-            
+        
           self.frontmatter = data
           self.title = data["title"]
           self.raw = content
