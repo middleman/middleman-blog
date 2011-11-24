@@ -1,11 +1,11 @@
 require "date"
 
 module Middleman
-  module Features
+  module Extensions
     module Blog
       class << self
         def registered(app)
-          app.extend ClassMethods
+          app.send :include, InstanceMethods
           
           app.file_changed do |file|
             blog.touch_file(file)
@@ -14,69 +14,46 @@ module Middleman
           app.file_deleted do |file|
             blog.remove_file(file)
           end
-          
-          # Include helpers
-          app.helpers Helpers
 
-          app.after_configuration do
-            if !settings.respond_to? :blog_permalink
+          app.after_configuration do 
+            if !respond_to? :blog_permalink
               set :blog_permalink, ":year/:month/:day/:title.html"
             end
 
-            if !settings.respond_to? :blog_taglink
+            if !respond_to? :blog_taglink
               set :blog_taglink, "tags/:tag.html"
             end
 
-            if !settings.respond_to? :blog_layout
+            if !respond_to? :blog_layout
               set :blog_layout, "layout"
             end
 
-            if !settings.respond_to? :blog_summary_separator
+            if !respond_to? :blog_summary_separator
               set :blog_summary_separator, /READMORE/
             end
 
-            if !settings.respond_to? :blog_summary_length
+            if !respond_to? :blog_summary_length
               set :blog_summary_length, 250
             end
 
-            if !settings.respond_to? :blog_layout_engine
+            if !respond_to? :blog_layout_engine
               set :blog_layout_engine, "erb"
             end
 
-            if !settings.respond_to? :blog_index_template
+            if !respond_to? :blog_index_template
               set :blog_index_template, "index_template"
             end
 
-            if !settings.respond_to? :blog_article_template
+            if !respond_to? :blog_article_template
               set :blog_article_template, "article_template"
             end
+          end
 
-            if !build?
-              $stderr.puts "== Blog: #{settings.blog_permalink}"
-            end
-            
-            app.get("/#{settings.blog_permalink}") do
-              process_request({
-                :layout        => settings.blog_layout,
-                :layout_engine => settings.blog_layout_engine
-              })
-
-              current_body = body
-              current_body = current_body.first if current_body.class == Array
-              # No need for separator on permalink page
-              body current_body.gsub(settings.blog_summary_separator, "")
-            end
-            
-            app.blog
+          app.ready do
+            puts "== Blog: #{blog_permalink}" unless build?
           end
         end
         alias :included :registered
-      end
-      
-      module ClassMethods
-        def blog
-          @blog ||= BlogData.new(self)
-        end
       end
 
       class BlogData
@@ -84,7 +61,7 @@ module Middleman
           @app = app
           @articles = {}
           
-          matcher = @app.settings.blog_permalink
+          matcher = @app.blog_permalink
           matcher.sub!(":year",  "(\\d{4})")
           matcher.sub!(":month", "(\\d{2})")
           matcher.sub!(":day",   "(\\d{2})")
@@ -140,6 +117,7 @@ module Middleman
         def touch_file(file)
           @articles[file] = BlogArticle.new(@app, file)
           self.update_data
+          # Register with sitemap
         end
       
         def remove_file(file)
@@ -167,11 +145,11 @@ module Middleman
         def initialize(app, file)
           template_content = File.read(file)
           
-          source = File.expand_path(app.views, app.root)
+          source = File.expand_path(app.source, app.root)
           path   = file.sub(source, "")
           data, content = app.frontmatter.data(path)
           
-          if data["date"] && data["date"].is_a?(String)
+          if data && data["date"] && data["date"].is_a?(String)
             if data["date"].match(/\d{4}\/\d{2}\/\d{2}/)
               self.date = Date.strptime(data["date"], '%Y/%m/%d')
             elsif data["date"].match(/\d{2}\/\d{2}\/\d{4}/)
@@ -214,9 +192,9 @@ module Middleman
         end
       end
       
-      module Helpers
+      module InstanceMethods
         def blog
-          self.class.blog
+          @_blog ||= BlogData.new(self)
         end
         
         def is_blog_article?

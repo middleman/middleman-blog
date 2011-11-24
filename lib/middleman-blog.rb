@@ -1,2 +1,2 @@
-require "middleman-blog/feature"
+require "middleman-blog/extension"
 require "middleman-blog/template"
