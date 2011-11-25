@@ -6,14 +6,6 @@ module Middleman
       class << self
         def registered(app)
           app.send :include, InstanceMethods
-          
-          app.file_changed do |file|
-            blog.touch_file(file)
-          end
-
-          app.file_deleted do |file|
-            blog.remove_file(file)
-          end
 
           app.after_configuration do 
             if !respond_to? :blog_permalink
@@ -47,6 +39,30 @@ module Middleman
             if !respond_to? :blog_article_template
               set :blog_article_template, "article_template"
             end
+            
+            matcher = blog_permalink.dup
+            matcher.sub!(":year",  "(\\d{4})")
+            matcher.sub!(":month", "(\\d{2})")
+            matcher.sub!(":day",   "(\\d{2})")
+            matcher.sub!(":title", "(.*)")
+            BlogData.matcher = %r{#{source}/#{matcher}}
+
+            file_changed BlogData.matcher do |file|
+              blog.touch_file(file)
+            end
+
+            file_deleted BlogData.matcher do |file|
+              blog.remove_file(file)
+            end
+            
+            provides_metadata BlogData.matcher do
+              { 
+                :options => {
+                  :layout        => blog_layout,
+                  :layout_engine => blog_layout_engine
+                }
+              }
+            end
           end
 
           app.ready do
@@ -57,30 +73,13 @@ module Middleman
       end
 
       class BlogData
+        class << self
+          attr_accessor :matcher
+        end
+        
         def initialize(app)
           @app = app
           @articles = {}
-          
-          matcher = @app.blog_permalink
-          matcher.sub!(":year",  "(\\d{4})")
-          matcher.sub!(":month", "(\\d{2})")
-          matcher.sub!(":day",   "(\\d{2})")
-          matcher.sub!(":title", "(.*)")
-          @match_reg = %r{#{matcher}}
-          
-          article_paths = []
-          @app.sitemap.each do |k, v|
-            next unless v === true
-            article_paths << k unless @match_reg.match(k).nil?
-          end
-          
-          article_paths.each do |path|
-            next unless @app.sitemap.source_map.has_key?(path)
-            file = @app.sitemap.source_map[path]
-            @articles[file] = BlogArticle.new(@app, file)
-          end
-          
-          self.update_data
         end
         
         def sorted_articles
@@ -103,7 +102,7 @@ module Middleman
               tags_array = article_tags.split(',').map { |t| t.strip }
               tags_array.each do |tag_title|
                 tag_key = tag_title.parameterize
-                tag_path = @app.settings.blog_taglink.gsub(/(:\w+)/, tag_key)
+                tag_path = @app.blog_taglink.gsub(/(:\w+)/, tag_key)
                 (tags[tag_path] ||= {})["title"] = tag_title
                 tags[tag_path]["ident"] = tag_key
                 (tags[tag_path]["pages"] ||= {})[article.title] = article.url
@@ -115,9 +114,17 @@ module Middleman
         end
         
         def touch_file(file)
-          @articles[file] = BlogArticle.new(@app, file)
+          output_path = @app.sitemap.file_to_path(file)
+          
+          if @app.sitemap.exists?(output_path)
+            if @articles.has_key?(file)
+              @articles[file].update!
+            else
+              @articles[file] = BlogArticle.new(@app, @app.sitemap.page(output_path))
+            end
+          end
+          
           self.update_data
-          # Register with sitemap
         end
       
         def remove_file(file)
@@ -133,21 +140,26 @@ module Middleman
           @tags = false
           
           @app.data_content("blog", {
-            :articles => self.sorted_articles.map { |a| a.to_h }, 
+            :articles => self.sorted_articles.map(&:to_h), 
             :tags     => self.tags
           })
         end
       end
       
       class BlogArticle
-        attr_accessor :date, :title, :raw, :url, :body, :summary, :frontmatter
+        attr_accessor :date, :title, :raw, :url, :summary, :frontmatter
         
-        def initialize(app, file)
-          template_content = File.read(file)
+        def initialize(app, page)
+          @app  = app
+          @page = page
           
-          source = File.expand_path(app.source, app.root)
-          path   = file.sub(source, "")
-          data, content = app.frontmatter.data(path)
+          @page.custom_renderer do
+            "Hi mom"
+          end
+          
+          template_content = @app.cache.get([:raw_template, page.source_file])
+          
+          data, content = app.frontmatter.data(page.source_file.sub(@app.source_dir, ""))
           
           if data && data["date"] && data["date"].is_a?(String)
             if data["date"].match(/\d{4}\/\d{2}\/\d{2}/)
@@ -158,26 +170,36 @@ module Middleman
           end
         
           self.frontmatter = data
-          self.title = data["title"]
-          self.raw = content
-          self.url = app.sitemap.source_map.index(file)
-      
-          all_content = ::Tilt.new(file).render
-          self.body = all_content.sub(app.settings.blog_summary_separator, "")
-
-          sum = if self.raw =~ app.settings.blog_summary_separator
-            self.raw.split(app.settings.blog_summary_separator).first
-          else
-            self.raw.match(/(.{1,#{app.settings.blog_summary_length}}.*?)(\n|\Z)/m).to_s
-          end
-      
-          engine = app.settings.markdown_engine
-          if engine.is_a? Symbol
-            engine = app.markdown_tilt_template_from_symbol(engine)
-          end
+          self.title       = data["title"]
+          self.raw         = content
+          self.url         = page.path
           
-          engine = engine.new { sum }
-          self.summary = engine.render
+          self.update!
+        end
+        
+        def update!
+          @_body = nil
+          @_summary = nil
+        end
+        
+        def body
+          @_body ||= begin
+            all_content = @page.render(:layout => false)
+            all_content.sub(@app.blog_summary_separator, "")
+          end
+        end
+        
+        def summary
+          @_summary ||= begin
+            sum = if self.raw =~ @app.blog_summary_separator
+              self.raw.split(@app.blog_summary_separator).first
+            else
+              self.raw.match(/(.{1,#{@app.blog_summary_length}}.*?)(\n|\Z)/m).to_s
+            end
+      
+            engine = ::Tilt[@page.source_file].new { sum }
+            engine.render
+          end
         end
       
         def to_h
