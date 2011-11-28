@@ -93,7 +93,7 @@ module Middleman
                 tags_array = article["tags"].split(',').map{|t| t.strip}
                 tags_array.each do |tag_title|
                   tag_key = tag_title.parameterize
-                  tag_path = blog_taglink.gsub(/(:\w+)/, tag_key)
+                  tag_path = settings.blog_taglink.gsub(/(:\w+)/, tag_key)
                   (tags[tag_path] ||= {})["title"] = tag_title
                   tags[tag_path]["ident"] = tag_key
                   (tags[tag_path]["pages"] ||= {})[article["title"]] = article["url"]
