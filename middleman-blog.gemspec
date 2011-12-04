@@ -20,5 +20,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.add_runtime_dependency("middleman", [">= 3.0.0.alpha"])
-  s.add_development_dependency("rake")
+  s.add_development_dependency("cucumber", ["~> 1.1.0"])
+  s.add_development_dependency("rake", ["~> 0.9.2"])
+  s.add_development_dependency("rspec", ["~> 2.7.0"])
+  s.add_development_dependency("rdiscount")
 end

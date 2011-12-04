@@ -1,5 +1,3 @@
-Encoding.default_external = 'utf-8'
-
 activate :blog
 # set :blog_permalink, ":year/:month/:day/:title.html"
 # set :blog_summary_separator, /READMORE/

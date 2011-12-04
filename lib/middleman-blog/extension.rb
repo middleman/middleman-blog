@@ -47,7 +47,7 @@ module Middleman
             matcher.sub!(":title", "(.*)")
             BlogData.matcher = %r{#{source}/#{matcher}}
 
-            file_changed BlogData.matcher do |file|
+            frontmatter_changed BlogData.matcher do |file|
               blog.touch_file(file)
             end
 
@@ -83,10 +83,18 @@ module Middleman
         end
         
         def sorted_articles
-          @sorted_articles ||= begin
+          @_sorted_articles ||= begin
             @articles.values.sort do |a, b|
               b.date <=> a.date
             end
+          end
+        end
+        
+        def article(path)
+          if @articles.has_key?(path.to_s)
+            @articles[path.to_s]
+          else
+            nil
           end
         end
         
@@ -115,34 +123,34 @@ module Middleman
         
         def touch_file(file)
           output_path = @app.sitemap.file_to_path(file)
-          
+          $stderr.puts "touching"
           if @app.sitemap.exists?(output_path)
-            if @articles.has_key?(file)
-              @articles[file].update!
+            if @articles.has_key?(output_path)
+              $stderr.puts "update"
+              @articles[output_path].update!
             else
-              @articles[file] = BlogArticle.new(@app, @app.sitemap.page(output_path))
+              $stderr.puts "new"
+              @articles[output_path] = BlogArticle.new(@app, @app.sitemap.page(output_path))
             end
+            $stderr.puts output_path
           end
           
           self.update_data
         end
       
         def remove_file(file)
-          if @articles.has_key?(file)
-            @articles.delete(file)
+          output_path = @app.sitemap.file_to_path(file)
+          
+          if @articles.has_key?(output_path)
+            @articles.delete(output_path)
             self.update_data
           end
         end
         
       protected
         def update_data
-          @sorted_articles = false
-          @tags = false
-          
-          @app.data_content("blog", {
-            :articles => self.sorted_articles.map(&:to_h), 
-            :tags     => self.tags
-          })
+          @_sorted_articles = nil
+          @tags = nil
         end
       end
       
@@ -153,13 +161,16 @@ module Middleman
           @app  = app
           @page = page
           
-          @page.custom_renderer do
-            "Hi mom"
-          end
+          # @page.custom_renderer do
+          #   "Hi mom"
+          # end
           
-          template_content = @app.cache.get([:raw_template, page.source_file])
-          
-          data, content = app.frontmatter.data(page.source_file.sub(@app.source_dir, ""))
+          self.update!
+        end
+        
+        def update!
+          path = @page.source_file.sub(@app.source_dir, "")
+          data, content = @app.frontmatter.data(path)
           
           if data && data["date"] && data["date"].is_a?(String)
             if data["date"].match(/\d{4}\/\d{2}\/\d{2}/)
@@ -172,12 +183,8 @@ module Middleman
           self.frontmatter = data
           self.title       = data["title"]
           self.raw         = content
-          self.url         = page.path
+          self.url         = @page.path
           
-          self.update!
-        end
-        
-        def update!
           @_body = nil
           @_summary = nil
         end
@@ -202,16 +209,16 @@ module Middleman
           end
         end
       
-        def to_h
-          {
-            :date    => self.date,
-            :raw     => self.raw,
-            :url     => self.url,
-            :body    => self.body,
-            :title   => self.title,
-            :summary => self.summary
-          }
-        end
+        # def to_h
+        #   {
+        #     :date    => self.date,
+        #     :raw     => self.raw,
+        #     :url     => self.url,
+        #     :body    => self.body,
+        #     :title   => self.title,
+        #     :summary => self.summary
+        #   }
+        # end
       end
       
       module InstanceMethods
@@ -220,51 +227,51 @@ module Middleman
         end
         
         def is_blog_article?
-          !current_article_title.blank?
+          !current_article.nil?
         end
       
-        def blog_title
-        end
+        # def blog_title
+        # end
       
         def current_article_date
-          DateTime.parse("#{current_article_metadata.date}")
+          current_article.date
         end
       
         def current_article_title
-          current_article_metadata.title
+          current_article.title
         end
       
-        def current_article_metadata
-          data.page
+        def current_article
+          blog.article(current_path.sub(/^\//, ""))
         end
       
         def current_article_tags
           article_tags_hash = {}
-          if is_blog_article? && current_article_metadata.tags
-            article_tags = current_article_metadata.tags.split(',').map{|t| t.strip}
+          if is_blog_article? && current_article.tags
+            article_tags = current_article.tags.split(',').map{|t| t.strip}
             article_tags.each do |tag_title|
-              article_tags_hash[tag_title] = self.class.blog_taglink.gsub(/(:\w+)/, tag_title.parameterize)
+              article_tags_hash[tag_title] = self.blog_taglink.gsub(/(:\w+)/, tag_title.parameterize)
             end
           end
           article_tags_hash
         end
       
         def blog_tags
-          data.blog.tags
+          blog.tags
         end
       
-        def current_tag_data
-          data.blog.tags[request.path]
+        def current_tag
+          blog.tags[request.path]
         end
       
         def current_tag_articles
-          data.blog.articles.map do |article|
-            article if current_tag_data.pages.has_value?(article.url)
+          blog.articles.map do |article|
+            article if current_tag.pages.has_value?(article.url)
           end.compact
         end
       
         def current_tag_title
-          current_tag_data[:title]
+          current_tag_data.title
         end
       end
     end
