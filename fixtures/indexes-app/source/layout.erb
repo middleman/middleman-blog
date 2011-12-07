@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <% if is_blog_article? %>
+      <% content_for :blog_article, yield %>
+      <%= partial settings.blog_article_template %>
+    <% else %>
+      <%= yield %>
+    <% end %>
+  </body>
+</html>
