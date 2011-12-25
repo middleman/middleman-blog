@@ -21,7 +21,7 @@ module Middleman
             end
 
             if !respond_to? :blog_summary_separator
-              set :blog_summary_separator, /READMORE/
+              set :blog_summary_separator, /(READMORE)/
             end
 
             if !respond_to? :blog_summary_length
@@ -79,20 +79,20 @@ module Middleman
         
         def initialize(app)
           @app = app
-          @articles = {}
+          @_articles = {}
         end
         
-        def sorted_articles
+        def articles
           @_sorted_articles ||= begin
-            @articles.values.sort do |a, b|
+            @_articles.values.sort do |a, b|
               b.date <=> a.date
             end
           end
         end
         
         def article(path)
-          if @articles.has_key?(path.to_s)
-            @articles[path.to_s]
+          if @_articles.has_key?(path.to_s)
+            @_articles[path.to_s]
           else
             nil
           end
@@ -101,7 +101,7 @@ module Middleman
         def tags
           @tags ||= begin
             tags = {}
-            @articles.values.each do |article|
+            @_articles.values.each do |article|
               next unless article.frontmatter.has_key?("tags")
              
               article_tags = article.frontmatter["tags"]
@@ -125,12 +125,11 @@ module Middleman
           output_path = @app.sitemap.file_to_path(file)
           $stderr.puts "touching"
           if @app.sitemap.exists?(output_path)
-            if @articles.has_key?(output_path)
-              $stderr.puts "update"
-              @articles[output_path].update!
+            if @_articles.has_key?(output_path)
+              @_articles[output_path].update!
             else
               $stderr.puts "new"
-              @articles[output_path] = BlogArticle.new(@app, @app.sitemap.page(output_path))
+              @_articles[output_path] = BlogArticle.new(@app, @app.sitemap.page(output_path))
             end
             $stderr.puts output_path
           end
@@ -141,8 +140,8 @@ module Middleman
         def remove_file(file)
           output_path = @app.sitemap.file_to_path(file)
           
-          if @articles.has_key?(output_path)
-            @articles.delete(output_path)
+          if @_articles.has_key?(output_path)
+            @_articles.delete(output_path)
             self.update_data
           end
         end
@@ -161,10 +160,6 @@ module Middleman
           @app  = app
           @page = page
           
-          # @page.custom_renderer do
-          #   "Hi mom"
-          # end
-          
           self.update!
         end
         
@@ -176,14 +171,14 @@ module Middleman
             if data["date"].match(/\d{4}\/\d{2}\/\d{2}/)
               self.date = Date.strptime(data["date"], '%Y/%m/%d')
             elsif data["date"].match(/\d{2}\/\d{2}\/\d{4}/)
-              self.date = Date.strptime(data["date"], '%d/%m/%Y')
+              self.date = Date.strptime(data["date"], '%m/%d/%Y')
             end
           end
         
           self.frontmatter = data
           self.title       = data["title"]
           self.raw         = content
-          self.url         = @page.path
+          self.url         = "/#{@page.path}"
           
           @_body = nil
           @_summary = nil
@@ -192,7 +187,12 @@ module Middleman
         def body
           @_body ||= begin
             all_content = @page.render(:layout => false)
-            all_content.sub(@app.blog_summary_separator, "")
+            
+            if all_content =~ @app.blog_summary_separator
+              all_content.sub!($1, "")
+            end
+            
+            all_content
           end
         end
         
