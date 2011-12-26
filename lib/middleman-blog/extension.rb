@@ -165,7 +165,7 @@ module Middleman
         
         def update!
           path = @page.source_file.sub(@app.source_dir, "")
-          data, content = @app.frontmatter.data(path)
+          data, content = @app.frontmatter(path)
           
           if data && data["date"] && data["date"].is_a?(String)
             if data["date"].match(/\d{4}\/\d{2}\/\d{2}/)
