@@ -51,8 +51,8 @@ module Middleman
               blog.touch_file(file)
             end
 
-            file_deleted BlogData.matcher do |file|
-              blog.remove_file(file)
+            self.files.deleted BlogData.matcher do |file|
+              self.blog.remove_file(file)
             end
             
             provides_metadata BlogData.matcher do
