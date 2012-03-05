@@ -68,9 +68,13 @@ module Middleman
 
         def initialize(app)
           @app = app
+
+          # A map from path to BlogArticle
           @_articles = {}
         end
 
+        # A list of all blog articles, sorted by date
+        # @return [Array<Middleman::Extensions::Blog::BlogArticle>]
         def articles
           @_sorted_articles ||= begin
             @_articles.values.sort do |a, b|
@@ -79,37 +83,30 @@ module Middleman
           end
         end
 
+        # The BlogArticle for the given path, or nil
+        # @return [Middleman::Extensions::Blog::BlogArticle]
         def article(path)
-          if @_articles.has_key?(path.to_s)
-            @_articles[path.to_s]
-          else
-            nil
-          end
+          @_articles[path.to_s]
         end
 
+        # Returns a map from tag name to an array
+        # of BlogArticles associated with that tag.
         def tags
           @tags ||= begin
             tags = {}
             @_articles.values.each do |article|
-              next unless article.frontmatter.has_key?("tags")
-
-              article_tags = article.frontmatter["tags"]
-              next if article_tags.empty?
-
-              tags_array = article_tags.split(',').map { |t| t.strip }
-              tags_array.each do |tag_title|
-                tag_key = tag_title.parameterize
-                tag_path = @app.blog_taglink.gsub(/(:\w+)/, tag_key)
-                (tags[tag_path] ||= {})["title"] = tag_title
-                tags[tag_path]["ident"] = tag_key
-                (tags[tag_path]["pages"] ||= {})[article.title] = article.url
+              article.tags.each do |tag|
+                tags[tag] ||= []
+                tags[tag] << article
               end
 
-              tags
             end
+
+            tags
           end
         end
 
+        # Notify the blog store that a particular file has updated
         def touch_file(file)
           output_path = @app.sitemap.file_to_path(file)
           if @app.sitemap.exists?(output_path)
@@ -123,6 +120,7 @@ module Middleman
           end
         end
 
+        # Notify the blog store that a file has been removed
         def remove_file(file)
           output_path = @app.sitemap.file_to_path(file)
 
@@ -133,14 +131,17 @@ module Middleman
         end
 
       protected
+        # Clear cached data
         def update_data
           @_sorted_articles = nil
           @tags = nil
         end
       end
 
+      # A class encapsulating the properties of a blog article.
+      # Access the underlying page object with "page"
       class BlogArticle
-        attr_accessor :date, :title, :raw, :url, :summary, :frontmatter
+        attr_accessor :page, :date, :title, :raw, :summary, :frontmatter
 
         def initialize(app, page)
           @app  = app
@@ -162,7 +163,7 @@ module Middleman
           end
 
           self.frontmatter = data
-          self.title       = data["title"]
+          self.title       = data["title"] if data
           self.raw         = content
 
           @_body = nil
@@ -198,16 +199,16 @@ module Middleman
           end
         end
 
-        # def to_h
-        #   {
-        #     :date    => self.date,
-        #     :raw     => self.raw,
-        #     :url     => self.url,
-        #     :body    => self.body,
-        #     :title   => self.title,
-        #     :summary => self.summary
-        #   }
-        # end
+        def tags
+          article_tags = frontmatter["tags"]
+          [] if article_tags.blank?
+
+          if article_tags.is_a? String
+            article_tags.split(',').map(&:strip)
+          else
+            article_tags || []
+          end
+        end
       end
 
       module InstanceMethods
@@ -219,48 +220,8 @@ module Middleman
           !current_article.nil?
         end
 
-        # def blog_title
-        # end
-
-        def current_article_date
-          current_article.date
-        end
-
-        def current_article_title
-          current_article.title
-        end
-
         def current_article
           blog.article(current_page.path)
-        end
-
-        def current_article_tags
-          article_tags_hash = {}
-          if is_blog_article? && current_article.tags
-            article_tags = current_article.tags.split(',').map{|t| t.strip}
-            article_tags.each do |tag_title|
-              article_tags_hash[tag_title] = self.blog_taglink.gsub(/(:\w+)/, tag_title.parameterize)
-            end
-          end
-          article_tags_hash
-        end
-
-        def blog_tags
-          blog.tags
-        end
-
-        def current_tag
-          blog.tags[request.path]
-        end
-
-        def current_tag_articles
-          blog.articles.map do |article|
-            article if current_tag.pages.has_value?(article.url)
-          end.compact
-        end
-
-        def current_tag_title
-          current_tag_data.title
         end
       end
     end
