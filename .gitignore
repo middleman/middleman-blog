@@ -9,3 +9,4 @@ tmp
 .mm-pid-*
 doc
 .yardoc
+build/

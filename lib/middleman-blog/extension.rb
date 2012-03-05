@@ -56,6 +56,18 @@ module Middleman
 
           app.ready do
             puts "== Blog: #{blog_permalink}" unless build?
+
+            # Set up tag pages if the tag template has been specified
+            if defined? blog_tag_template
+              page blog_tag_template, :ignore => true
+
+              blog.tags.each do |tag, articles|
+                page tag_path(tag), :proxy => blog_tag_template do
+                  @tag = tag
+                  @articles = articles
+                end
+              end
+            end
           end
         end
         alias :included :registered
@@ -222,6 +234,10 @@ module Middleman
 
         def current_article
           blog.article(current_page.path)
+        end
+
+        def tag_path(tag)
+          blog_taglink.sub(':tag', tag.parameterize)
         end
       end
     end
