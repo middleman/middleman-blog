@@ -28,17 +28,7 @@ module Middleman
               set :blog_summary_length, 250
             end
 
-            if !respond_to? :blog_layout_engine
-              set :blog_layout_engine, "erb"
-            end
-
-            if !respond_to? :blog_index_template
-              set :blog_index_template, "index_template"
-            end
-
-            if !respond_to? :blog_article_template
-              set :blog_article_template, "article_template"
-            end
+            # optional: :blog_tag_template
 
             matcher = blog_permalink.dup
             matcher.sub!(":year",  "(\\d{4})")
@@ -58,8 +48,7 @@ module Middleman
             provides_metadata BlogData.matcher do
               {
                 :options => {
-                  :layout        => blog_layout,
-                  :layout_engine => blog_layout_engine
+                  :layout => blog_layout,
                 }
               }
             end
