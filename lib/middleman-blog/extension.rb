@@ -175,10 +175,13 @@ module Middleman
           self.frontmatter = data
           self.title       = data["title"]
           self.raw         = content
-          self.url         = "/#{@page.path}"
 
           @_body = nil
           @_summary = nil
+        end
+
+        def url
+          @page.url
         end
 
         def body
@@ -239,7 +242,7 @@ module Middleman
         end
 
         def current_article
-          blog.article(current_path.sub(/^\//, ""))
+          blog.article(current_page.path)
         end
 
         def current_article_tags

@@ -24,5 +24,6 @@ Feature: Preview Changes
 
       Newer Article Content
       """
+    When I go to "/2011/01/01/new-article.html"
     Then I should see "Newer Article Content"
     And I should see "Newer Article</title>"
