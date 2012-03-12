@@ -118,9 +118,9 @@ module Middleman
             else
               @_articles[output_path] = BlogArticle.new(@app, @app.sitemap.page(output_path))
             end
-          end
 
-          self.update_data
+            self.update_data
+          end
         end
 
         def remove_file(file)
