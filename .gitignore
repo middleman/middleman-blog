@@ -7,3 +7,5 @@ pkg/*
 .rbenv-version
 tmp
 .mm-pid-*
+doc
+.yardoc
