@@ -12,6 +12,10 @@ module Middleman
               set :blog_permalink, ":year/:month/:day/:title.html"
             end
 
+            if !respond_to? :blog_sources
+              set :blog_sources, ":year-:month-:day-:title.html"
+            end
+
             if !respond_to? :blog_taglink
               set :blog_taglink, "tags/:tag.html"
             end
@@ -30,12 +34,33 @@ module Middleman
 
             # optional: :blog_tag_template
 
-            matcher = blog_permalink.dup
+            matcher = blog_sources.dup
             matcher.sub!(":year",  "(\\d{4})")
             matcher.sub!(":month", "(\\d{2})")
             matcher.sub!(":day",   "(\\d{2})")
             matcher.sub!(":title", "(.*)")
-            BlogData.matcher = %r{#{source}/#{matcher}}
+            BlogData.matcher = /#{matcher}/
+
+            sitemap.reroute do |destination, page|
+              if page.path =~ BlogData.matcher
+                # This doesn't allow people to omit one part!
+                year = $1
+                month = $2
+                day = $3
+                title = $4
+
+                # compute output path:
+                #   substitute date parts to path pattern
+                #   get date from frontmatter, path
+                blog_permalink.dup
+                     .sub!(':year', year)
+                     .sub!(':month', month)
+                     .sub!(':day', day)
+                     .sub!(':title', title)
+              else
+                destination
+              end
+            end
 
             frontmatter_changed BlogData.matcher do |file|
               blog.touch_file(file)
