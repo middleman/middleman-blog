@@ -1,7 +1,5 @@
 activate :blog
-# set :blog_permalink, ":year/:month/:day/:title.html"
-# set :blog_summary_separator, /READMORE/
-# set :blog_summary_length, 500
+set :blog_sources, ":year/:month/:day/:title.html"
 
 page "/feed.xml", :layout => false
 
