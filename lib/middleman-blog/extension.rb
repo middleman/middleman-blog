@@ -32,7 +32,29 @@ module Middleman
               set :blog_summary_length, 250
             end
 
+            if !respond_to? :blog_year_link
+              set :blog_year_link, ":year.html"
+            end
+
+            if !respond_to? :blog_month_link
+              set :blog_month_link, ":year/:month.html"
+            end
+
+            if !respond_to? :blog_day_link
+              set :blog_day_link, ":year/:month/:day.html"
+            end
+
             # optional: :blog_tag_template
+            # optional: :blog_year_template
+            # optional: :blog_month_template
+            # optional: :blog_day_template
+            
+            # Allow one setting to set all the calendar templates
+            if respond_to? :blog_calendar_template
+              set :blog_year_template, blog_calendar_template
+              set :blog_month_template, blog_calendar_template
+              set :blog_day_template, blog_calendar_template
+            end
 
             matcher = blog_sources.dup
             matcher.sub!(":year",  "(\\d{4})")
@@ -92,6 +114,43 @@ module Middleman
                   @articles = articles
                 end
               end
+
+            # Set up date pages if the appropriate templates have been specified
+            blog.articles.group_by {|a| a.date.year }.each do |year, articles|
+              if defined? blog_year_template
+                page blog_year_template, :ignore => true
+
+                page blog_year_path(year), :proxy => blog_year_template do
+                  @year = year
+                  @articles = articles
+                end
+              end
+              
+              articles.group_by {|a| a.date.month }.each do |month, articles|
+                if defined? blog_month_template
+                  page blog_month_template, :ignore => true
+
+                  page blog_month_path(year, month), :proxy => blog_month_template do
+                    @year = year
+                    @month = month
+                    @articles = articles
+                  end
+                end
+                
+                articles.group_by {|a| a.date.day }.each do |day, articles|
+                  if defined? blog_day_template
+                    page blog_day_template, :ignore => true
+
+                    page blog_day_path(year, month, day), :proxy => blog_day_template do
+                      @year = year
+                      @month = month
+                      @day = day
+                      @articles = articles
+                    end
+                  end
+                end
+              end
+>>>>>>> Generate date-based calendar pages
             end
           end
         end
@@ -263,6 +322,20 @@ module Middleman
 
         def tag_path(tag)
           blog_taglink.sub(':tag', tag.parameterize)
+
+        def blog_year_path(year)
+          blog_year_link.sub(':year', year.to_s)
+        end
+
+        def blog_month_path(year, month)
+          blog_month_link.sub(':year', year.to_s)
+            .sub(':month', month.to_s.rjust(2,'0'))
+        end
+
+        def blog_day_path(year, month, day)
+          blog_day_link.sub(':year', year.to_s)
+            .sub(':month', month.to_s.rjust(2,'0'))
+            .sub(':day', day.to_s.rjust(2,'0'))
         end
       end
     end
