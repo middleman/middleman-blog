@@ -195,7 +195,6 @@ module Middleman
                 tags[tag] ||= []
                 tags[tag] << article
               end
-
             end
 
             tags
@@ -322,6 +321,7 @@ module Middleman
 
         def tag_path(tag)
           blog_taglink.sub(':tag', tag.parameterize)
+        end
 
         def blog_year_path(year)
           blog_year_link.sub(':year', year.to_s)
