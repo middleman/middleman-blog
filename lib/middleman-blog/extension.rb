@@ -114,6 +114,7 @@ module Middleman
                   @articles = articles
                 end
               end
+            end
 
             # Set up date pages if the appropriate templates have been specified
             blog.articles.group_by {|a| a.date.year }.each do |year, articles|
@@ -150,7 +151,6 @@ module Middleman
                   end
                 end
               end
->>>>>>> Generate date-based calendar pages
             end
           end
         end
