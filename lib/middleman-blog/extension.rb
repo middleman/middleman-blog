@@ -74,11 +74,11 @@ module Middleman
                 # compute output path:
                 #   substitute date parts to path pattern
                 #   get date from frontmatter, path
-                blog_permalink.dup
-                     .sub!(':year', year)
-                     .sub!(':month', month)
-                     .sub!(':day', day)
-                     .sub!(':title', title)
+                blog_permalink.dup.
+                  sub!(':year', year).
+                  sub!(':month', month).
+                  sub!(':day', day).
+                  sub!(':title', title)
               else
                 destination
               end
@@ -117,28 +117,28 @@ module Middleman
             end
 
             # Set up date pages if the appropriate templates have been specified
-            blog.articles.group_by {|a| a.date.year }.each do |year, articles|
+            blog.articles.group_by {|a| a.date.year }.each do |year, year_articles|
               if defined? blog_year_template
                 page blog_year_template, :ignore => true
 
                 page blog_year_path(year), :proxy => blog_year_template do
                   @year = year
-                  @articles = articles
+                  @articles = year_articles
                 end
               end
               
-              articles.group_by {|a| a.date.month }.each do |month, articles|
+              year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
                 if defined? blog_month_template
                   page blog_month_template, :ignore => true
 
                   page blog_month_path(year, month), :proxy => blog_month_template do
                     @year = year
                     @month = month
-                    @articles = articles
+                    @articles = month_articles
                   end
                 end
                 
-                articles.group_by {|a| a.date.day }.each do |day, articles|
+                month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
                   if defined? blog_day_template
                     page blog_day_template, :ignore => true
 
@@ -146,7 +146,7 @@ module Middleman
                       @year = year
                       @month = month
                       @day = day
-                      @articles = articles
+                      @articles = day_articles
                     end
                   end
                 end
@@ -328,14 +328,14 @@ module Middleman
         end
 
         def blog_month_path(year, month)
-          blog_month_link.sub(':year', year.to_s)
-            .sub(':month', month.to_s.rjust(2,'0'))
+          blog_month_link.sub(':year', year.to_s).
+            sub(':month', month.to_s.rjust(2,'0'))
         end
 
         def blog_day_path(year, month, day)
-          blog_day_link.sub(':year', year.to_s)
-            .sub(':month', month.to_s.rjust(2,'0'))
-            .sub(':day', day.to_s.rjust(2,'0'))
+          blog_day_link.sub(':year', year.to_s).
+            sub(':month', month.to_s.rjust(2,'0')).
+            sub(':day', day.to_s.rjust(2,'0'))
         end
       end
     end
