@@ -5,45 +5,19 @@ module Middleman
     module Blog
       class << self
         def registered(app)
+          app.set :blog_permalink, ":year/:month/:day/:title.html"
+          app.set :blog_sources, ":year-:month-:day-:title.html"
+          app.set :blog_taglink, "tags/:tag.html"
+          app.set :blog_layout, "layout"
+          app.set :blog_summary_separator, /(READMORE)/
+          app.set :blog_summary_length, 250
+          app.set :blog_year_link, ":year.html"
+          app.set :blog_month_link, ":year/:month.html"
+          app.set :blog_day_link, ":year/:month/:day.html"
+            
           app.send :include, InstanceMethods
 
           app.after_configuration do
-            if !respond_to? :blog_permalink
-              set :blog_permalink, ":year/:month/:day/:title.html"
-            end
-
-            if !respond_to? :blog_sources
-              set :blog_sources, ":year-:month-:day-:title.html"
-            end
-
-            if !respond_to? :blog_taglink
-              set :blog_taglink, "tags/:tag.html"
-            end
-
-            if !respond_to? :blog_layout
-              set :blog_layout, "layout"
-            end
-
-            if !respond_to? :blog_summary_separator
-              set :blog_summary_separator, /(READMORE)/
-            end
-
-            if !respond_to? :blog_summary_length
-              set :blog_summary_length, 250
-            end
-
-            if !respond_to? :blog_year_link
-              set :blog_year_link, ":year.html"
-            end
-
-            if !respond_to? :blog_month_link
-              set :blog_month_link, ":year/:month.html"
-            end
-
-            if !respond_to? :blog_day_link
-              set :blog_day_link, ":year/:month/:day.html"
-            end
-
             # optional: :blog_tag_template
             # optional: :blog_year_template
             # optional: :blog_month_template
@@ -95,7 +69,7 @@ module Middleman
             provides_metadata BlogData.matcher do
               {
                 :options => {
-                  :layout => blog_layout,
+                  :layout => blog_layout
                 }
               }
             end
