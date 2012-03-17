@@ -1,6 +1,6 @@
 --- 
 title: "Another Article"
-date: 01/02/2011
+date: 2011-01-02
 tags:
   - foo
 ---
