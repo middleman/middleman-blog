@@ -77,8 +77,6 @@ module Middleman
           end
 
           app.ready do
-            puts "== Blog: #{blog_permalink}" unless build?
-
             # Set up tag pages if the tag template has been specified
             if defined? blog_tag_template
               page blog_tag_template, :ignore => true
@@ -224,12 +222,14 @@ module Middleman
           path = @page.source_file.sub(@app.source_dir, "")
           data, content = @app.frontmatter(path)
 
-          if data && data["date"] && data["date"].is_a?(String)
-            if data["date"].match(/\d{4}\/\d{2}\/\d{2}/)
-              self.date = Date.strptime(data["date"], '%Y/%m/%d')
-            elsif data["date"].match(/\d{2}\/\d{2}\/\d{4}/)
-              self.date = Date.strptime(data["date"], '%m/%d/%Y')
+          if data && data["date"]
+            if data["date"].is_a?(String)
+              self.date = DateTime.parse(data["date"])
+            else
+              self.date = data["date"]
             end
+          else
+            raise "Blog post #{path} needs a date in its frontmatter"
           end
 
           self.frontmatter = data
