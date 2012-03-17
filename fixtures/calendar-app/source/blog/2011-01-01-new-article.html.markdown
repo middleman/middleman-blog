@@ -1,6 +1,6 @@
 --- 
 title: "Newer Article"
-date: 01/01/2011
+date: 2011-01-01
 tags: foo, bar
 ---
 
