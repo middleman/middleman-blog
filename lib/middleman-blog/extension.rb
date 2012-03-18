@@ -14,6 +14,7 @@ module Middleman
           app.set :blog_year_link, ":year.html"
           app.set :blog_month_link, ":year/:month.html"
           app.set :blog_day_link, ":year/:month/:day.html"
+          app.set :blog_default_extension, ".markdown"
             
           app.send :include, InstanceMethods
 
