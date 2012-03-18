@@ -16,6 +16,11 @@ module Middleman
         File.dirname(__FILE__)
       end
 
+      # Tell Thor to exit with a nonzero exit code on failure
+      def self.exit_on_failure?
+        true
+      end
+
       desc "article TITLE", "Create a new blog article"
       method_option "date",
         :aliases => "-d",
