@@ -1,0 +1,15 @@
+<h1>Archive for
+  <% if @day %>
+    <%= Date.new(@year, @month, @day).strftime('%b %e %Y') %>
+  <% elsif @month %>
+    <%= Date.new(@year, @month, 1).strftime('%b %Y') %>
+  <% else %>
+    <%= @year %>
+  <% end %>
+</h1>
+
+<ul>
+  <% @articles.each_with_index do |article, i| %>
+  <li><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e') %></span></li>
+   <% end %>
+</ul>

@@ -7,24 +7,30 @@
   <body>
     
     <div id="main" role="main">
-      <% if is_blog_article? %>
-        <% content_for :blog_article, yield %>
-        <%= partial settings.blog_article_template %>
-      <% else %>
-        <%= yield %>
-      <% end %>
+      <%= yield %>
     </div>
     
     <aside>
-      <h2>
-        Recent Articles
-        <a href="/archives">Archive</a>
-      </h2>
+      <h2>Recent Articles</h2>
       <ol>
-        <% data.blog.articles[0...10].each do |article| %>
+        <% blog.articles[0...10].each do |article| %>
           <li><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e') %></span></li>
         <% end %>
-      </li>
+      </ol>
+
+      <h2>Tags</h2>
+      <ol>
+        <% blog.tags.each do |tag, articles| %>
+          <li><a href="<%= tag_path tag %>"><%= tag %> (<%= articles.size %>)</a></li>
+        <% end %>
+      </ol>
+
+      <h2>By Year</h2>
+      <ol>
+        <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
+          <li><a href="<%= blog_year_path year %>"><%= year %> (<%= articles.size %>)</a></li>
+        <% end %>
+      </ol>
     </aside>
   </body>
 </html>

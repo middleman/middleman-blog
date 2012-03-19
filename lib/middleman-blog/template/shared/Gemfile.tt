@@ -1,0 +1,4 @@
+source :rubygems
+
+gem "middleman", "~> <%= Middleman::VERSION %>"
+gem "middleman-blog", "~> <%= Middleman::Blog::VERSION %>"
