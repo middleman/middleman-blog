@@ -39,6 +39,11 @@ https://github.com/middleman/middleman-blog/issues
 
 The best way to get quick responses to your issues and swift fixes to your bugs is to submit detailed bug reports, include test cases and respond to developer questions in a timely manner. Even better, if you know Ruby, you can submit Pull Requests containing Cucumber Features which describe how your feature should work or exploit the bug you are submitting.
 
+# Build & Dependency Status
+
+[![Build Status](http://travis-ci.org/middleman/middleman-blog.png)](http://travis-ci.org/middleman/middleman-blog)
+[![Dependency Status](https://gemnasium.com/middleman/middleman-blog.png?travis)](https://gemnasium.com/middleman/middleman-blog)
+
 # How to Run Cucumber Tests
 
 1. Checkout Repository: `git clone https://github.com/middleman/middleman-blog.git`
