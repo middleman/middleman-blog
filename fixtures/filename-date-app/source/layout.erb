@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <% if is_blog_article? %>
+      <%= yield %>
+      <%= current_article.url %>
+      <p>Date: <%= current_article.date %></p>
+    <% else %>
+      <%= yield %>
+    <% end %>
+  </body>
+</html>
