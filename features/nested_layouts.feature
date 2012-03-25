@@ -8,7 +8,6 @@ Feature: Nested Layouts Support
       --- 
       title: "New Article Title"
       date: 01/01/2011
-      layout: article
       ---
 
       New Article Content

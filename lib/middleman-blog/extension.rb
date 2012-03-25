@@ -232,7 +232,8 @@ module Middleman
             raise "Blog post #{path} needs a date in its frontmatter"
           end
 
-          data["layout"] ||= @app.blog_layout
+          data[:layout] ||= @app.blog_layout
+          
           self.frontmatter = data
           self.title       = data["title"] if data
           self.raw         = content
