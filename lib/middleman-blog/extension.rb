@@ -31,15 +31,18 @@ module Middleman
               set :blog_day_template, blog_calendar_template
             end
 
-            matcher = blog_sources.dup
-            matcher.sub!(":year",  "(\\d{4})")
-            matcher.sub!(":month", "(\\d{2})")
-            matcher.sub!(":day",   "(\\d{2})")
-            matcher.sub!(":title", "(.*)")
-            BlogData.matcher = /#{matcher}/
+            matcher = Regexp.escape(blog_sources).
+              sub(/^\//, "").
+              sub(":year",  "(\\d{4})").
+              sub(":month", "(\\d{2})").
+              sub(":day",   "(\\d{2})").
+              sub(":title", "(.*)")
+
+            path_matcher = /^#{matcher}/
+            file_matcher = /^#{source_dir}\/#{matcher}/
 
             sitemap.reroute do |destination, page|
-              if page.path =~ BlogData.matcher
+              if page.path =~ path_matcher
                 # This doesn't allow people to omit one part!
                 year = $1
                 month = $2
@@ -49,25 +52,25 @@ module Middleman
                 # compute output path:
                 #   substitute date parts to path pattern
                 #   get date from frontmatter, path
-                blog_permalink.dup.
-                  sub!(':year', year).
-                  sub!(':month', month).
-                  sub!(':day', day).
-                  sub!(':title', title)
+                blog_permalink.
+                  sub(':year', year).
+                  sub(':month', month).
+                  sub(':day', day).
+                  sub(':title', title)
               else
                 destination
               end
             end
 
-            frontmatter_changed BlogData.matcher do |file|
+            frontmatter_changed file_matcher do |file|
               blog.touch_file(file)
             end
 
-            self.files.deleted BlogData.matcher do |file|
+            self.files.deleted file_matcher do |file|
               self.blog.remove_file(file)
             end
 
-            provides_metadata BlogData.matcher do
+            provides_metadata file_matcher do
               {
                 :options => {
                   :layout => blog_layout
@@ -131,10 +134,6 @@ module Middleman
       end
 
       class BlogData
-        class << self
-          attr_accessor :matcher
-        end
-
         def initialize(app)
           @app = app
 
