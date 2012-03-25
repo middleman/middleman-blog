@@ -222,19 +222,11 @@ module Middleman
           path = @page.source_file.sub(@app.source_dir, "")
           data, content = @app.frontmatter(path)
 
-          if data && data["date"]
-            if data["date"].is_a?(String)
-              self.date = DateTime.parse(data["date"])
-            else
-              self.date = data["date"]
-            end
-          else
-            raise "Blog post #{path} needs a date in its frontmatter"
-          end
-
           self.frontmatter = data
           self.title       = data["title"] if data
           self.raw         = content
+
+          find_date
 
           @_body = nil
           @_summary = nil
@@ -278,6 +270,39 @@ module Middleman
           else
             article_tags || []
           end
+        end
+
+        private
+
+        # Attempt to figure out the date of the post. The date should be
+        # present in the source path, but users may also provide a date
+        # in the frontmatter in order to provide a time of day for sorting
+        # reasons.
+        def find_date
+          # First get the date from frontmatter
+          if frontmatter && frontmatter["date"]
+            if frontmatter["date"].is_a?(String)
+              self.date = DateTime.parse(frontmatter["date"])
+            else
+              self.date = frontmatter["date"]
+            end
+          end
+
+          # Bext figure out the date from the filename
+          if @app.blog_sources.include?(":year") &&
+              @app.blog_sources.include?(":month") &&
+              @app.blog_sources.include?(":day")
+            date_parts = BlogData.matcher.match(@page.path).captures
+
+            filename_date = Date.new(date_parts[0].to_i, date_parts[1].to_i, date_parts[2].to_i)
+            if self.date
+              raise "The date in #{@page.path}'s filename doesn't match the date in its frontmatter" unless self.date.to_date == filename_date
+            else
+              self.date = filename_date.to_datetime
+            end
+          end
+
+          raise "Blog post #{@page.path} needs a date in its filename or frontmatter" unless self.date
         end
       end
 
