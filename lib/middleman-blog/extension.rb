@@ -208,7 +208,7 @@ module Middleman
       # A class encapsulating the properties of a blog article.
       # Access the underlying page object with "page"
       class BlogArticle
-        attr_accessor :page, :date, :title, :raw, :summary, :frontmatter
+        attr_reader :page, :date, :title
 
         def initialize(app, page)
           @app  = app
@@ -218,12 +218,10 @@ module Middleman
         end
 
         def update!
-          path = @page.source_file.sub(@app.source_dir, "")
-          data, content = @app.frontmatter(path)
+          data, content = @app.frontmatter(@page.relative_path)
 
-          self.frontmatter = data
-          self.title       = data["title"] if data
-          self.raw         = content
+          @title = data["title"]
+          @_raw  = content
 
           find_date
 
@@ -249,10 +247,10 @@ module Middleman
 
         def summary
           @_summary ||= begin
-            sum = if self.raw =~ @app.blog_summary_separator
-              self.raw.split(@app.blog_summary_separator).first
+            sum = if @_raw =~ @app.blog_summary_separator
+              @_raw.split(@app.blog_summary_separator).first
             else
-              self.raw.match(/(.{1,#{@app.blog_summary_length}}.*?)(\n|\Z)/m).to_s
+              @_raw.match(/(.{1,#{@app.blog_summary_length}}.*?)(\n|\Z)/m).to_s
             end
 
             engine = ::Tilt[@page.source_file].new { sum }
@@ -261,8 +259,7 @@ module Middleman
         end
 
         def tags
-          article_tags = frontmatter["tags"]
-          [] if article_tags.blank?
+          article_tags = @page.data["tags"]
 
           if article_tags.is_a? String
             article_tags.split(',').map(&:strip)
@@ -278,30 +275,30 @@ module Middleman
         # in the frontmatter in order to provide a time of day for sorting
         # reasons.
         def find_date
+          frontmatter_date = @page.data["date"]
+
           # First get the date from frontmatter
-          if frontmatter && frontmatter["date"]
-            if frontmatter["date"].is_a?(String)
-              self.date = DateTime.parse(frontmatter["date"])
-            else
-              self.date = frontmatter["date"]
-            end
+          if frontmatter_date.is_a?(String)
+            @date = DateTime.parse(frontmatter_date)
+          else
+            @date = frontmatter_date
           end
 
-          # Bext figure out the date from the filename
+          # Next figure out the date from the filename
           if @app.blog_sources.include?(":year") &&
               @app.blog_sources.include?(":month") &&
               @app.blog_sources.include?(":day")
             date_parts = BlogData.matcher.match(@page.path).captures
 
             filename_date = Date.new(date_parts[0].to_i, date_parts[1].to_i, date_parts[2].to_i)
-            if self.date
-              raise "The date in #{@page.path}'s filename doesn't match the date in its frontmatter" unless self.date.to_date == filename_date
+            if @date
+              raise "The date in #{@page.path}'s filename doesn't match the date in its frontmatter" unless @date.to_date == filename_date
             else
-              self.date = filename_date.to_datetime
+              @date = filename_date.to_datetime
             end
           end
 
-          raise "Blog post #{@page.path} needs a date in its filename or frontmatter" unless self.date
+          raise "Blog post #{@page.path} needs a date in its filename or frontmatter" unless @date
         end
       end
 
