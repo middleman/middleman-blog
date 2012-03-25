@@ -3,6 +3,7 @@ require 'date'
 
 module Middleman
   module Cli
+    # This class provides an "article" command for the middleman CLI.
     class Article < Thor
       include Thor::Actions
 
