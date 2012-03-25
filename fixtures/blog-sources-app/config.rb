@@ -1,2 +1,2 @@
 activate :blog
-set :blog_sources, ":year-:month-:day-:title.html"
+set :blog_sources, "blog/:year-:month-:day-:title.html"
