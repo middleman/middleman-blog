@@ -67,13 +67,13 @@ module Middleman
               self.blog.remove_file(file)
             end
 
-            # provides_metadata BlogData.matcher do
-            #   {
-            #     :options => {
-            #       :layout => blog_layout
-            #     }
-            #   }
-            # end
+            provides_metadata BlogData.matcher do
+              {
+                :options => {
+                  :layout => blog_layout
+                }
+              }
+            end
           end
 
           app.ready do
@@ -176,7 +176,7 @@ module Middleman
 
         # Notify the blog store that a particular file has updated
         def touch_file(file)
-          output_path = @app.sitemap.file_to_path(file)        
+          output_path = @app.sitemap.file_to_path(file)
           if @app.sitemap.exists?(output_path)
             if @_articles.has_key?(output_path)
               @_articles[output_path].update!
@@ -232,8 +232,6 @@ module Middleman
             raise "Blog post #{path} needs a date in its frontmatter"
           end
 
-          data[:layout] ||= @app.blog_layout
-          
           self.frontmatter = data
           self.title       = data["title"] if data
           self.raw         = content

@@ -8,6 +8,7 @@ Feature: Nested Layouts Support
       --- 
       title: "New Article Title"
       date: 01/01/2011
+      layout: article
       ---
 
       New Article Content
@@ -15,3 +16,4 @@ Feature: Nested Layouts Support
     When I go to "/2011/01/01/new-article-title.html"
     Then I should see "New Article Content"
     And I should see "New Article Title</h1>"
+    And I should see "Main Layout"
