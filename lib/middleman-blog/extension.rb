@@ -133,7 +133,12 @@ module Middleman
         alias :included :registered
       end
 
+      # A store of all the blog articles in the site, with accessors
+      # for the articles by various dimensions. Accessed via "blog" in
+      # templates.
       class BlogData
+
+        # @private
         def initialize(app)
           @app = app
 
@@ -151,7 +156,7 @@ module Middleman
           end
         end
 
-        # The BlogArticle for the given path, or nil
+        # The BlogArticle for the given path, or nil if one doesn't exist.
         # @return [Middleman::Extensions::Blog::BlogArticle]
         def article(path)
           @_articles[path.to_s]
@@ -159,6 +164,7 @@ module Middleman
 
         # Returns a map from tag name to an array
         # of BlogArticles associated with that tag.
+        # @return [Hash<String, Array<Middleman::Extensions::Blog::BlogArticle>>]
         def tags
           @tags ||= begin
             tags = {}
@@ -174,6 +180,7 @@ module Middleman
         end
 
         # Notify the blog store that a particular file has updated
+        # @private
         def touch_file(file)
           output_path = @app.sitemap.file_to_path(file)
           if @app.sitemap.exists?(output_path)
@@ -188,6 +195,7 @@ module Middleman
         end
 
         # Notify the blog store that a file has been removed
+        # @private
         def remove_file(file)
           output_path = @app.sitemap.file_to_path(file)
 
@@ -199,6 +207,7 @@ module Middleman
 
       protected
         # Clear cached data
+        # @private
         def update_data
           @_sorted_articles = nil
           @tags = nil
@@ -206,10 +215,22 @@ module Middleman
       end
 
       # A class encapsulating the properties of a blog article.
-      # Access the underlying page object with "page"
+      # Access the underlying page object with {#page}.
       class BlogArticle
-        attr_reader :page, :date, :title
+        # The {http://rubydoc.info/github/middleman/middleman/master/Middleman/Sitemap/Page Page} associated with this article.
+        # @return [Middleman::Sitemap::Page]
+        attr_reader :page
 
+        # The date for this article, set from the filename 
+        # (and optionally refined by frontmatter)
+        # @return [DateTime]
+        attr_reader :date
+
+        # The title of the article, set from frontmatter
+        # @return [String]
+        attr_reader :title
+
+        # @private
         def initialize(app, page)
           @app  = app
           @page = page
@@ -217,6 +238,7 @@ module Middleman
           self.update!
         end
 
+        # @private
         def update!
           data, content = @app.frontmatter(@page.relative_path)
 
@@ -229,10 +251,17 @@ module Middleman
           @_summary = nil
         end
 
+        # The permalink url for this blog article.
+        # @return [String]
         def url
           @page.url
         end
 
+        # The body of this article, in HTML. This is for
+        # things like RSS feeds or lists of articles - individual
+        # articles will automatically be rendered from their
+        # template.
+        # @return [String]
         def body
           @_body ||= begin
             all_content = @page.render(:layout => false)
@@ -245,6 +274,11 @@ module Middleman
           end
         end
 
+        # The summary for this article, in HTML. The summary is either
+        # everything before the summary separator (set via :blog_summary_separator
+        # and defaulting to "READMORE") or the first :blog_summary_length
+        # characters of the post.
+        # @return [String]
         def summary
           @_summary ||= begin
             sum = if @_raw =~ @app.blog_summary_separator
@@ -258,6 +292,8 @@ module Middleman
           end
         end
 
+        # A list of tags for this article, set from frontmatter.
+        # @return [Array<String>] (never nil)
         def tags
           article_tags = @page.data["tags"]
 
@@ -303,31 +339,53 @@ module Middleman
       end
 
       module InstanceMethods
+        # Get the {BlogData} for this site.
+        # @return [BlogData]
         def blog
           @_blog ||= BlogData.new(self)
         end
 
+        # Determine whether the currently rendering template is a blog article.
+        # This can be useful in layouts.
+        # @return [Boolean]
         def is_blog_article?
           !current_article.nil?
         end
 
+        # Get a {BlogArticle} representing the current article.
+        # @return [BlogArticle]
         def current_article
           blog.article(current_page.path)
         end
 
+        # Get a path to the given tag, based on the :blog_taglink setting.
+        # @param [String] tag
+        # @return [String]
         def tag_path(tag)
           blog_taglink.sub(':tag', tag.parameterize)
         end
 
+        # Get a path to the given year-based calendar page, based on the :blog_year_link setting.
+        # @param [Number] year
+        # @return [String]
         def blog_year_path(year)
           blog_year_link.sub(':year', year.to_s)
         end
 
+        # Get a path to the given month-based calendar page, based on the :blog_month_link setting.
+        # @param [Number] year        
+        # @param [Number] month
+        # @return [String]
         def blog_month_path(year, month)
           blog_month_link.sub(':year', year.to_s).
             sub(':month', month.to_s.rjust(2,'0'))
         end
 
+        # Get a path to the given day-based calendar page, based on the :blog_day_link setting.
+        # @param [Number] year        
+        # @param [Number] month
+        # @param [Number] day
+        # @return [String]
         def blog_day_path(year, month, day)
           blog_day_link.sub(':year', year.to_s).
             sub(':month', month.to_s.rjust(2,'0')).
