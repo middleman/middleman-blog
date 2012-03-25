@@ -112,7 +112,14 @@ module Middleman
         if @app.blog_sources.include?(":year") &&
             @app.blog_sources.include?(":month") &&
             @app.blog_sources.include?(":day")
-          date_parts = BlogData.matcher.match(@page.path).captures
+
+          matcher = Regexp.escape(@app.blog_sources).
+            sub(":year",  "(\\d{4})").
+            sub(":month", "(\\d{2})").
+            sub(":day",   "(\\d{2})").
+            sub(":title", "(.*)")
+          matcher = /#{matcher}/
+          date_parts = matcher.match(@page.path).captures
 
           filename_date = Date.new(date_parts[0].to_i, date_parts[1].to_i, date_parts[2].to_i)
           if @date
