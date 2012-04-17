@@ -1,3 +1,5 @@
+require "middleman-core/templates"
+
 module Middleman
   module Blog
 
