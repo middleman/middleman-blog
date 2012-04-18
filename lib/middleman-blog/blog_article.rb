@@ -18,6 +18,8 @@ module Middleman
       # @return [String]
       attr_reader :title
 
+      attr_accessor :slug
+
       # @private
       def initialize(app, page)
         @app  = app

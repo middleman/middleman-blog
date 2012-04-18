@@ -58,15 +58,16 @@ module Middleman
               )
             end
 
-            #if defined? blog_year_template || 
-            #   defined? blog_month_template || 
-            #   defined? blog_day_template
-            #  sitemap.register_resource_list_manipulator(
-            #    :blog_calendar,
-            #    CalendarPages.new(self, path_matcher, file_matcher),
-            #    false
-            #  )
-            #end
+            if defined? blog_year_template || 
+               defined? blog_month_template || 
+               defined? blog_day_template
+
+              sitemap.register_resource_list_manipulator(
+                :blog_calendar,
+                CalendarPages.new(self),
+                false
+              )
+            end
 
             sitemap.rebuild_resource_list!(:registered_new)
           end
@@ -81,43 +82,6 @@ module Middleman
         end
 
         #app.ready do
-          # Set up date pages if the appropriate templates have been specified
-        #  blog.articles.group_by {|a| a.date.year }.each do |year, year_articles|
-        #    if defined? blog_year_template
-        #      page blog_year_template, :ignore => true
-
-        #      page blog_year_path(year), :proxy => blog_year_template do
-        #        @year = year
-        #        @articles = year_articles
-        #      end
-        #    end
-            
-        #    year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
-        #      if defined? blog_month_template
-        #        page blog_month_template, :ignore => true
-
-        #        page blog_month_path(year, month), :proxy => blog_month_template do
-        #          @year = year
-        #          @month = month
-        #          @articles = month_articles
-        #        end
-        #      end
-              
-        #      month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
-        #        if defined? blog_day_template
-        #          page blog_day_template, :ignore => true
-
-        #          page blog_day_path(year, month, day), :proxy => blog_day_template do
-        #            @year = year
-        #            @month = month
-        #            @day = day
-        #            @articles = day_articles
-        #          end
-        #        end
-        #      end
-        #    end
-        #  end
-        #end
       end
       alias :included :registered
     end
@@ -130,9 +94,7 @@ module Middleman
       # Update the main sitemap resource list
       # @return [void]
       def manipulate_resource_list(resources)
-        # TODO: how to do this only once?
-        # Answer: Declare it up top
-        # TODO: gotta get tags out of the list of resources passed in!
+        # TODO: gotta get tags out of the list of resources passed in?
 
         resources + @app.blog.tags.map do |tag, articles|
           path = @app.tag_path(tag)
@@ -159,7 +121,95 @@ module Middleman
       end
     end
 
-    class CalendaPages
+    class CalendarPages
+      def initialize(app)
+        @app = app
+      end
+      
+      # Update the main sitemap resource list
+      # @return [void]
+      def manipulate_resource_list(resources)
+        new_resources = []
+        # Set up date pages if the appropriate templates have been specified
+        @app.blog.articles.group_by {|a| a.date.year }.each do |year, year_articles|
+          if @app.respond_to? :blog_year_template
+            @app.ignore @app.blog_year_template
+
+            path = Middleman::Util.normalize_path(@app.blog_year_path(year))
+          
+            p = ::Middleman::Sitemap::Resource.new(
+              @app.sitemap,
+              path
+            )
+            p.proxy_to(@app.blog_year_template)
+
+            set_locals = Proc.new do
+              @year = year
+              @articles = year_articles
+            end
+
+            @app.sitemap.provides_metadata_for_path path do |path|
+              { :blocks => [ set_locals ] }
+            end
+
+            new_resources << p
+          end
+            
+          year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
+            if @app.respond_to? :blog_month_template
+              @app.ignore @app.blog_month_template
+
+              path = Middleman::Util.normalize_path(@app.blog_month_path(year, month))
+          
+              p = ::Middleman::Sitemap::Resource.new(
+                @app.sitemap,
+                path
+              )
+              p.proxy_to(@app.blog_month_template)
+
+              set_locals = Proc.new do
+                @year = year
+                @month = month
+                @articles = month_articles
+              end
+
+              @app.sitemap.provides_metadata_for_path path do |path|
+                { :blocks => [ set_locals ] }
+              end
+
+              new_resources << p
+            end
+            
+            month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
+              if @app.respond_to? :blog_day_template
+                @app.ignore @app.blog_day_template
+
+                path = Middleman::Util.normalize_path(@app.blog_day_path(year, month, day))
+                p = ::Middleman::Sitemap::Resource.new(
+                  @app.sitemap,
+                  path
+                )
+                p.proxy_to(@app.blog_month_template)
+
+                set_locals = Proc.new do
+                  @year = year
+                  @month = month
+                  @day = day
+                  @articles = day_articles
+                end
+
+                @app.sitemap.provides_metadata_for_path path do |path|
+                  { :blocks => [ set_locals ] }
+                end
+
+                new_resources << p
+              end
+            end
+          end
+        end
+
+        resources + new_resources
+      end      
     end
 
     # Helpers for use within templates and layouts.

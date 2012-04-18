@@ -63,25 +63,23 @@ module Middleman
 
         resources.each do |resource|
           if resource.path =~ @path_matcher
-            # This doesn't allow people to omit one part!
-            year = $1
-            month = $2
-            day = $3
-            title = $4
-
+            article = BlogArticle.new(@app, resource)
+            article.slug = $4
+            
             # compute output path:
             #   substitute date parts to path pattern
-            #   get date from frontmatter, path
             resource.destination_path = @app.blog_permalink.
-              sub(':year', year).
-              sub(':month', month).
-              sub(':day', day).
-              sub(':title', title)
+              sub(':year', article.date.year.to_s).
+              sub(':month', article.date.month.to_s.rjust(2,'0')).
+              sub(':day', article.date.day.to_s.rjust(2,'0')).
+              sub(':title', article.slug)
+
+            resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
 
             # TODO: mix in "blogarticle" module?
             # TODO: update blog data (for real?)
             # @app.blog.touch_file(resource.path)
-            @_articles[resource.path] = BlogArticle.new(@app, resource)
+            @_articles[resource.path] = article
           end
         end
 
