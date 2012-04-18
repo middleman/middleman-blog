@@ -11,6 +11,15 @@ module Middleman
 
         # A map from path to BlogArticle
         @_articles = {}
+        
+        matcher = Regexp.escape(@app.blog_sources).
+            sub(/^\//, "").
+            sub(":year",  "(\\d{4})").
+            sub(":month", "(\\d{2})").
+            sub(":day",   "(\\d{2})").
+            sub(":title", "(.*)")
+
+        @path_matcher = /^#{matcher}/
       end
 
       # A list of all blog articles, sorted by date
@@ -46,30 +55,39 @@ module Middleman
         end
       end
 
-      # Notify the blog store that a particular file has updated
-      # @private
-      def touch_file(file)
-        output_path = @app.sitemap.file_to_path(file)
-        if @app.sitemap.exists?(output_path)
-          if @_articles.has_key?(output_path)
-            @_articles[output_path].update!
-          else
-            @_articles[output_path] = BlogArticle.new(@app, @app.sitemap.page(output_path))
+      # Updates' blog articles destination paths to be the
+      # permalink.
+      # @return [void]
+      def manipulate_resource_list(resources)
+        @_articles = {}
+
+        resources.each do |resource|
+          if resource.path =~ @path_matcher
+            # This doesn't allow people to omit one part!
+            year = $1
+            month = $2
+            day = $3
+            title = $4
+
+            # compute output path:
+            #   substitute date parts to path pattern
+            #   get date from frontmatter, path
+            resource.destination_path = @app.blog_permalink.
+              sub(':year', year).
+              sub(':month', month).
+              sub(':day', day).
+              sub(':title', title)
+
+            # TODO: mix in "blogarticle" module?
+            # TODO: update blog data (for real?)
+            # @app.blog.touch_file(resource.path)
+            @_articles[resource.path] = BlogArticle.new(@app, resource)
           end
-
-          self.update_data
         end
-      end
 
-      # Notify the blog store that a file has been removed
-      # @private
-      def remove_file(file)
-        output_path = @app.sitemap.file_to_path(file)
+        self.update_data
 
-        if @_articles.has_key?(output_path)
-          @_articles.delete(output_path)
-          self.update_data
-        end
+        resources
       end
 
       protected
