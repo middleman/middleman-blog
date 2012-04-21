@@ -26,3 +26,25 @@ Feature: Tag pages
     And the file "tags/bar.html" should contain "Tag: bar"
     And the file "tags/bar.html" should contain "/2011-01-01-new-article.html"
     And the file "tags/bar.html" should not contain "/2011-01-02-another-article.html"
+
+  Scenario: Adding a tag to a post in preview adds a tag page
+    Given the Server is running at "tags-app"
+    When I go to "/tags/bar.html"
+    Then I should see "/2011-01-01-new-article.html"
+    When I go to "/tags/newtag.html"
+    Then I should see "Not Found"
+    And the file "source/blog/2011-01-01-new-article.html.markdown" has the contents
+      """
+      --- 
+      title: "Newest Article"
+      date: 2011-01-01
+      tags: newtag
+      ---
+
+      Newer Article Content
+      """
+    When I go to "/tags/bar.html"
+    Then I should see "Not Found"
+    When I go to "/tags/newtag.html"
+    Then I should see "/2011-01-01-new-article.html"
+    
