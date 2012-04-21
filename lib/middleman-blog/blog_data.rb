@@ -33,7 +33,12 @@ module Middleman
       # The BlogArticle for the given path, or nil if one doesn't exist.
       # @return [Middleman::Sitemap::Resource]
       def article(path)
-        @app.sitemap.find_resource_by_path(path.to_s)
+        article = @app.sitemap.find_resource_by_path(path.to_s)
+        if article && article.is_a?(BlogArticle)
+          article
+        else
+          nil
+        end
       end
 
       # Returns a map from tag name to an array

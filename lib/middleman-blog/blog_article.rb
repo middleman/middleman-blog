@@ -110,6 +110,20 @@ module Middleman
 
         @_date
       end
+
+      # The previous (chronologically earlier) article after this one
+      # or nil if this is the first article.
+      # @return [Middleman::Sitemap::Resource]
+      def previous_article
+        app.blog.articles.find {|a| a.date < self.date }
+      end
+      
+      # The next (chronologically later) article after this one
+      # or nil if this is the most recent article.
+      # @return [Middleman::Sitemap::Resource]
+      def next_article
+        app.blog.articles.reverse.find {|a| a.date > self.date }
+      end
     end
   end
 end
