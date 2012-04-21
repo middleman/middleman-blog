@@ -4,80 +4,85 @@ module Middleman
     # for the articles by various dimensions. Accessed via "blog" in
     # templates.
     class BlogData
+      # A regex for matching blog article source paths
+      # @return [Regex]
+      attr_reader :path_matcher
 
       # @private
       def initialize(app)
         @app = app
 
-        # A map from path to BlogArticle
-        @_articles = {}
+        # A list of resources corresponding to blog articles
+        @_articles = []
+        
+        matcher = Regexp.escape(@app.blog_sources).
+            sub(/^\//, "").
+            sub(":year",  "(\\d{4})").
+            sub(":month", "(\\d{2})").
+            sub(":day",   "(\\d{2})").
+            sub(":title", "(.*)")
+
+        @path_matcher = /^#{matcher}/
       end
 
       # A list of all blog articles, sorted by date
-      # @return [Array<Middleman::Extensions::Blog::BlogArticle>]
+      # @return [Array<Middleman::Sitemap::Resource>]
       def articles
-        @_sorted_articles ||= begin
-          @_articles.values.sort do |a, b|
-            b.date <=> a.date
-          end
+        @_articles.sort do |a,b|
+          b.date <=> a.date
         end
       end
 
       # The BlogArticle for the given path, or nil if one doesn't exist.
-      # @return [Middleman::Extensions::Blog::BlogArticle]
+      # @return [Middleman::Sitemap::Resource]
       def article(path)
-        @_articles[path.to_s]
+        article = @app.sitemap.find_resource_by_path(path.to_s)
+        if article && article.is_a?(BlogArticle)
+          article
+        else
+          nil
+        end
       end
 
       # Returns a map from tag name to an array
       # of BlogArticles associated with that tag.
-      # @return [Hash<String, Array<Middleman::Extensions::Blog::BlogArticle>>]
+      # @return [Hash<String, Array<Middleman::Sitemap::Resource>>]
       def tags
-        @tags ||= begin
-          tags = {}
-          @_articles.values.each do |article|
+        tags = {}
+        @_articles.each do |article|
           article.tags.each do |tag|
-              tags[tag] ||= []
-              tags[tag] << article
-            end
+            tags[tag] ||= []
+            tags[tag] << article
           end
-
-          tags
         end
+
+        tags
       end
 
-      # Notify the blog store that a particular file has updated
-      # @private
-      def touch_file(file)
-        output_path = @app.sitemap.file_to_path(file)
-        if @app.sitemap.exists?(output_path)
-          if @_articles.has_key?(output_path)
-            @_articles[output_path].update!
-          else
-            @_articles[output_path] = BlogArticle.new(@app, @app.sitemap.page(output_path))
+      # Updates' blog articles destination paths to be the
+      # permalink.
+      # @return [void]
+      def manipulate_resource_list(resources)
+        @_articles = []
+
+        resources.each do |resource|
+          if resource.path =~ path_matcher
+            resource.extend BlogArticle
+            resource.slug = $4
+            
+            # compute output path:
+            #   substitute date parts to path pattern
+            resource.destination_path = @app.blog_permalink.
+              sub(':year', resource.date.year.to_s).
+              sub(':month', resource.date.month.to_s.rjust(2,'0')).
+              sub(':day', resource.date.day.to_s.rjust(2,'0')).
+              sub(':title', resource.slug)
+
+            resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
+
+            @_articles << resource
           end
-
-          self.update_data
         end
-      end
-
-      # Notify the blog store that a file has been removed
-      # @private
-      def remove_file(file)
-        output_path = @app.sitemap.file_to_path(file)
-
-        if @_articles.has_key?(output_path)
-          @_articles.delete(output_path)
-          self.update_data
-        end
-      end
-
-      protected
-      # Clear cached data
-      # @private
-      def update_data
-        @_sorted_articles = nil
-        @tags = nil
       end
     end
   end
