@@ -12,7 +12,7 @@ module Middleman
       def initialize(app)
         @app = app
 
-        # A map from path to blog article
+        # A list of resources corresponding to blog articles
         @_articles = []
         
         matcher = Regexp.escape(@app.blog_sources).

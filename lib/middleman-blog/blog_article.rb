@@ -105,7 +105,7 @@ module Middleman
         @_date
       end
 
-      # The previous (chronologically earlier) article after this one
+      # The previous (chronologically earlier) article before this one
       # or nil if this is the first article.
       # @return [Middleman::Sitemap::Resource]
       def previous_article
