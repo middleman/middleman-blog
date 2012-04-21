@@ -4,38 +4,21 @@ module Middleman
   module Blog
     # A class encapsulating the properties of a blog article.
     # Access the underlying page object with {#page}.
-    class BlogArticle
-      # The {http://rubydoc.info/github/middleman/middleman/master/Middleman/Sitemap/Page Page} associated with this article.
-      # @return [Middleman::Sitemap::Page]
-      attr_reader :page
-
+    module BlogArticle
       attr_accessor :slug
 
-      # @private
-      def initialize(app, page)
-        @app  = app
-        @page = page
-
-        self.update!
-      end
-
-      # @private
-      def update!
-        @date = nil
-        @_body = nil
-        @_summary = nil
-      end
-
-      # The permalink url for this blog article.
+      # Render this resource
       # @return [String]
-      def url
-        @page.url
+      def render(opts={}, locs={}, &block)
+        opts[:layout] = app.blog_layout
+
+        super(opts, locs, &block)
       end
 
       # The title of the article, set from frontmatter
       # @return [String]
       def title
-        @page.data["title"]
+        data["title"]
       end
 
       # The body of this article, in HTML. This is for
@@ -45,9 +28,9 @@ module Middleman
       # @return [String]
       def body
         @_body ||= begin
-          all_content = @page.render(:layout => false)
+          all_content = render(:layout => false)
 
-          if all_content =~ @app.blog_summary_separator
+          if all_content =~ app.blog_summary_separator
             all_content.sub!($1, "")
           end
 
@@ -62,11 +45,11 @@ module Middleman
       # @return [String]
       def summary
         @_summary ||= begin
-          all_content = @page.render(:layout => false)
-          if all_content =~ @app.blog_summary_separator
-            all_content.split(@app.blog_summary_separator).first
+          all_content = render(:layout => false)
+          if all_content =~ app.blog_summary_separator
+            all_content.split(app.blog_summary_separator).first
           else
-            all_content.match(/(.{1,#{@app.blog_summary_length}}.*?)(\n|\Z)/m).to_s
+            all_content.match(/(.{1,#{app.blog_summary_length}}.*?)(\n|\Z)/m).to_s
           end
         end
       end
@@ -74,7 +57,7 @@ module Middleman
       # A list of tags for this article, set from frontmatter.
       # @return [Array<String>] (never nil)
       def tags
-        article_tags = @page.data["tags"]
+        article_tags = data["tags"]
 
         if article_tags.is_a? String
           article_tags.split(',').map(&:strip)
@@ -90,41 +73,41 @@ module Middleman
       #
       # @return [DateTime]
       def date
-        return @date if @date
+        return @_date if @_date
 
-        frontmatter_date = @page.data["date"]
+        frontmatter_date = data["date"]
 
         # First get the date from frontmatter
         if frontmatter_date.is_a?(String)
-          @date = DateTime.parse(frontmatter_date)
+          @_date = DateTime.parse(frontmatter_date)
         else
-          @date = frontmatter_date
+          @_date = frontmatter_date
         end
 
         # Next figure out the date from the filename
-        if @app.blog_sources.include?(":year") &&
-            @app.blog_sources.include?(":month") &&
-            @app.blog_sources.include?(":day")
+        if app.blog_sources.include?(":year") &&
+            app.blog_sources.include?(":month") &&
+            app.blog_sources.include?(":day")
 
-          matcher = Regexp.escape(@app.blog_sources).
+          matcher = Regexp.escape(app.blog_sources).
             sub(":year",  "(\\d{4})").
             sub(":month", "(\\d{2})").
             sub(":day",   "(\\d{2})").
             sub(":title", "(.*)")
           matcher = /#{matcher}/
-          date_parts = matcher.match(@page.path).captures
+          date_parts = matcher.match(path).captures
 
           filename_date = Date.new(date_parts[0].to_i, date_parts[1].to_i, date_parts[2].to_i)
-          if @date
-            raise "The date in #{@page.path}'s filename doesn't match the date in its frontmatter" unless @date.to_date == filename_date
+          if @_date
+            raise "The date in #{path}'s filename doesn't match the date in its frontmatter" unless @_date.to_date == filename_date
           else
-            @date = filename_date.to_datetime
+            @_date = filename_date.to_datetime
           end
         end
 
-        raise "Blog post #{@page.path} needs a date in its filename or frontmatter" unless @date
+        raise "Blog post #{path} needs a date in its filename or frontmatter" unless @_date
 
-        @date
+        @_date
       end
     end
   end
