@@ -9,7 +9,7 @@ module Middleman
       def initialize(app)
         @app = app
 
-        # A map from path to BlogArticle
+        # A map from path to blog article
         @_articles = []
         
         matcher = Regexp.escape(@app.blog_sources).
@@ -23,7 +23,7 @@ module Middleman
       end
 
       # A list of all blog articles, sorted by date
-      # @return [Array<Middleman::Extensions::Blog::BlogArticle>]
+      # @return [Array<Middleman::Sitemap::Resource>]
       def articles
         @_articles.sort do |a,b|
           b.date <=> a.date
@@ -38,7 +38,7 @@ module Middleman
 
       # Returns a map from tag name to an array
       # of BlogArticles associated with that tag.
-      # @return [Hash<String, Array<Middleman::Extensions::Blog::BlogArticle>>]
+      # @return [Hash<String, Array<Middleman::Sitemap::Resource>>]
       def tags
         tags = {}
         @_articles.each do |article|

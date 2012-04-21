@@ -2,9 +2,10 @@ require 'date'
 
 module Middleman
   module Blog
-    # A class encapsulating the properties of a blog article.
-    # Access the underlying page object with {#page}.
+    # A module that adds blog-article methods to Resources.
     module BlogArticle
+      # The "slug" of the article that shows up in its URL.
+      # @return [String]
       attr_accessor :slug
 
       # Render this resource

@@ -1,5 +1,7 @@
 require 'middleman-blog/blog_data'
 require 'middleman-blog/blog_article'
+require 'middleman-blog/calendar_pages'
+require 'middleman-blog/tag_pages'
 
 module Middleman
   module Blog
@@ -71,145 +73,9 @@ module Middleman
 
             sitemap.rebuild_resource_list!(:registered_new)
           end
-
-          sitemap.provides_metadata file_matcher do
-            {
-              :options => {
-                :layout => blog_layout
-              }
-            }
-          end
         end
-
-        #app.ready do
       end
       alias :included :registered
-    end
-
-    class TagPages
-      def initialize(app)
-        @app = app
-      end
-      
-      # Update the main sitemap resource list
-      # @return [void]
-      def manipulate_resource_list(resources)
-        # TODO: gotta get tags out of the list of resources passed in?
-
-        resources + @app.blog.tags.map do |tag, articles|
-          path = @app.tag_path(tag)
-          
-          p = ::Middleman::Sitemap::Resource.new(
-            @app.sitemap,
-            path
-          )
-          p.proxy_to(@app.blog_tag_template)
-
-          set_locals = Proc.new do
-            @tag = tag
-            @articles = articles
-          end
-
-          # TODO: how to keep from adding duplicates?
-          # How could we better set locals?
-          @app.sitemap.provides_metadata_for_path path do |path|
-            { :blocks => [ set_locals ] }
-          end
-
-          p
-        end
-      end
-    end
-
-    class CalendarPages
-      def initialize(app)
-        @app = app
-      end
-      
-      # Update the main sitemap resource list
-      # @return [void]
-      def manipulate_resource_list(resources)
-        new_resources = []
-        # Set up date pages if the appropriate templates have been specified
-        @app.blog.articles.group_by {|a| a.date.year }.each do |year, year_articles|
-          if @app.respond_to? :blog_year_template
-            @app.ignore @app.blog_year_template
-
-            path = Middleman::Util.normalize_path(@app.blog_year_path(year))
-          
-            p = ::Middleman::Sitemap::Resource.new(
-              @app.sitemap,
-              path
-            )
-            p.proxy_to(@app.blog_year_template)
-
-            set_locals_year = Proc.new do
-              @year = year
-              @articles = year_articles
-            end
-
-            @app.sitemap.provides_metadata_for_path path do |path|
-              { :blocks => set_locals_year }
-            end
-
-            new_resources << p
-          end
-            
-          year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
-            if @app.respond_to? :blog_month_template
-              @app.ignore @app.blog_month_template
-
-              path = Middleman::Util.normalize_path(@app.blog_month_path(year, month))
-          
-              p = ::Middleman::Sitemap::Resource.new(
-                @app.sitemap,
-                path
-              )
-              p.proxy_to(@app.blog_month_template)
-
-              set_locals_month = Proc.new do
-                @year = year
-                @month = month
-                @articles = month_articles
-              end
-
-              @app.sitemap.provides_metadata_for_path path do |path|
-                { :blocks => [ set_locals_month ] }
-              end
-
-              new_resources << p
-            end
-            
-            month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
-              if @app.respond_to? :blog_day_template
-                @app.ignore @app.blog_day_template
-
-                path = Middleman::Util.normalize_path(@app.blog_day_path(year, month, day))
-                p = ::Middleman::Sitemap::Resource.new(
-                  @app.sitemap,
-                  path
-                )
-                p.proxy_to(@app.blog_month_template)
-
-                set_locals_day = Proc.new do
-                  @year = year
-                  @month = month
-                  @day = day
-                  @articles = day_articles
-                end
-
-                @app.sitemap.provides_metadata_for_path path do |path|
-                  { :blocks => [ set_locals_day ] }
-                end
-
-                new_resources << p
-              end
-            end
-          end
-        end
-
-        resources + new_resources
-      end      
     end
 
     # Helpers for use within templates and layouts.
@@ -227,8 +93,8 @@ module Middleman
         !current_article.nil?
       end
 
-      # Get a {BlogArticle} representing the current article.
-      # @return [BlogArticle]
+      # Get a {Resource} with mixed in {BlogArticle} methods representing the current article.
+      # @return [Middleman::Sitemap::Resource]
       def current_article
         blog.article(current_page.path)
       end
