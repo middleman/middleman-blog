@@ -143,13 +143,13 @@ module Middleman
             )
             p.proxy_to(@app.blog_year_template)
 
-            set_locals = Proc.new do
+            set_locals_year = Proc.new do
               @year = year
               @articles = year_articles
             end
 
             @app.sitemap.provides_metadata_for_path path do |path|
-              { :blocks => [ set_locals ] }
+              { :blocks => set_locals_year }
             end
 
             new_resources << p
@@ -167,14 +167,14 @@ module Middleman
               )
               p.proxy_to(@app.blog_month_template)
 
-              set_locals = Proc.new do
+              set_locals_month = Proc.new do
                 @year = year
                 @month = month
                 @articles = month_articles
               end
 
               @app.sitemap.provides_metadata_for_path path do |path|
-                { :blocks => [ set_locals ] }
+                { :blocks => [ set_locals_month ] }
               end
 
               new_resources << p
@@ -191,7 +191,7 @@ module Middleman
                 )
                 p.proxy_to(@app.blog_month_template)
 
-                set_locals = Proc.new do
+                set_locals_day = Proc.new do
                   @year = year
                   @month = month
                   @day = day
@@ -199,7 +199,7 @@ module Middleman
                 end
 
                 @app.sitemap.provides_metadata_for_path path do |path|
-                  { :blocks => [ set_locals ] }
+                  { :blocks => [ set_locals_day ] }
                 end
 
                 new_resources << p
