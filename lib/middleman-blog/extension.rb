@@ -33,16 +33,6 @@ module Middleman
             set :blog_day_template, blog_calendar_template
           end
 
-          matcher = Regexp.escape(blog_sources).
-            sub(/^\//, "").
-            sub(":year",  "(\\d{4})").
-            sub(":month", "(\\d{2})").
-            sub(":day",   "(\\d{2})").
-            sub(":title", "(.*)")
-
-          path_matcher = /^#{matcher}/
-          file_matcher = /^#{source_dir}\/#{matcher}/
-
           app.ready do
             sitemap.register_resource_list_manipulator(
               :blog_articles,

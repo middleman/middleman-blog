@@ -4,6 +4,9 @@ module Middleman
     # for the articles by various dimensions. Accessed via "blog" in
     # templates.
     class BlogData
+      # A regex for matching blog article source paths
+      # @return [Regex]
+      attr_reader :path_matcher
 
       # @private
       def initialize(app)
@@ -63,7 +66,7 @@ module Middleman
         @_articles = []
 
         resources.each do |resource|
-          if resource.path =~ @path_matcher
+          if resource.path =~ path_matcher
             resource.extend BlogArticle
             resource.slug = $4
             
