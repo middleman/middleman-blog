@@ -11,7 +11,7 @@ module Middleman
       # Render this resource
       # @return [String]
       def render(opts={}, locs={}, &block)
-        opts[:layout] = app.blog_layout
+        opts[:layout] = app.blog_layout if opts[:layout].nil?
 
         super(opts, locs, &block)
       end
