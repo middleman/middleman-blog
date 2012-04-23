@@ -12,7 +12,7 @@ module Middleman
       # @return [void]
       def manipulate_resource_list(resources)
         resources + @app.blog.tags.map do |tag, articles|
-          path = @app.tag_path(tag)
+          path = Middleman::Util.normalize_path(@app.tag_path(tag))
           
           p = ::Middleman::Sitemap::Resource.new(
             @app.sitemap,
