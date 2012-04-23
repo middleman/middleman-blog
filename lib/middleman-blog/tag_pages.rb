@@ -27,7 +27,7 @@ module Middleman
 
           # TODO: how to keep from adding duplicates here?
           # How could we better set locals?
-          @app.sitemap.provides_metadata_for_path path do |path|
+          @app.sitemap.provides_metadata_for_path path, :blog_tags do |path|
             { :blocks => [ set_locals ] }
           end
 

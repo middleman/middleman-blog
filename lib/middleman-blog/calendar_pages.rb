@@ -30,7 +30,7 @@ module Middleman
               @articles = year_articles
             end
 
-            @app.sitemap.provides_metadata_for_path path do |path|
+            @app.sitemap.provides_metadata_for_path path, :blog_calendar do |path|
               { :blocks => set_locals_year }
             end
 
@@ -55,7 +55,7 @@ module Middleman
                 @articles = month_articles
               end
 
-              @app.sitemap.provides_metadata_for_path path do |path|
+              @app.sitemap.provides_metadata_for_path path, :blog_calendar do |path|
                 { :blocks => [ set_locals_month ] }
               end
 
@@ -80,7 +80,7 @@ module Middleman
                   @articles = day_articles
                 end
 
-                @app.sitemap.provides_metadata_for_path path do |path|
+                @app.sitemap.provides_metadata_for_path path, :blog_calendar do |path|
                   { :blocks => [ set_locals_day ] }
                 end
 
