@@ -13,7 +13,15 @@ module Middleman
       def render(opts={}, locs={}, &block)
         opts[:layout] = app.blog_layout if opts[:layout].nil?
 
-        super(opts, locs, &block)
+        content = super(opts, locs, &block)
+
+        unless opts[:keep_separator]
+          if content =~ app.blog_summary_separator
+            content.sub!($1, "")
+          end
+        end
+
+        content
       end
 
       # The title of the article, set from frontmatter
@@ -28,15 +36,7 @@ module Middleman
       # template.
       # @return [String]
       def body
-        @_body ||= begin
-          all_content = render(:layout => false)
-
-          if all_content =~ app.blog_summary_separator
-            all_content.sub!($1, "")
-          end
-
-          all_content
-        end
+        render(:layout => false)
       end
 
       # The summary for this article, in HTML. The summary is either
@@ -46,7 +46,7 @@ module Middleman
       # @return [String]
       def summary
         @_summary ||= begin
-          all_content = render(:layout => false)
+          all_content = render(:layout => false, :keep_separator => true)
           if all_content =~ app.blog_summary_separator
             all_content.split(app.blog_summary_separator).first
           else
