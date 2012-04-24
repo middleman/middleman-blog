@@ -33,35 +33,31 @@ module Middleman
             set :blog_day_template, blog_calendar_template
           end
 
-          app.ready do
+          sitemap.register_resource_list_manipulator(
+            :blog_articles,
+            blog,
+            false
+          )
+
+          if defined? blog_tag_template
+            ignore blog_tag_template
+
             sitemap.register_resource_list_manipulator(
-              :blog_articles,
-              blog,
+              :blog_tags,
+              TagPages.new(self),
               false
             )
+          end
 
-            if defined? blog_tag_template
-              ignore blog_tag_template
+          if defined? blog_year_template || 
+             defined? blog_month_template || 
+             defined? blog_day_template
 
-              sitemap.register_resource_list_manipulator(
-                :blog_tags,
-                TagPages.new(self),
-                false
-              )
-            end
-
-            if defined? blog_year_template || 
-               defined? blog_month_template || 
-               defined? blog_day_template
-
-              sitemap.register_resource_list_manipulator(
-                :blog_calendar,
-                CalendarPages.new(self),
-                false
-              )
-            end
-
-            sitemap.rebuild_resource_list!(:registered_new)
+            sitemap.register_resource_list_manipulator(
+              :blog_calendar,
+              CalendarPages.new(self),
+              false
+            )
           end
         end
       end
