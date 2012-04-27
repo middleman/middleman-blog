@@ -18,7 +18,7 @@ module Middleman
             @app.sitemap,
             path
           )
-          p.proxy_to(@app.blog_tag_template)
+          p.proxy_to(@app.blog.tag_template)
 
           set_locals = Proc.new do
             @tag = tag

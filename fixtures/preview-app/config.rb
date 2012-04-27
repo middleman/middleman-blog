@@ -1,3 +1,3 @@
-activate :blog
-set :blog_sources, ":year/:month/:day/:title.html"
-
+activate :blog do |blog|
+  blog.sources = ":year/:month/:day/:title.html"
+end

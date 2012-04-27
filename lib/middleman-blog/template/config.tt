@@ -2,21 +2,21 @@
 # Blog settings
 ###
 
-activate :blog
+activate :blog do |blog|
+  # blog.permalink = ":year/:month/:day/:title.html"
+  # blog.sources = ":year-:month-:day-:title.html"
+  # blog.taglink = "tags/:tag.html"
+  # blog.layout = "layout"
+  # blog.summary_separator = /(READMORE)/
+  # blog.summary_length = 250
+  # blog.year_link = ":year.html"
+  # blog.month_link = ":year/:month.html"
+  # blog.day_link = ":year/:month/:day.html"
+  # blog.default_extension = ".markdown"
 
-# set :blog_permalink, ":year/:month/:day/:title.html"
-# set :blog_sources, ":year-:month-:day-:title.html"
-# set :blog_taglink, "tags/:tag.html"
-# set :blog_layout, "layout"
-# set :blog_summary_separator, /(READMORE)/
-# set :blog_summary_length, 250
-# set :blog_year_link, ":year.html"
-# set :blog_month_link, ":year/:month.html"
-# set :blog_day_link, ":year/:month/:day.html"
-# set :blog_default_extension, ".markdown"
-
-set :blog_tag_template, "tag.html"
-set :blog_calendar_template, "calendar.html"
+  blog.tag_template = "tag.html"
+  blog.calendar_template = "calendar.html"
+end
 
 page "/feed.xml", :layout => false
 

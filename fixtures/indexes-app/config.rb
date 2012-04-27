@@ -1,3 +1,5 @@
-activate :blog
+activate :blog do |blog|
+  blog.sources = ":year/:month/:day/:title.html"
+end
+
 activate :directory_indexes
-set :blog_sources, ":year/:month/:day/:title.html"

@@ -14,8 +14,8 @@ module Middleman
         new_resources = []
         # Set up date pages if the appropriate templates have been specified
         @app.blog.articles.group_by {|a| a.date.year }.each do |year, year_articles|
-          if @app.respond_to? :blog_year_template
-            @app.ignore @app.blog_year_template
+          if @app.blog.year_template
+            @app.ignore @app.blog.year_template
 
             path = Middleman::Util.normalize_path(@app.blog_year_path(year))
           
@@ -23,7 +23,7 @@ module Middleman
               @app.sitemap,
               path
             )
-            p.proxy_to(@app.blog_year_template)
+            p.proxy_to(@app.blog.year_template)
 
             set_locals_year = Proc.new do
               @year = year
@@ -38,8 +38,8 @@ module Middleman
           end
             
           year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
-            if @app.respond_to? :blog_month_template
-              @app.ignore @app.blog_month_template
+            if @app.blog.month_template
+              @app.ignore @app.blog.month_template
 
               path = Middleman::Util.normalize_path(@app.blog_month_path(year, month))
           
@@ -47,7 +47,7 @@ module Middleman
                 @app.sitemap,
                 path
               )
-              p.proxy_to(@app.blog_month_template)
+              p.proxy_to(@app.blog.month_template)
 
               set_locals_month = Proc.new do
                 @year = year
@@ -63,15 +63,15 @@ module Middleman
             end
             
             month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
-              if @app.respond_to? :blog_day_template
-                @app.ignore @app.blog_day_template
+              if @app.blog.day_template
+                @app.ignore @app.blog.day_template
 
                 path = Middleman::Util.normalize_path(@app.blog_day_path(year, month, day))
                 p = ::Middleman::Sitemap::Resource.new(
                   @app.sitemap,
                   path
                 )
-                p.proxy_to(@app.blog_month_template)
+                p.proxy_to(@app.blog.month_template)
 
                 set_locals_day = Proc.new do
                   @year = year

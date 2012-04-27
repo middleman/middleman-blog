@@ -7,15 +7,22 @@ module Middleman
       # A regex for matching blog article source paths
       # @return [Regex]
       attr_reader :path_matcher
+      
+      # The configured options for this blog
+      # @return [Thor::CoreExt::HashWithIndifferentAccess]
+      attr_reader :options
 
+      delegate *::Middleman::Blog::Options::KEYS, :to => :options
+      
       # @private
-      def initialize(app)
+      def initialize(app, options={})
         @app = app
+        @options = options
 
         # A list of resources corresponding to blog articles
         @_articles = []
         
-        matcher = Regexp.escape(@app.blog_sources).
+        matcher = Regexp.escape(sources).
             sub(/^\//, "").
             sub(":year",  "(\\d{4})").
             sub(":month", "(\\d{2})").
@@ -72,7 +79,7 @@ module Middleman
             
             # compute output path:
             #   substitute date parts to path pattern
-            resource.destination_path = @app.blog_permalink.
+            resource.destination_path = permalink.
               sub(':year', resource.date.year.to_s).
               sub(':month', resource.date.month.to_s.rjust(2,'0')).
               sub(':day', resource.date.day.to_s.rjust(2,'0')).
