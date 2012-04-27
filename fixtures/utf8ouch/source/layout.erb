@@ -9,7 +9,7 @@
     <div id="main" role="main">
       <% if is_blog_article? %>
         <% content_for :blog_article, yield %>
-        <%= partial settings.blog_article_template %>
+        <%= partial blog.article_template %>
       <% else %>
         <%= yield %>
       <% end %>

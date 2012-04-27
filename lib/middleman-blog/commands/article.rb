@@ -30,18 +30,18 @@ module Middleman
         shared_instance = ::Middleman.server.inst
 
         # This only exists when the config.rb sets it!
-        if shared_instance.respond_to? :blog_sources
+        if shared_instance.respond_to? :blog
           @title = title
           @slug = title.parameterize
           @date = options[:date] ? DateTime.parse(options[:date]) : DateTime.now
 
-          article_path = shared_instance.blog_sources.
+          article_path = shared_instance.blog.sources.
             sub(':year', @date.year.to_s).
             sub(':month', @date.month.to_s.rjust(2,'0')).
             sub(':day', @date.day.to_s.rjust(2,'0')).
             sub(':title', @slug)
 
-          template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog_default_extension)
+          template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.default_extension)
         else
           raise Thor::Error.new "You need to activate the blog extension in config.rb before you can create an article"
         end
