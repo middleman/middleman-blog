@@ -20,15 +20,9 @@ module Middleman
           )
           p.proxy_to(@app.blog.tag_template)
 
-          set_locals = Proc.new do
+          p.add_metadata do
             @tag = tag
             @articles = articles
-          end
-
-          # TODO: how to keep from adding duplicates here?
-          # How could we better set locals?
-          @app.sitemap.provides_metadata_for_path path, :blog_tags do |path|
-            { :blocks => [ set_locals ] }
           end
 
           p
