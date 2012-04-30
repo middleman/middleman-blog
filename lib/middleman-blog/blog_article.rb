@@ -11,12 +11,12 @@ module Middleman
       # Render this resource
       # @return [String]
       def render(opts={}, locs={}, &block)
-        opts[:layout] = app.blog_layout if opts[:layout].nil?
+        opts[:layout] = app.blog.layout if opts[:layout].nil?
 
         content = super(opts, locs, &block)
 
         unless opts[:keep_separator]
-          if content =~ app.blog_summary_separator
+          if content =~ app.blog.summary_separator
             content.sub!($1, "")
           end
         end
@@ -40,17 +40,17 @@ module Middleman
       end
 
       # The summary for this article, in HTML. The summary is either
-      # everything before the summary separator (set via :blog_summary_separator
-      # and defaulting to "READMORE") or the first :blog_summary_length
+      # everything before the summary separator (set via :summary_separator
+      # and defaulting to "READMORE") or the first :summary_length
       # characters of the post.
       # @return [String]
       def summary
         @_summary ||= begin
           all_content = render(:layout => false, :keep_separator => true)
-          if all_content =~ app.blog_summary_separator
-            all_content.split(app.blog_summary_separator).first
+          if all_content =~ app.blog.summary_separator
+            all_content.split(app.blog.summary_separator).first
           else
-            all_content.match(/(.{1,#{app.blog_summary_length}}.*?)(\n|\Z)/m).to_s
+            all_content.match(/(.{1,#{app.blog.summary_length}}.*?)(\n|\Z)/m).to_s
           end
         end
       end
@@ -86,9 +86,9 @@ module Middleman
         end
 
         # Next figure out the date from the filename
-        if app.blog_sources.include?(":year") &&
-            app.blog_sources.include?(":month") &&
-            app.blog_sources.include?(":day")
+        if app.blog.sources.include?(":year") &&
+            app.blog.sources.include?(":month") &&
+            app.blog.sources.include?(":day")
 
           date_parts = @app.blog.path_matcher.match(path).captures
 
