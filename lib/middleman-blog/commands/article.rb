@@ -27,7 +27,7 @@ module Middleman
         :aliases => "-d",
         :desc => "The date to create the post with (defaults to now)"      
       def article(title)
-        shared_instance = ::Middleman.server.inst
+        shared_instance = ::Middleman::Application.server.inst
 
         # This only exists when the config.rb sets it!
         if shared_instance.respond_to? :blog

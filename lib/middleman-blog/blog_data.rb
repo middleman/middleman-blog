@@ -22,7 +22,7 @@ module Middleman
         # A list of resources corresponding to blog articles
         @_articles = []
         
-        matcher = Regexp.escape(sources).
+        matcher = Regexp.escape(options.sources).
             sub(/^\//, "").
             sub(":year",  "(\\d{4})").
             sub(":month", "(\\d{2})").
@@ -79,7 +79,7 @@ module Middleman
             
             # compute output path:
             #   substitute date parts to path pattern
-            resource.destination_path = permalink.
+            resource.destination_path = options.permalink.
               sub(':year', resource.date.year.to_s).
               sub(':month', resource.date.month.to_s.rjust(2,'0')).
               sub(':day', resource.date.day.to_s.rjust(2,'0')).
