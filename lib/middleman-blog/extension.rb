@@ -136,14 +136,14 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def tag_path(tag)
-        blog.taglink.sub(':tag', tag.parameterize)
+        blog.options.taglink.sub(':tag', tag.parameterize)
       end
 
       # Get a path to the given year-based calendar page, based on the :year_link setting.
       # @param [Number] year
       # @return [String]
       def blog_year_path(year)
-        blog.year_link.sub(':year', year.to_s)
+        blog.options.year_link.sub(':year', year.to_s)
       end
 
       # Get a path to the given month-based calendar page, based on the :month_link setting.
@@ -151,7 +151,7 @@ module Middleman
       # @param [Number] month
       # @return [String]
       def blog_month_path(year, month)
-        blog.month_link.sub(':year', year.to_s).
+        blog.options.month_link.sub(':year', year.to_s).
           sub(':month', month.to_s.rjust(2,'0'))
       end
 
@@ -161,7 +161,7 @@ module Middleman
       # @param [Number] day
       # @return [String]
       def blog_day_path(year, month, day)
-        blog.day_link.sub(':year', year.to_s).
+        blog.options.day_link.sub(':year', year.to_s).
           sub(':month', month.to_s.rjust(2,'0')).
           sub(':day', day.to_s.rjust(2,'0'))
       end

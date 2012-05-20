@@ -14,8 +14,8 @@ module Middleman
         new_resources = []
         # Set up date pages if the appropriate templates have been specified
         @app.blog.articles.group_by {|a| a.date.year }.each do |year, year_articles|
-          if @app.blog.year_template
-            @app.ignore @app.blog.year_template
+          if @app.blog.options.year_template
+            @app.ignore @app.blog.options.year_template
 
             path = Middleman::Util.normalize_path(@app.blog_year_path(year))
           
@@ -23,7 +23,7 @@ module Middleman
               @app.sitemap,
               path
             )
-            p.proxy_to(@app.blog.year_template)
+            p.proxy_to(@app.blog.options.year_template)
 
             p.add_metadata do
               @year = year
@@ -34,8 +34,8 @@ module Middleman
           end
             
           year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
-            if @app.blog.month_template
-              @app.ignore @app.blog.month_template
+            if @app.blog.options.month_template
+              @app.ignore @app.blog.options.month_template
 
               path = Middleman::Util.normalize_path(@app.blog_month_path(year, month))
           
@@ -43,7 +43,7 @@ module Middleman
                 @app.sitemap,
                 path
               )
-              p.proxy_to(@app.blog.month_template)
+              p.proxy_to(@app.blog.options.month_template)
 
               p.add_metadata do
                 @year = year
@@ -56,14 +56,14 @@ module Middleman
             
             month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
               if @app.blog.day_template
-                @app.ignore @app.blog.day_template
+                @app.ignore @app.blog.options.day_template
 
                 path = Middleman::Util.normalize_path(@app.blog_day_path(year, month, day))
                 p = ::Middleman::Sitemap::Resource.new(
                   @app.sitemap,
                   path
                 )
-                p.proxy_to(@app.blog.month_template)
+                p.proxy_to(@app.blog.options.month_template)
 
                 p.add_metadata do
                   @year = year

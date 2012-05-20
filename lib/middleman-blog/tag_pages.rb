@@ -18,7 +18,7 @@ module Middleman
             @app.sitemap,
             path
           )
-          p.proxy_to(@app.blog.tag_template)
+          p.proxy_to(@app.blog.options.tag_template)
 
           p.add_metadata do
             @tag = tag
