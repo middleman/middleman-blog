@@ -35,13 +35,13 @@ module Middleman
           @slug = title.parameterize
           @date = options[:date] ? DateTime.parse(options[:date]) : DateTime.now
 
-          article_path = shared_instance.blog.sources.
+          article_path = shared_instance.blog.options.sources.
             sub(':year', @date.year.to_s).
             sub(':month', @date.month.to_s.rjust(2,'0')).
             sub(':day', @date.day.to_s.rjust(2,'0')).
             sub(':title', @slug)
 
-          template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.default_extension)
+          template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
         else
           raise Thor::Error.new "You need to activate the blog extension in config.rb before you can create an article"
         end

@@ -55,7 +55,7 @@ module Middleman
             end
             
             month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
-              if @app.blog.day_template
+              if @app.blog.options.day_template
                 @app.ignore @app.blog.options.day_template
 
                 path = Middleman::Util.normalize_path(@app.blog_day_path(year, month, day))

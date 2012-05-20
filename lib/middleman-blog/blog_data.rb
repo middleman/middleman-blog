@@ -12,8 +12,6 @@ module Middleman
       # @return [Thor::CoreExt::HashWithIndifferentAccess]
       attr_reader :options
 
-      delegate *::Middleman::Blog::Options::KEYS, :to => :options
-      
       # @private
       def initialize(app, options={})
         @app = app

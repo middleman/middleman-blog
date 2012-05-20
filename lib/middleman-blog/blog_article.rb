@@ -11,12 +11,12 @@ module Middleman
       # Render this resource
       # @return [String]
       def render(opts={}, locs={}, &block)
-        opts[:layout] = app.blog.layout if opts[:layout].nil?
+        opts[:layout] = app.blog.options.layout if opts[:layout].nil?
 
         content = super(opts, locs, &block)
 
         unless opts[:keep_separator]
-          if content =~ app.blog.summary_separator
+          if content =~ app.blog.options.summary_separator
             content.sub!($1, "")
           end
         end
@@ -47,10 +47,10 @@ module Middleman
       def summary
         @_summary ||= begin
           all_content = render(:layout => false, :keep_separator => true)
-          if all_content =~ app.blog.summary_separator
-            all_content.split(app.blog.summary_separator).first
+          if all_content =~ app.blog.options.summary_separator
+            all_content.split(app.blog.options.summary_separator).first
           else
-            all_content.match(/(.{1,#{app.blog.summary_length}}.*?)(\n|\Z)/m).to_s
+            all_content.match(/(.{1,#{app.blog.options.summary_length}}.*?)(\n|\Z)/m).to_s
           end
         end
       end
@@ -86,9 +86,9 @@ module Middleman
         end
 
         # Next figure out the date from the filename
-        if app.blog.sources.include?(":year") &&
-            app.blog.sources.include?(":month") &&
-            app.blog.sources.include?(":day")
+        if app.blog.options.sources.include?(":year") &&
+            app.blog.options.sources.include?(":month") &&
+            app.blog.options.sources.include?(":day")
 
           date_parts = @app.blog.path_matcher.match(path).captures
 
