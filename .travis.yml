@@ -6,3 +6,7 @@ rvm:
   - jruby-19mode
   
 script: "bundle exec rake test"
+
+matrix:
+  allow_failures:
+    - rvm: jruby-19mode
