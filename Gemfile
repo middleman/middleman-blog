@@ -17,7 +17,3 @@ group :development do
   # gem "rdoc",     "~> 3.9"
   # gem "yard"
 end
-
-group :test do 
-  gem "rdiscount"
-end

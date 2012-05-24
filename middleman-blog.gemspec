@@ -6,9 +6,9 @@ Gem::Specification.new do |s|
   s.name        = "middleman-blog"
   s.version     = Middleman::Blog::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Thomas Reynolds"]
-  s.email       = ["me@tdreyno.com"]
-  s.homepage    = "https://github.com/tdreyno/middleman-blog"
+  s.authors     = ["Thomas Reynolds", "Ben Hollis"]
+  s.email       = ["me@tdreyno.com", "ben@benhollis.net"]
+  s.homepage    = "https://github.com/middleman/middleman-blog"
   s.summary     = %q{A blog foundation using Middleman}
   s.description = %q{A blog foundation using Middleman}
 
@@ -16,8 +16,8 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  # s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
   
-  s.add_runtime_dependency("middleman-core", [">= 3.0.0.beta.3"])
+  s.add_runtime_dependency("middleman-more", [">= 3.0.0.beta.3"])
 end

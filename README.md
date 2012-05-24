@@ -42,7 +42,6 @@ The best way to get quick responses to your issues and swift fixes to your bugs 
 # Build & Dependency Status
 
 [![Build Status](http://travis-ci.org/middleman/middleman-blog.png)](http://travis-ci.org/middleman/middleman-blog)
-[![Dependency Status](https://gemnasium.com/middleman/middleman-blog.png?travis)](https://gemnasium.com/middleman/middleman-blog)
 
 # How to Run Cucumber Tests
 
