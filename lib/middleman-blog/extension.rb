@@ -129,7 +129,7 @@ module Middleman
       # Get a {Resource} with mixed in {BlogArticle} methods representing the current article.
       # @return [Middleman::Sitemap::Resource]
       def current_article
-        blog.article(current_page.path)
+        blog.article(current_resource.path)
       end
 
       # Get a path to the given tag, based on the :taglink setting.

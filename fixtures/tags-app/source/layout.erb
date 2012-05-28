@@ -4,8 +4,8 @@
   </head>
   <body>
     <% if is_blog_article? %>
-      <%= yield %>
       <%= current_article.url %>
+      <%= yield %>
     <% else %>
       <%= yield %>
     <% end %>
