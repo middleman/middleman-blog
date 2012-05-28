@@ -4,8 +4,7 @@
   </head>
   <body>
     <% if is_blog_article? %>
-      <% content_for :blog_article, yield %>
-      <%= partial 'article_template' %>
+      <%= current_article.url %>
     <% else %>
       <%= yield %>
     <% end %>

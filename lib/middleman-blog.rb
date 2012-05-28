@@ -1,5 +1,4 @@
 require "middleman-core"
-require "middleman-more"
 
 require "middleman-blog/version"
 require "middleman-blog/template"

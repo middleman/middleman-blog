@@ -12,8 +12,16 @@
     
     <div id="main" role="main">
       <% if is_blog_article? %>
-        <% content_for :blog_article, yield %>
-        <%= partial 'article_template' %>
+        <article class="hentry">
+          <h1 class="entry-title">
+            <%= current_article.title %> 
+            <time class="updated"><%= current_article.date.strftime('%b %e %Y') %></time>
+          </h1>
+
+          <div class="entry-content">
+            <%= yield %>
+          </div>
+        </article>
       <% else %>
         <%= yield %>
       <% end %>
