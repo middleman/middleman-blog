@@ -14,10 +14,10 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "middleman-blog"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.files         = `git ls-files -z`.split("\0")
+  s.test_files    = `git ls-files -z -- {fixtures,features}/*`.split("\0")
   s.require_paths = ["lib"]
   
-  s.add_dependency("middleman-core", [">= 3.0.0.beta.3"])
+  s.add_dependency("middleman-core", Middleman::Blog::VERSION)
   s.add_dependency("maruku", ["~> 0.6.0"])
 end
