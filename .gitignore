@@ -6,7 +6,6 @@ pkg/*
 .DS_Store
 .rbenv-version
 tmp
-.mm-pid-*
 doc
 .yardoc
 build/
