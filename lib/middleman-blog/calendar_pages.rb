@@ -63,7 +63,7 @@ module Middleman
                   @app.sitemap,
                   path
                 )
-                p.proxy_to(@app.blog.options.month_template)
+                p.proxy_to(@app.blog.options.day_template)
 
                 p.add_metadata do
                   @year = year
