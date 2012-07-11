@@ -1,3 +1,6 @@
+---
+pageable: true
+---
 <h1>Archive for
   <% if day %>
     <%= Date.new(year, month, day).strftime('%b %e %Y') %>
@@ -8,8 +11,22 @@
   <% end %>
 </h1>
 
+<% if paginate %>
+  <p>Page <%= page_number %> of <%= num_pages %></p>
+
+  <% if prev_page %>
+    <p><a href="<%= prev_page %>">Previous page</a></p>
+  <% end %>
+<% end %>
+
 <ul>
-  <% articles.each_with_index do |article, i| %>
-  <li><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e') %></span></li>
-   <% end %>
+  <% articles[page_start..page_end].each_with_index do |article, i| %>
+    <li><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e') %></span></li>
+  <% end %>
 </ul>
+
+<% if paginate %>
+  <% if next_page %>
+    <p><a href="<%= next_page %>">Next page</a></p>
+  <% end %>
+<% end %>

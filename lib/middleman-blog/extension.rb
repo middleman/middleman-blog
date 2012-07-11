@@ -17,7 +17,10 @@ module Middleman
         :year_template,
         :month_template,
         :day_template,
-        :tag_template
+        :tag_template,
+        :paginate,
+        :per_page,
+        :page_link
       ]
       
       KEYS.each do |name|
@@ -51,6 +54,9 @@ module Middleman
         options.month_link        ||= "/:year/:month.html"
         options.day_link          ||= "/:year/:month/:day.html"
         options.default_extension ||= ".markdown"
+        options.paginate          ||= false
+        options.per_page          ||= 10
+        options.page_link         ||= "page/:num"
 
         # optional: :tag_template
         # optional: :year_template
@@ -103,6 +109,15 @@ module Middleman
             sitemap.register_resource_list_manipulator(
               :blog_calendar,
               CalendarPages.new(self),
+              false
+            )
+          end
+
+          if options.paginate
+            require 'middleman-blog/paginator'
+            sitemap.register_resource_list_manipulator(
+              :blog_paginate,
+              Paginator.new(self),
               false
             )
           end
@@ -164,6 +179,27 @@ module Middleman
         blog.options.day_link.sub(':year', year.to_s).
           sub(':month', month.to_s.rjust(2,'0')).
           sub(':day', day.to_s.rjust(2,'0'))
+      end
+
+
+      # Pagination Helpers
+      # These are used by the template if pagination is off, to allow a single template to work
+      # in both modes. They get overridden by the local variables if the paginator is active.
+
+      # Returns true if pagination is turned on for this template; false otherwise.
+      # @return [Boolean]
+      def paginate; false; end
+
+      # Returns the index into articles[] of the first item to display on this page.
+      # @return [Number]
+      def page_start; 0; end
+
+      # Returns the index into articles[] of the last item to display on this page.
+      # @return [Number]
+      def page_end
+        # If per_page is set in the frontmatter, limit the page to that many items;
+        # otherwise, show all of them.
+        (current_resource.metadata[:page]["per_page"] || 0) - 1
       end
     end
   end

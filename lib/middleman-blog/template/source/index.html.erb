@@ -1,8 +1,22 @@
-<ul>
-  <% blog.articles[0...10].each do |article| %>
-  <li>
-    <h2><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e') %></span></h2>
-    <p><%= article.summary %></p>
-  </li>
+---
+pageable: true
+per_page: 10
+---
+<% if paginate %>
+  <p>Page <%= page_number %> of <%= num_pages %></p>
+
+  <% if prev_page %>
+    <p><a href="<%= prev_page %>">Previous page</a></p>
   <% end %>
-</ul>
+<% end %>
+
+<% articles[page_start..page_end].each_with_index do |article, i| %>
+  <h2><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e') %></span></h2>
+  <p><%= article.summary %></p>
+<% end %>
+
+<% if paginate %>
+  <% if next_page %>
+    <p><a href="<%= next_page %>">Next page</a></p>
+  <% end %>
+<% end %>
