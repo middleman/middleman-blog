@@ -25,10 +25,10 @@ module Middleman
             )
             p.proxy_to(@app.blog.options.year_template)
 
-            p.add_metadata do
-              @year = year
-              @articles = year_articles
-            end
+            p.add_metadata :locals => {
+              'year' => year,
+              'articles' => year_articles
+            }
 
             new_resources << p
           end
@@ -45,11 +45,11 @@ module Middleman
               )
               p.proxy_to(@app.blog.options.month_template)
 
-              p.add_metadata do
-                @year = year
-                @month = month
-                @articles = month_articles
-              end
+              p.add_metadata :locals => {
+                'year' => year,
+                'month' => month,
+                'articles' => month_articles
+              }
 
               new_resources << p
             end
@@ -65,12 +65,12 @@ module Middleman
                 )
                 p.proxy_to(@app.blog.options.day_template)
 
-                p.add_metadata do
-                  @year = year
-                  @month = month
-                  @day = day
-                  @articles = day_articles
-                end
+                p.add_metadata :locals => {
+                  'year' => year,
+                  'month' => month,
+                  'day' => day,
+                  'articles' => day_articles
+                }
 
                 new_resources << p
               end

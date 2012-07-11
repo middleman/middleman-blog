@@ -20,10 +20,10 @@ module Middleman
           )
           p.proxy_to(@app.blog.options.tag_template)
 
-          p.add_metadata do
-            @tag = tag
-            @articles = articles
-          end
+          p.add_metadata :locals => {
+            'tag' => tag,
+            'articles' => articles
+          }
 
           p
         end
