@@ -56,9 +56,10 @@ module Middleman
               'num_pages' => num_pages,
               'per_page' => per_page,
 
-              # Indexes into the article list for which articles appear on this page
-              'page_start' => 0,
-              'page_end' => per_page-1,
+              # The range of article numbers on this page
+              # (1-based, for showing "Items X to Y of Z")
+              'page_start' => 1,
+              'page_end' => per_page,
 
               # These contain the URL for the next and previous page.
               # They are set to nil if there are no more pages.
@@ -93,8 +94,8 @@ module Middleman
                 'page_number' => num,
                 'num_pages' => num_pages,
                 'per_page' => per_page,
-                'page_start' => page_start,
-                'page_end' => page_end,
+                'page_start' => page_start+1,
+                'page_end' => page_end+1,
                 'next_page' => num < num_pages ? page_sub(res, num+1, page_link) : nil,
                 'prev_page' => page_sub(res, num-1, page_link),
                 'page_articles' => articles[page_start..page_end],
