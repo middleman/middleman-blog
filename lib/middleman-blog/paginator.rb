@@ -78,7 +78,7 @@ module Middleman
                 res.source_file
               )
 
-              # Copy the metadata from the base PAge
+              # Copy the metadata from the base page.
               p.add_metadata md
 
               # Add pagination metadata, meanings as above.
