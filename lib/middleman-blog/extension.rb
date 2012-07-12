@@ -201,6 +201,10 @@ module Middleman
         # otherwise, show all of them.
         (current_resource.metadata[:page]["per_page"] || 0) - 1
       end
+
+      # Returns the list of articles to display on this page.
+      # @return [Array<Middleman::Sitemap::Resource>]
+      def page_articles; blog.articles[page_start..page_end]; end
     end
   end
 end

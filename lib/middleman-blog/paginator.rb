@@ -65,6 +65,9 @@ module Middleman
               'next_page' => num_pages > 1 ? page_sub(res, 2, page_link) : nil,
               'prev_page' => nil,
 
+              # The list of articles for this page.
+              'page_articles' => articles[0..per_page-1],
+
               # Include the articles so that non-proxied pages can use "articles" instead
               # of "blog.articles" for consistency with the calendar and tag templates.
               'articles' => articles
@@ -81,16 +84,20 @@ module Middleman
               # Copy the metadata from the base page.
               p.add_metadata md
 
+              page_start = (num-1)*per_page
+              page_end   = (num*per_page)-1
+
               # Add pagination metadata, meanings as above.
               p.add_metadata :locals => {
                 'paginate' => true,
                 'page_number' => num,
                 'num_pages' => num_pages,
                 'per_page' => per_page,
-                'page_start' => (num-1)*per_page,
-                'page_end' => (num*per_page)-1,
+                'page_start' => page_start,
+                'page_end' => page_end,
                 'next_page' => num < num_pages ? page_sub(res, num+1, page_link) : nil,
                 'prev_page' => page_sub(res, num-1, page_link),
+                'page_articles' => articles[page_start..page_end],
                 'articles' => articles
               }
 
