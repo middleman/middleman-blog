@@ -1,8 +1,8 @@
-Year: '<%= @year %>'
-Month: '<%= @month %>'
-Day: '<%= @day %>'
+Year: '<%= year %>'
+Month: '<%= month if defined?(month) %>'
+Day: '<%= day if defined?(day) %>'
 
-<% @articles[0...5].each_with_index do |article, i| %>
+<% articles[0...5].each_with_index do |article, i| %>
   <article class="<%= (i == 0) ? 'first' : '' %>">
     <h1><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e %Y') %></span></h1>
     
