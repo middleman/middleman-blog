@@ -15,7 +15,7 @@ pageable: true
   <p>Page <%= page_number %> of <%= num_pages %></p>
 
   <% if prev_page %>
-    <p><a href="<%= prev_page %>">Previous page</a></p>
+    <p><a href="<%= prev_page.url %>">Previous page</a></p>
   <% end %>
 <% end %>
 
@@ -27,6 +27,6 @@ pageable: true
 
 <% if paginate %>
   <% if next_page %>
-    <p><a href="<%= next_page %>">Next page</a></p>
+    <p><a href="<%= next_page.url %>">Next page</a></p>
   <% end %>
 <% end %>

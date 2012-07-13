@@ -1,0 +1,28 @@
+---
+pageable: true
+---
+Year: '<%= year %>'
+Month: '<%= month if defined?(month) %>'
+Day: '<%= day if defined?(day) %>'
+
+Paginate: <%= paginate %>
+Article Count: <%= page_articles.size %>
+<% if paginate %>
+Page Num: <%= page_number %>
+Num Pages: <%= num_pages %>
+Per Page: <%= per_page %>
+Page Start: <%= page_start %>
+Page End: <%= page_end %>
+Next Page: '<%= next_page.url if next_page %>'
+Prev Page: '<%= prev_page.url if prev_page %>'
+<% end %>
+
+<% page_articles.each_with_index do |article, i| %>
+  <article class="<%= (i == 0) ? 'first' : '' %>">
+    <h1><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e %Y') %></span></h1>
+
+    <%= article.summary %>
+
+    <div class="more"><a href="<%= article.url %>">read on &raquo;</a></div>
+  </article>
+<% end %>
