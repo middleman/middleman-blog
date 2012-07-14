@@ -7,4 +7,5 @@ activate :blog do |blog|
   blog.per_page          = 5
 end
 
+require "middleman-more"
 activate :directory_indexes
