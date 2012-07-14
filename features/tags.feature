@@ -9,7 +9,21 @@ Feature: Tag pages
     Then I should see "/2011-01-01-new-article.html"
     Then I should not see "/2011-01-02-another-article.html"
     Then I should see "Tag: bar"
-    
+    When I go to "/index.html"
+    Then I should see "Tag Path: '/tags/foo.html'"
+
+  Scenario: Tag pages are accessible from preview server with directory_indexes
+    Given a fixture app "tags-app"
+    And app "tags-app" is using config "directory-indexes"
+    And the Server is running
+    When I go to "/tags/foo.html"
+    Then I should see "File Not Found"
+    When I go to "/tags/foo/"
+    Then I should not see "/2011-01-01-new-article.html"
+    Then I should see "/2011-01-01-new-article/"
+    When I go to "/index.html"
+    Then I should see "Tag Path: '/tags/foo/'"
+
   Scenario: Tag pages also get built
     Given a successfully built app at "tags-app"
     When I cd to "build"
@@ -47,4 +61,3 @@ Feature: Tag pages
     Then I should see "Not Found"
     When I go to "/tags/newtag.html"
     Then I should see "/2011-01-01-new-article.html"
-    

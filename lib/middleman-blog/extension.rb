@@ -151,14 +151,14 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def tag_path(tag)
-        blog.options.taglink.sub(':tag', tag.parameterize)
+        sitemap.find_resource_by_path(TagPages.link(self, tag)).try(:url)
       end
 
       # Get a path to the given year-based calendar page, based on the :year_link setting.
       # @param [Number] year
       # @return [String]
       def blog_year_path(year)
-        blog.options.year_link.sub(':year', year.to_s)
+        sitemap.find_resource_by_path(CalendarPages.link(self, year)).try(:url)
       end
 
       # Get a path to the given month-based calendar page, based on the :month_link setting.
@@ -166,8 +166,7 @@ module Middleman
       # @param [Number] month
       # @return [String]
       def blog_month_path(year, month)
-        blog.options.month_link.sub(':year', year.to_s).
-          sub(':month', month.to_s.rjust(2,'0'))
+        sitemap.find_resource_by_path(CalendarPages.link(self, year, month)).try(:url)
       end
 
       # Get a path to the given day-based calendar page, based on the :day_link setting.
@@ -176,9 +175,7 @@ module Middleman
       # @param [Number] day
       # @return [String]
       def blog_day_path(year, month, day)
-        blog.options.day_link.sub(':year', year.to_s).
-          sub(':month', month.to_s.rjust(2,'0')).
-          sub(':day', day.to_s.rjust(2,'0'))
+        sitemap.find_resource_by_path(CalendarPages.link(self, year, month, day)).try(:url)
       end
 
 

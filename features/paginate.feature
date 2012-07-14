@@ -77,6 +77,24 @@ Feature: Pagination
     Then I should not see "/2011-01-04-test-article.html"
     Then I should not see "/2011-01-03-test-article.html"
 
+  Scenario: Index pages are accessible from preview server, with directory_indexes on
+    Given a fixture app "paginate-app"
+    And app "paginate-app" is using config "directory-indexes"
+    And the Server is running
+    When I go to "/2011.html"
+    Then I should see "File Not Found"
+
+    When I go to "/2011/"
+    Then I should see "Next Page: '/2011/page/2/'"
+    Then I should not see "/2011-01-03-test-article.html"
+    Then I should see "/2011-01-03-test-article/"
+
+    When I go to "/2011/page/2/"
+    Then I should see "Prev Page: '/2011/'"
+
+    When I go to "/tags/bar/"
+    Then I should see "Next Page: '/tags/bar/page/2/'"
+
   Scenario: Index pages also get built
     Given a successfully built app at "paginate-app"
     When I cd to "build"
