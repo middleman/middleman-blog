@@ -4,10 +4,6 @@ module Middleman
   module Blog
     # A module that adds blog-article methods to Resources.
     module BlogArticle
-      # The "slug" of the article that shows up in its URL.
-      # @return [String]
-      attr_accessor :slug
-
       # Render this resource
       # @return [String]
       def render(opts={}, locs={}, &block)
@@ -90,9 +86,9 @@ module Middleman
             app.blog.options.sources.include?(":month") &&
             app.blog.options.sources.include?(":day")
 
-          date_parts = @app.blog.path_matcher.match(path).captures
+          date_parts = app.blog.path_matcher.match(path)
 
-          filename_date = Date.new(date_parts[0].to_i, date_parts[1].to_i, date_parts[2].to_i)
+          filename_date = Date.new(date_parts["year"].to_i, date_parts["month"].to_i, date_parts["day"].to_i)
           if @_date
             raise "The date in #{path}'s filename doesn't match the date in its frontmatter" unless @_date.to_date == filename_date
           else
@@ -103,6 +99,14 @@ module Middleman
         raise "Blog post #{path} needs a date in its filename or frontmatter" unless @_date
 
         @_date
+      end
+
+      # The "slug" of the article that shows up in its URL.
+      # @return [String]
+      def slug
+        return @_slug if @_slug
+
+        @_slug = app.blog.path_matcher.match(path)["title"]
       end
 
       # The previous (chronologically earlier) article before this one

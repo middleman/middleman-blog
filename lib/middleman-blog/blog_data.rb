@@ -22,10 +22,10 @@ module Middleman
         
         matcher = Regexp.escape(options.sources).
             sub(/^\//, "").
-            sub(":year",  "(\\d{4})").
-            sub(":month", "(\\d{2})").
-            sub(":day",   "(\\d{2})").
-            sub(":title", "(.*)")
+            sub(":year",  "(?<year>\\d{4})").
+            sub(":month", "(?<month>\\d{2})").
+            sub(":day",   "(?<day>\\d{2})").
+            sub(":title", "(?<title>.*)")
 
         @path_matcher = /^#{matcher}/
       end
@@ -75,7 +75,6 @@ module Middleman
         resources.each do |resource|
           if resource.path =~ path_matcher
             resource.extend BlogArticle
-            resource.slug = $4
             
             # compute output path:
             #   substitute date parts to path pattern
