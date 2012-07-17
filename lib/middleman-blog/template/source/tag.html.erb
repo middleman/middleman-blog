@@ -1,7 +1,25 @@
-<h1>Articles tagged '<%= @tag %>'</h1>
+---
+pageable: true
+per_page: 12
+---
+<h1>Articles tagged '<%= tag %>'</h1>
 
-<% if @articles %>
-  <% @articles[0...12].each do |article| %>
-    <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+<% if paginate %>
+  <p>Page <%= page_number %> of <%= num_pages %></p>
+
+  <% if prev_page %>
+    <p><a href="<%= prev_page.url %>">Previous page</a></p>
+  <% end %>
+<% end %>
+
+<ul>
+  <% page_articles.each_with_index do |article, i| %>
+    <li><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e') %></span></li>
+  <% end %>
+</ul>
+
+<% if paginate %>
+  <% if next_page %>
+    <p><a href="<%= next_page.url %>">Next page</a></p>
   <% end %>
 <% end %>

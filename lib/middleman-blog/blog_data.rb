@@ -30,12 +30,10 @@ module Middleman
         @path_matcher = /^#{matcher}/
       end
 
-      # A list of all blog articles, sorted by date
+      # A list of all blog articles, sorted by descending date
       # @return [Array<Middleman::Sitemap::Resource>]
       def articles
-        @_articles.sort do |a,b|
-          b.date <=> a.date
-        end
+        @_articles.sort_by(&:date).reverse
       end
 
       # The BlogArticle for the given path, or nil if one doesn't exist.
@@ -59,6 +57,10 @@ module Middleman
             tags[tag] ||= []
             tags[tag] << article
           end
+        end
+
+        tags.each do |tag, articles|
+          tags[tag] = articles.sort_by(&:date).reverse
         end
 
         tags
