@@ -50,10 +50,17 @@ module Middleman
             )
             p.proxy_to(@app.blog.options.year_template)
 
+            # Add metadata in local variables so it's accessible to
+            # later extensions
             p.add_metadata :locals => {
               'year' => year,
               'articles' => year_articles
             }
+            # Add metadata in instance variables for backwards compatibility
+            p.add_metadata do
+              @year = year
+              @articles = year_articles
+            end
 
             new_resources << p
           end
@@ -75,6 +82,11 @@ module Middleman
                 'month' => month,
                 'articles' => month_articles
               }
+              p.add_metadata do
+                @year = year
+                @month = month
+                @articles = month_articles
+              end
 
               new_resources << p
             end
@@ -97,6 +109,12 @@ module Middleman
                   'day' => day,
                   'articles' => day_articles
                 }
+                p.add_metadata do
+                  @year = year
+                  @month = month
+                  @day = day
+                  @articles = day_articles
+                end
 
                 new_resources << p
               end
