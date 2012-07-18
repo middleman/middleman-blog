@@ -11,7 +11,13 @@ module Middleman
       # Render this resource
       # @return [String]
       def render(opts={}, locs={}, &block)
-        opts[:layout] = app.blog.options.layout if opts[:layout].nil?
+        if opts[:layout].nil?
+          if metadata[:options] && !metadata[:options][:layout].nil?
+            opts[:layout] = metadata[:options][:layout]
+          end
+          opts[:layout] = app.blog.options.layout if opts[:layout].nil?
+          opts[:layout] = opts[:layout].to_s if opts[:layout].is_a? Symbol
+        end
 
         content = super(opts, locs, &block)
 
