@@ -25,9 +25,12 @@ module Middleman
             sub(":year",  "(?<year>\\d{4})").
             sub(":month", "(?<month>\\d{2})").
             sub(":day",   "(?<day>\\d{2})").
-            sub(":title", "(?<title>.*)")
+            sub(":title", "(?<title>[^/]+)")
+
+        subdir_matcher = matcher.sub(/\\\.[^.]+$/, "(?<path>/.*)$")
 
         @path_matcher = /^#{matcher}/
+        @subdir_matcher = /^#{subdir_matcher}/
       end
 
       # A list of all blog articles, sorted by descending date
@@ -87,6 +90,29 @@ module Middleman
             resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
 
             @_articles << resource
+
+          elsif resource.path =~ @subdir_matcher
+            match = $~
+
+            article_path = options.sources.
+              sub(':year', match["year"]).
+              sub(':month', match["month"]).
+              sub(':day', match["day"]).
+              sub(':title', match["title"])
+
+            article = @app.sitemap.find_resource_by_path(article_path)
+            raise "Article for #{resource.path} not found" if article.nil?
+
+            # The subdir path is the article path with the index file name
+            # or file extension stripped off.
+            resource.destination_path = options.permalink.
+              sub(':year', article.date.year.to_s).
+              sub(':month', article.date.month.to_s.rjust(2,'0')).
+              sub(':day', article.date.day.to_s.rjust(2,'0')).
+              sub(':title', article.slug).
+              sub(/(\/#{@app.index_file}$)|(\.[^.]+$)|(\/$)/, match["path"])
+
+            resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
           end
         end
       end
