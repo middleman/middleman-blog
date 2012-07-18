@@ -17,7 +17,10 @@ module Middleman
         :year_template,
         :month_template,
         :day_template,
-        :tag_template
+        :tag_template,
+        :paginate,
+        :per_page,
+        :page_link
       ]
       
       KEYS.each do |name|
@@ -51,6 +54,9 @@ module Middleman
         options.month_link        ||= "/:year/:month.html"
         options.day_link          ||= "/:year/:month/:day.html"
         options.default_extension ||= ".markdown"
+        options.paginate          ||= false
+        options.per_page          ||= 10
+        options.page_link         ||= "page/:num"
 
         # optional: :tag_template
         # optional: :year_template
@@ -106,6 +112,15 @@ module Middleman
               false
             )
           end
+
+          if options.paginate
+            require 'middleman-blog/paginator'
+            sitemap.register_resource_list_manipulator(
+              :blog_paginate,
+              Paginator.new(self),
+              false
+            )
+          end
         end
       end
       alias :included :registered
@@ -136,14 +151,14 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def tag_path(tag)
-        blog.options.taglink.sub(':tag', tag.parameterize)
+        sitemap.find_resource_by_path(TagPages.link(self, tag)).try(:url)
       end
 
       # Get a path to the given year-based calendar page, based on the :year_link setting.
       # @param [Number] year
       # @return [String]
       def blog_year_path(year)
-        blog.options.year_link.sub(':year', year.to_s)
+        sitemap.find_resource_by_path(CalendarPages.link(self, year)).try(:url)
       end
 
       # Get a path to the given month-based calendar page, based on the :month_link setting.
@@ -151,8 +166,7 @@ module Middleman
       # @param [Number] month
       # @return [String]
       def blog_month_path(year, month)
-        blog.options.month_link.sub(':year', year.to_s).
-          sub(':month', month.to_s.rjust(2,'0'))
+        sitemap.find_resource_by_path(CalendarPages.link(self, year, month)).try(:url)
       end
 
       # Get a path to the given day-based calendar page, based on the :day_link setting.
@@ -161,9 +175,23 @@ module Middleman
       # @param [Number] day
       # @return [String]
       def blog_day_path(year, month, day)
-        blog.options.day_link.sub(':year', year.to_s).
-          sub(':month', month.to_s.rjust(2,'0')).
-          sub(':day', day.to_s.rjust(2,'0'))
+        sitemap.find_resource_by_path(CalendarPages.link(self, year, month, day)).try(:url)
+      end
+
+
+      # Pagination Helpers
+      # These are used by the template if pagination is off, to allow a single template to work
+      # in both modes. They get overridden by the local variables if the paginator is active.
+
+      # Returns true if pagination is turned on for this template; false otherwise.
+      # @return [Boolean]
+      def paginate; false; end
+
+      # Returns the list of articles to display on this page.
+      # @return [Array<Middleman::Sitemap::Resource>]
+      def page_articles
+        limit = (current_resource.metadata[:page]["per_page"] || 0) - 1
+        blog.articles[0..limit]
       end
     end
   end
