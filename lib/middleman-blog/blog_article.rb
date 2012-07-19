@@ -63,6 +63,15 @@ module Middleman
         end
       end
 
+      # Retrieve a section of the source path
+      # @param [String] The part of the path, e.g. "year", "month", "day", "title"
+      # @return [String]
+      def path_part(part)
+        @_path_parts ||= app.blog.path_matcher.match(path).captures
+
+        @_path_parts[app.blog.matcher_indexes[part]]
+      end
+
       # Attempt to figure out the date of the post. The date should be
       # present in the source path, but users may also provide a date
       # in the frontmatter in order to provide a time of day for sorting
@@ -86,9 +95,7 @@ module Middleman
             app.blog.options.sources.include?(":month") &&
             app.blog.options.sources.include?(":day")
 
-          date_parts = app.blog.path_matcher.match(path)
-
-          filename_date = Date.new(date_parts["year"].to_i, date_parts["month"].to_i, date_parts["day"].to_i)
+          filename_date = Date.new(path_part("year").to_i, path_part("month").to_i, path_part("day").to_i)
           if @_date
             raise "The date in #{path}'s filename doesn't match the date in its frontmatter" unless @_date.to_date == filename_date
           else
@@ -104,9 +111,7 @@ module Middleman
       # The "slug" of the article that shows up in its URL.
       # @return [String]
       def slug
-        return @_slug if @_slug
-
-        @_slug = app.blog.path_matcher.match(path)["title"]
+        @_slug ||= path_part("title")
       end
 
       # The previous (chronologically earlier) article before this one
