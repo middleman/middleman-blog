@@ -87,11 +87,15 @@ module Middleman
       # @return [void]
       def manipulate_resource_list(resources)
         @_articles = []
+        used_resources = []
 
         resources.each do |resource|
           if resource.path =~ path_matcher
             resource.extend BlogArticle
             
+            # Skip articles that have "published: false"
+            next unless @app.environment == :development || resource.published?
+
             # compute output path:
             #   substitute date parts to path pattern
             resource.destination_path = options.permalink.
@@ -116,6 +120,9 @@ module Middleman
             article = @app.sitemap.find_resource_by_path(article_path)
             raise "Article for #{resource.path} not found" if article.nil?
 
+            # Skip files that belong to articles that have "published: false"
+            next unless @app.environment == :development || article.published?
+
             # The subdir path is the article path with the index file name
             # or file extension stripped off.
             resource.destination_path = options.permalink.
@@ -127,7 +134,11 @@ module Middleman
 
             resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
           end
+
+          used_resources << resource
         end
+        
+        used_resources
       end
     end
   end
