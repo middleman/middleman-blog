@@ -3,6 +3,7 @@
 ###
 
 activate :blog do |blog|
+  # blog.prefix = "blog"
   # blog.permalink = ":year/:month/:day/:title.html"
   # blog.sources = ":year-:month-:day-:title.html"
   # blog.taglink = "tags/:tag.html"
@@ -29,7 +30,7 @@ page "/feed.xml", :layout => false
 ###
 
 # Susy grids in Compass
-# First: gem install compass-susy-plugin
+# First: gem install susy
 # require 'susy'
 
 # Change Compass configuration
