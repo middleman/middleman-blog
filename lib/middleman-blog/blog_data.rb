@@ -8,6 +8,10 @@ module Middleman
       # @return [Regex]
       attr_reader :path_matcher
       
+      # A hash of indexes into the path_matcher captures
+      # @return [Hash]
+      attr_reader :matcher_indexes
+
       # The configured options for this blog
       # @return [Thor::CoreExt::HashWithIndifferentAccess]
       attr_reader :options
@@ -25,9 +29,21 @@ module Middleman
             sub(":year",  "(\\d{4})").
             sub(":month", "(\\d{2})").
             sub(":day",   "(\\d{2})").
-            sub(":title", "(.*)")
+            sub(":title", "([^/]+)")
+
+        subdir_matcher = matcher.sub(/\\\.[^.]+$/, "(/.*)$")
 
         @path_matcher = /^#{matcher}/
+        @subdir_matcher = /^#{subdir_matcher}/
+
+        # Build a hash of part name to capture index, e.g. {"year" => 0}
+        @matcher_indexes = {}
+        options.sources.scan(/:year|:month|:day|:title/).
+          each_with_index do |key, i|
+            @matcher_indexes[key[1..-1]] = i
+          end
+        # The path always appears at the end.
+        @matcher_indexes["path"] = @matcher_indexes.size
       end
 
       # A list of all blog articles, sorted by descending date
@@ -75,7 +91,6 @@ module Middleman
         resources.each do |resource|
           if resource.path =~ path_matcher
             resource.extend BlogArticle
-            resource.slug = $4
             
             # compute output path:
             #   substitute date parts to path pattern
@@ -88,6 +103,29 @@ module Middleman
             resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
 
             @_articles << resource
+
+          elsif resource.path =~ @subdir_matcher
+            match = $~.captures
+
+            article_path = options.sources.
+              sub(':year', match[@matcher_indexes["year"]]).
+              sub(':month', match[@matcher_indexes["month"]]).
+              sub(':day', match[@matcher_indexes["day"]]).
+              sub(':title', match[@matcher_indexes["title"]])
+
+            article = @app.sitemap.find_resource_by_path(article_path)
+            raise "Article for #{resource.path} not found" if article.nil?
+
+            # The subdir path is the article path with the index file name
+            # or file extension stripped off.
+            resource.destination_path = options.permalink.
+              sub(':year', article.date.year.to_s).
+              sub(':month', article.date.month.to_s.rjust(2,'0')).
+              sub(':day', article.date.day.to_s.rjust(2,'0')).
+              sub(':title', article.slug).
+              sub(/(\/#{@app.index_file}$)|(\.[^.]+$)|(\/$)/, match[@matcher_indexes["path"]])
+
+            resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
           end
         end
       end
