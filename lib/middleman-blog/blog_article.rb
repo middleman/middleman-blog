@@ -32,6 +32,12 @@ module Middleman
         data["title"]
       end
 
+      # Whether or not this article has been published
+      # @return [Boolean]
+      def published?
+        data["published"] != false
+      end
+
       # The body of this article, in HTML. This is for
       # things like RSS feeds or lists of articles - individual
       # articles will automatically be rendered from their
