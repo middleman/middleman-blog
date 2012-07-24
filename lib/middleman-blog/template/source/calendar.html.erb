@@ -2,11 +2,12 @@
 pageable: true
 ---
 <h1>Archive for
-  <% if defined?(day) %>
+  <% case page_type
+     when 'day' %>
     <%= Date.new(year, month, day).strftime('%b %e %Y') %>
-  <% elsif defined?(month) %>
+  <% when 'month' %>
     <%= Date.new(year, month, 1).strftime('%b %Y') %>
-  <% else %>
+  <% when 'year' %>
     <%= year %>
   <% end %>
 </h1>

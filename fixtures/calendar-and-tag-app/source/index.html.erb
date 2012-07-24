@@ -1,0 +1,7 @@
+ <% blog.articles[0...12].each do |article| %>
+      <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+    <% end %>
+
+Year Path: '<%= blog_year_path(2011) %>'
+Month Path: '<%= blog_month_path(2011,1) %>'
+Day Path: '<%= blog_day_path(2011,1,1) %>'
