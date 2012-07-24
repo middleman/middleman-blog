@@ -34,10 +34,13 @@ module Middleman
           # Add metadata in local variables so it's accessible to
           # later extensions
           p.add_metadata :locals => {
-            'tag' => tag,
+            'page_type' => 'tag',
+            'tagname' => tag,
             'articles' => articles
           }
           # Add metadata in instance variables for backwards compatibility
+          # Note: These do not get properly cleared between templates, and
+          #       are therefore deprecated. Use the local variables instead.
           p.add_metadata do
             @tag = tag
             @articles = articles
