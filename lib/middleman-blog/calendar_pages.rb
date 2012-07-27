@@ -55,13 +55,9 @@ module Middleman
             p.add_metadata :locals => {
               'page_type' => 'year',
               'year' => year,
-              'month' => nil,
-              'day' => nil,
               'articles' => year_articles
             }
             # Add metadata in instance variables for backwards compatibility
-            # Note: These do not get properly cleared between templates, and
-            #       are therefore deprecated. Use the local variables instead.
             p.add_metadata do
               @year = year
               @articles = year_articles
@@ -86,7 +82,6 @@ module Middleman
                 'page_type' => 'month',
                 'year' => year,
                 'month' => month,
-                'day' => nil,
                 'articles' => month_articles
               }
               p.add_metadata do

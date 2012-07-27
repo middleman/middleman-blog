@@ -39,8 +39,6 @@ module Middleman
             'articles' => articles
           }
           # Add metadata in instance variables for backwards compatibility
-          # Note: These do not get properly cleared between templates, and
-          #       are therefore deprecated. Use the local variables instead.
           p.add_metadata do
             @tag = tag
             @articles = articles
