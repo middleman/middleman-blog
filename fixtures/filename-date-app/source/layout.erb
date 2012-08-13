@@ -6,7 +6,7 @@
     <% if is_blog_article? %>
       <%= yield %>
       <%= current_article.url %>
-      <p>Date: <%= current_article.date %></p>
+      <p>Date: <%= current_article.date.iso8601 %></p>
     <% else %>
       <%= yield %>
     <% end %>
