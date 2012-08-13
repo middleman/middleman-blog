@@ -1,4 +1,4 @@
-require 'active_support/core_ext/time/zones'
+require 'active_support/core_ext/time/calculations'
 
 # Default to UTC
 Time.zone = "UTC" if Time.zone.nil?
@@ -38,7 +38,7 @@ module Middleman
       # Whether or not this article has been published
       # @return [Boolean]
       def published?
-        data["published"] != false
+        data["published"] != false and date <= Time.current
       end
 
       # The body of this article, in HTML. This is for
