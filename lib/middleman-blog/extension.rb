@@ -9,6 +9,7 @@ module Middleman
         :layout,
         :summary_separator,
         :summary_length,
+        :summary_generator,
         :year_link,
         :month_link,
         :day_link,
