@@ -109,7 +109,6 @@ module Middleman
             @_articles << resource
 
           elsif resource.path =~ @subdir_matcher
-            resource.extend BlogArticle
             match = $~.captures
 
             article_path = options.sources.
@@ -119,11 +118,11 @@ module Middleman
               sub(':title', match[@matcher_indexes["title"]])
 
             article = @app.sitemap.find_resource_by_path(article_path)
+            article.extend BlogArticle
             raise "Article for #{resource.path} not found" if article.nil?
 
             # Skip files that belong to articles that have "published: false"
-            next unless @app.environment == :development
-            next unless article.respond_to?(:published?) && article.published?
+            next unless @app.environment == :development || !article.respond_to?(:published?) || article.published?
 
             # The subdir path is the article path with the index file name
             # or file extension stripped off.
