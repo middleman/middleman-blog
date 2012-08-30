@@ -54,12 +54,26 @@ module Middleman
       # @return [String]
       def summary
         @_summary ||= begin
-          all_content = render(:layout => false, :keep_separator => true)
-          if all_content =~ app.blog.options.summary_separator
-            all_content.split(app.blog.options.summary_separator).first
-          else
-            all_content.match(/(.{1,#{app.blog.options.summary_length}}.*?)(\n|\Z)/m).to_s
-          end
+          source = app.template_data_for_file(source_file).dup
+
+          summary_source = if app.blog.options.summary_generator
+                             app.blog.options.summary_generator.call(self, source)
+                           else
+                             default_summary_generator(source)
+                           end
+
+          md   = metadata.dup
+          locs = md[:locals]
+          opts = md[:options].merge({:template_body => summary_source})
+          app.render_individual_file(source_file, locs, opts)
+        end
+      end
+
+      def default_summary_generator(source)
+        if source =~ app.blog.options.summary_separator
+          source.split(app.blog.options.summary_separator).first
+        else
+          source.match(/(.{1,#{app.blog.options.summary_length}}.*?)(\n|\Z)/m).to_s
         end
       end
 
