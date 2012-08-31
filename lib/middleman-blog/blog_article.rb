@@ -1,4 +1,7 @@
-require 'date'
+require 'active_support/core_ext/time/calculations'
+
+# Default to UTC
+Time.zone = "UTC" if Time.zone.nil?
 
 module Middleman
   module Blog
@@ -35,7 +38,7 @@ module Middleman
       # Whether or not this article has been published
       # @return [Boolean]
       def published?
-        data["published"] != false
+        data["published"] != false and date <= Time.current
       end
 
       # The body of this article, in HTML. This is for
@@ -103,17 +106,17 @@ module Middleman
       # in the frontmatter in order to provide a time of day for sorting
       # reasons.
       #
-      # @return [DateTime]
+      # @return [TimeWithZone]
       def date
         return @_date if @_date
 
         frontmatter_date = data["date"]
 
         # First get the date from frontmatter
-        if frontmatter_date.is_a?(String)
-          @_date = DateTime.parse(frontmatter_date)
+        if frontmatter_date.is_a? Time
+          @_date = frontmatter_date.in_time_zone
         else
-          @_date = frontmatter_date
+          @_date = Time.zone.parse(frontmatter_date.to_s)
         end
 
         # Next figure out the date from the filename
@@ -121,11 +124,11 @@ module Middleman
             app.blog.options.sources.include?(":month") &&
             app.blog.options.sources.include?(":day")
 
-          filename_date = Date.new(path_part("year").to_i, path_part("month").to_i, path_part("day").to_i)
+          filename_date = Time.zone.local(path_part("year").to_i, path_part("month").to_i, path_part("day").to_i)
           if @_date
-            raise "The date in #{path}'s filename doesn't match the date in its frontmatter" unless @_date.to_date == filename_date
+            raise "The date in #{path}'s filename doesn't match the date in its frontmatter" unless @_date.to_date == filename_date.to_date
           else
-            @_date = filename_date.to_datetime
+            @_date = filename_date.to_time.in_time_zone
           end
         end
 
