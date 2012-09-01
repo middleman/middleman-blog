@@ -47,7 +47,7 @@ module Middleman
         
         options.permalink         ||= "/:year/:month/:day/:title.html"
         options.sources           ||= ":year-:month-:day-:title.html"
-        options.taglink           ||= "tags/:tag.html"
+        options.taglink           ||= "/tags/:tag.html"
         options.layout            ||= "layout"
         options.summary_separator ||= /(READMORE)/
         options.summary_length    ||= 250
