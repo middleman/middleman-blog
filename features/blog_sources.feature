@@ -7,3 +7,8 @@ Feature: Flexible article sources
     Then I should see "Not Found"
     When I go to "/"
     Then I should see "/2011/01/01/new-article.html"
+
+  Scenario: Blog articles can omit the day part
+    Given the Server is running at "no-day-app"
+    When I go to "/2012/08/01/testing.html"
+    Then I should see "Testing Article"
