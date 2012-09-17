@@ -1,7 +1,5 @@
+require 'active_support/time_with_zone'
 require 'active_support/core_ext/time/calculations'
-
-# Default to UTC
-Time.zone = "UTC" if Time.zone.nil?
 
 module Middleman
   module Blog
