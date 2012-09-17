@@ -2,27 +2,27 @@ module Middleman
   module Blog
     class Options
       KEYS = [
-        :prefix,
-        :permalink,
-        :sources,
-        :taglink,
-        :layout,
-        :summary_separator,
-        :summary_length,
-        :summary_generator,
-        :year_link,
-        :month_link,
-        :day_link,
-        :default_extension,
-        :calendar_template,
-        :year_template,
-        :month_template,
-        :day_template,
-        :tag_template,
-        :paginate,
-        :per_page,
-        :page_link
-      ]
+              :prefix,
+              :permalink,
+              :sources,
+              :taglink,
+              :layout,
+              :summary_separator,
+              :summary_length,
+              :summary_generator,
+              :year_link,
+              :month_link,
+              :day_link,
+              :default_extension,
+              :calendar_template,
+              :year_template,
+              :month_template,
+              :day_template,
+              :tag_template,
+              :paginate,
+              :per_page,
+              :page_link
+             ]
       
       KEYS.each do |name|
         attr_accessor name
@@ -39,7 +39,10 @@ module Middleman
       def registered(app, options_hash={}, &block)
         require 'middleman-blog/blog_data'
         require 'middleman-blog/blog_article'
-        
+        require 'active_support/core_ext/time/zones'
+
+        app.set :time_zone, 'UTC'
+
         app.send :include, Helpers
         
         options = Options.new(options_hash)
@@ -82,45 +85,55 @@ module Middleman
         end
 
         app.after_configuration do
+          # Make sure ActiveSupport's TimeZone stuff has something to work with,
+          # allowing people to set their desired time zone via Time.zone or
+          # set :time_zone
+          time_zone = Time.zone if Time.zone
+          zone_default = Time.find_zone!(time_zone || 'UTC')
+          unless zone_default
+            raise 'Value assigned to time_zone not recognized.'
+          end
+          Time.zone_default = zone_default
+
           # Initialize blog with options
           blog(options)
           
           sitemap.register_resource_list_manipulator(
-            :blog_articles,
-            blog,
-            false
-          )
+                                                     :blog_articles,
+                                                     blog,
+                                                     false
+                                                     )
 
           if options.tag_template
             ignore options.tag_template
 
             require 'middleman-blog/tag_pages'
             sitemap.register_resource_list_manipulator(
-              :blog_tags,
-              TagPages.new(self),
-              false
-            )
+                                                       :blog_tags,
+                                                       TagPages.new(self),
+                                                       false
+                                                       )
           end
 
           if options.year_template || 
-             options.month_template || 
-             options.day_template
+              options.month_template || 
+              options.day_template
 
             require 'middleman-blog/calendar_pages'
             sitemap.register_resource_list_manipulator(
-              :blog_calendar,
-              CalendarPages.new(self),
-              false
-            )
+                                                       :blog_calendar,
+                                                       CalendarPages.new(self),
+                                                       false
+                                                       )
           end
 
           if options.paginate
             require 'middleman-blog/paginator'
             sitemap.register_resource_list_manipulator(
-              :blog_paginate,
-              Paginator.new(self),
-              false
-            )
+                                                       :blog_paginate,
+                                                       Paginator.new(self),
+                                                       false
+                                                       )
           end
         end
       end
