@@ -65,8 +65,27 @@ Feature: Pagination
     Then I should see "/2011-02-01-test-article.html"
     Then I should see "/2011-02-02-test-article.html"
 
+    When I go to "/2011/01.html"
+    Then I should see "Paginate: false"
+    Then I should see "Article Count: 5"
+    Then I should see "/2011-01-01-test-article.html"
+    Then I should see "/2011-01-02-test-article.html"
+    Then I should see "/2011-01-03-test-article.html"
+    Then I should see "/2011-01-04-test-article.html"
+    Then I should see "/2011-01-05-test-article.html"
+    Then I should not see "/2011-02-01-test-article.html"
+    Then I should not see "/2011-02-02-test-article.html"
+
     When I go to "/2011/page/2.html"
     Then I should see "File Not Found"
+
+    When I go to "/tags/foo.html"
+    Then I should see "Paginate: false"
+    Then I should see "Article Count: 2"
+    Then I should not see "/2011-02-02-test-article.html"
+    Then I should not see "/2011-02-01-test-article.html"
+    Then I should see "/2011-01-02-test-article.html"
+    Then I should see "/2011-01-01-test-article.html"
 
     When I go to "/tags/bar.html"
     Then I should see "Paginate: false"

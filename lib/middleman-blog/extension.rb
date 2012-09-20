@@ -192,7 +192,10 @@ module Middleman
       # @return [Array<Middleman::Sitemap::Resource>]
       def page_articles
         limit = (current_resource.metadata[:page]["per_page"] || 0) - 1
-        blog.articles[0..limit]
+
+        # "articles" local variable is populated by Calendar and Tag page generators
+        # If it's not set then use the complete list of articles
+        (current_resource.metadata[:locals]["articles"] || blog.articles)[0..limit]
       end
     end
   end
