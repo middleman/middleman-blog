@@ -1,3 +1,8 @@
+3.1.1
+====
+* Correctly handle time zone, allow setting time zone with `set :time_zone`. #76
+* Fix using `page_articles` in when `paginate` is false. #78
+
 3.1.0
 ====
 * Don't publish future-dated articles. #74
