@@ -20,7 +20,7 @@ module Middleman
 
         unless opts[:keep_separator]
           if content =~ app.blog.options.summary_separator
-            content.sub!($1, "")
+            content.sub!(app.blog.options.summary_separator, "")
           end
         end
 
