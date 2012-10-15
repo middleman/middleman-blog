@@ -34,9 +34,16 @@ module Middleman
       end
 
       # Whether or not this article has been published
+      #
+      # An article is considered published in the following scenarios:
+      #
+      # 1. frontmatter does not set published to false and either
+      # 2. published_future_dated is true or
+      # 3. article date is after the current time
       # @return [Boolean]
       def published?
-        data["published"] != false and date <= Time.current
+        (data["published"] != false) and
+          (app.blog.options.publish_future_dated || date <= Time.current)
       end
 
       # The body of this article, in HTML. This is for

@@ -21,7 +21,8 @@ module Middleman
               :tag_template,
               :paginate,
               :per_page,
-              :page_link
+              :page_link,
+              :publish_future_dated
              ]
       
       KEYS.each do |name|
@@ -48,19 +49,20 @@ module Middleman
         options = Options.new(options_hash)
         yield options if block_given?
         
-        options.permalink         ||= "/:year/:month/:day/:title.html"
-        options.sources           ||= ":year-:month-:day-:title.html"
-        options.taglink           ||= "tags/:tag.html"
-        options.layout            ||= "layout"
-        options.summary_separator ||= /(READMORE)/
-        options.summary_length    ||= 250
-        options.year_link         ||= "/:year.html"
-        options.month_link        ||= "/:year/:month.html"
-        options.day_link          ||= "/:year/:month/:day.html"
-        options.default_extension ||= ".markdown"
-        options.paginate          ||= false
-        options.per_page          ||= 10
-        options.page_link         ||= "page/:num"
+        options.permalink            ||= "/:year/:month/:day/:title.html"
+        options.sources              ||= ":year-:month-:day-:title.html"
+        options.taglink              ||= "tags/:tag.html"
+        options.layout               ||= "layout"
+        options.summary_separator    ||= /(READMORE)/
+        options.summary_length       ||= 250
+        options.year_link            ||= "/:year.html"
+        options.month_link           ||= "/:year/:month.html"
+        options.day_link             ||= "/:year/:month/:day.html"
+        options.default_extension    ||= ".markdown"
+        options.paginate             ||= false
+        options.per_page             ||= 10
+        options.page_link            ||= "page/:num"
+        options.publish_future_dated ||= false
 
         # optional: :tag_template
         # optional: :year_template
