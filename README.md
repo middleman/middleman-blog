@@ -20,7 +20,7 @@ activate :blog
 
 # Learn More
 
-See [the blog extension guide](http://beta.middlemanapp.com/extensions/blog/) for detailed information on configuring and using the blog extension.
+See [the blog extension guide](http://middlemanapp.com/extensions/blog/) for detailed information on configuring and using the blog extension.
 
 Up-to-date generated code documentation is available on RubyDoc: 
 http://rubydoc.info/github/middleman/middleman-blog
@@ -41,7 +41,7 @@ The best way to get quick responses to your issues and swift fixes to your bugs 
 
 # Build & Dependency Status
 
-[![Build Status](http://travis-ci.org/middleman/middleman-blog.png)](http://travis-ci.org/middleman/middleman-blog)
+[![Build Status](https://travis-ci.org/middleman/middleman-blog.png)](https://travis-ci.org/middleman/middleman-blog)
 
 # How to Run Cucumber Tests
 
