@@ -34,45 +34,45 @@ module Middleman
           next if res.ignored?
 
           md = res.metadata
-          if md[:page]["pageable"]
+          if md[:page][:pageable]
             # "articles" local variable is populated by Calendar and Tag page generators
             # If it's not set then use the complete list of articles
             # TODO: Some way to allow the frontmatter to specify the article filter?
-            articles = md[:locals]["articles"] || @app.blog.articles
+            articles = md[:locals][:articles] || @app.blog.articles
 
             # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
-            per_page  = md[:page]["per_page"] || @app.blog.options.per_page
-            page_link = md[:page]["page_link"] || @app.blog.options.page_link
+            per_page  = md[:page][:per_page] || @app.blog.options.per_page
+            page_link = md[:page][:page_link] || @app.blog.options.page_link
 
             num_pages = (articles.length / per_page.to_f).ceil
 
             # Add the pagination metadata to the base page (page 1)
             res.add_metadata :locals => {
               # Set a flag to allow templates to be used with and without pagination
-              'paginate' => true,
+              :paginate => true,
 
               # Include the numbers, useful for displaying "Page X of Y"
-              'page_number' => 1,
-              'num_pages' => num_pages,
-              'per_page' => per_page,
+              :page_number => 1,
+              :num_pages => num_pages,
+              :per_page => per_page,
 
               # The range of article numbers on this page
               # (1-based, for showing "Items X to Y of Z")
-              'page_start' => 1,
-              'page_end' => [per_page, articles.length].min,
+              :page_start => 1,
+              :page_end => [per_page, articles.length].min,
 
               # These contain the next and previous page.
               # They are set to nil if there are no more pages.
               # The nils are overwritten when the later pages are generated, below.
-              'next_page' => nil,
-              'prev_page' => nil,
+              :next_page => nil,
+              :prev_page => nil,
 
               # The list of articles for this page.
-              'page_articles' => articles[0..per_page-1],
+              :page_articles => articles[0..per_page-1],
 
               # Include the articles so that non-proxied pages can use "articles" instead
               # of "blog.articles" for consistency with the calendar and tag templates.
-              'articles' => articles
+              :articles => articles
             }
 
             prev_page_res = res
@@ -96,21 +96,21 @@ module Middleman
 
               # Add pagination metadata, meanings as above.
               p.add_metadata :locals => {
-                'paginate' => true,
-                'page_number' => num,
-                'num_pages' => num_pages,
-                'per_page' => per_page,
-                'page_start' => page_start+1,
-                'page_end' => [page_end+1, articles.length].min,
-                'next_page' => nil,
-                'prev_page' => prev_page_res,
-                'page_articles' => articles[page_start..page_end],
-                'articles' => articles
+                :paginate => true,
+                :page_number => num,
+                :num_pages => num_pages,
+                :per_page => per_page,
+                :page_start => page_start+1,
+                :page_end => [page_end+1, articles.length].min,
+                :next_page => nil,
+                :prev_page => prev_page_res,
+                :page_articles => articles[page_start..page_end],
+                :articles => articles
               }
 
               # Add a reference in the previous page to this page
               prev_page_res.add_metadata :locals => {
-                'next_page' => p
+                :next_page => p
               }
 
               prev_page_res = p

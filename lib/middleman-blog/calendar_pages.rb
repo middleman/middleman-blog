@@ -53,9 +53,9 @@ module Middleman
             # Add metadata in local variables so it's accessible to
             # later extensions
             p.add_metadata :locals => {
-              'page_type' => 'year',
-              'year' => year,
-              'articles' => year_articles
+              :page_type => 'year',
+              :year => year,
+              :articles => year_articles
             }
             # Add metadata in instance variables for backwards compatibility
             p.add_metadata do
@@ -79,10 +79,10 @@ module Middleman
               p.proxy_to(@app.blog.options.month_template)
 
               p.add_metadata :locals => {
-                'page_type' => 'month',
-                'year' => year,
-                'month' => month,
-                'articles' => month_articles
+                :page_type => 'month',
+                :year => year,
+                :month => month,
+                :articles => month_articles
               }
               p.add_metadata do
                 @year = year
@@ -106,11 +106,11 @@ module Middleman
                 p.proxy_to(@app.blog.options.day_template)
 
                 p.add_metadata :locals => {
-                  'page_type' => 'day',
-                  'year' => year,
-                  'month' => month,
-                  'day' => day,
-                  'articles' => day_articles
+                  :page_type => 'day',
+                  :year => year,
+                  :month => month,
+                  :day => day,
+                  :articles => day_articles
                 }
                 p.add_metadata do
                   @year = year
