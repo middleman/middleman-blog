@@ -1,5 +1,6 @@
 require 'active_support/time_with_zone'
 require 'active_support/core_ext/time/calculations'
+require 'middleman-blog/truncate_html'
 
 module Middleman
   module Blog
@@ -61,29 +62,30 @@ module Middleman
       # characters of the post.
       #
       # :summary_generator can be set to a Proc in order to provide
-      # custom summary generation. The Proc is provided a single parameter
-      # which is the rendered content of the article (without layout).
+      # custom summary generation. The Proc is provided a parameter
+      # which is the rendered content of the article (without layout), the
+      # desired length to trim the summary to, and the ellipsis string to use.
       #
+      # @param [Number] length How many characters to trim the summary to.
+      # @param [Number] length The ellipsis string to use when content is trimmed.
       # @return [String]
-      def summary
-        @_summary ||= begin
-          rendered = render(:layout => false, :keep_separator => true)
+      def summary(length=app.blog.options.summary_length, ellipsis='...')
+        rendered = render(:layout => false, :keep_separator => true)
 
-          if app.blog.options.summary_separator && rendered.match(app.blog.options.summary_separator)
-            rendered.split(app.blog.options.summary_separator).first
-          elsif app.blog.options.summary_generator
-            app.blog.options.summary_generator.call(self, rendered)
-          else
-            default_summary_generator(rendered)
-          end
+        if app.blog.options.summary_separator && rendered.match(app.blog.options.summary_separator)
+          rendered.split(app.blog.options.summary_separator).first
+        elsif app.blog.options.summary_generator
+          app.blog.options.summary_generator.call(self, rendered, ellipsis)
+        else
+          default_summary_generator(rendered, length, ellipsis)
         end
       end
 
-      def default_summary_generator(rendered)
+      def default_summary_generator(rendered, length, ellipsis)
         if rendered =~ app.blog.options.summary_separator
           rendered.split(app.blog.options.summary_separator).first
-        elsif app.blog.options.summary_length
-          rendered.match(/(.{1,#{app.blog.options.summary_length}}.*?)(\n|\Z)/m).to_s
+        elsif length
+          TruncateHTML.truncate_html(rendered, length, ellipsis)
         else
           rendered
         end
