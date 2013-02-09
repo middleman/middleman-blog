@@ -1,3 +1,15 @@
+3.2.0
+====
+
+* The `summary` method on articles is now HTML-aware, and can be provided with
+  a different summary length or ellipsis string: `summary(1000, '&hellip;')`
+* The `summary_generator` option now recieves the rendered article (without
+  layout) instead of the template source.
+* Set `summary_length` to false to always use the full article as a summary.
+* Future-dated articles can still be generated if `publish_future_dated` is true.
+* The `summary_separator` option no longer needs to have a capturing group, or
+  even be a regexp.
+
 3.1.1
 ====
 * Correctly handle time zone, allow setting time zone with `set :time_zone`. #76
