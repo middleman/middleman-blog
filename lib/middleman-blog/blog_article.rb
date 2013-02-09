@@ -72,8 +72,16 @@ module Middleman
 
           md   = metadata.dup
           locs = md[:locals]
-          opts = md[:options].merge({:template_body => summary_source})
-          app.render_individual_file(source_file, locs, opts)
+          opts = md[:options]
+
+          file_path = source_file
+          content = summary_source
+          while ::Tilt[file_path]
+            opts[:template_body] = content
+            content = app.render_individual_file(file_path, locs, opts)
+            file_path = File.basename(file_path, File.extname(file_path))
+          end
+          content
         end
       end
 
