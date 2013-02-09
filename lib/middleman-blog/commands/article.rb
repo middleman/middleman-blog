@@ -33,7 +33,7 @@ module Middleman
         if shared_instance.respond_to? :blog
           @title = title
           @slug = title.parameterize
-          @date = options[:date] ? DateTime.parse(options[:date]) : DateTime.now
+          @date = options[:date] ? Time.zone.parse(options[:date]) : Time.zone.now
 
           article_path = shared_instance.blog.options.sources.
             sub(':year', @date.year.to_s).
