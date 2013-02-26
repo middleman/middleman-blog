@@ -23,6 +23,6 @@ group :test do
   gem "timecop",  "~> 0.4.0"
   
   platforms :ruby do
-    gem "redcarpet", "~> 2.1.1"
+    gem "redcarpet"
   end
 end
