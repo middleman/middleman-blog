@@ -12,6 +12,6 @@ env: TEST=true
 
 matrix:
   allow_failures:
-  	- rvm: 2.0.0
+    - rvm: 2.0.0
     - rvm: jruby-18mode
     - rvm: jruby-19mode
