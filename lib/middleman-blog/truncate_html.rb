@@ -1,4 +1,8 @@
-require "nokogiri"
+begin
+  require "nokogiri"
+rescue LoadError
+  raise "Nokogiri is required for blog post summaries. Add 'nokogiri' to your Gemfile."
+end
 
 # Taken and modified from http://madebydna.com/all/code/2010/06/04/ruby-helper-to-cleanly-truncate-html.html
 # MIT license
