@@ -1,6 +1,5 @@
 require 'active_support/time_with_zone'
 require 'active_support/core_ext/time/calculations'
-require 'middleman-blog/truncate_html'
 
 module Middleman
   module Blog
@@ -82,6 +81,8 @@ module Middleman
       end
 
       def default_summary_generator(rendered, length, ellipsis)
+        require 'middleman-blog/truncate_html'
+
         if rendered =~ app.blog.options.summary_separator
           rendered.split(app.blog.options.summary_separator).first
         elsif length
