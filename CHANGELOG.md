@@ -2,7 +2,8 @@
 ====
 
 * The `summary` method on articles is now HTML-aware, and can be provided with
-  a different summary length or ellipsis string: `summary(1000, '&hellip;')`
+  a different summary length or ellipsis string: `summary(1000, '&hellip;')`. 
+  Nokogiri is required to use the summary.
 * The `summary_generator` option now recieves the rendered article (without
   layout) instead of the template source.
 * Set `summary_length` to false to always use the full article as a summary.
