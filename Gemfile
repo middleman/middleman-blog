@@ -1,10 +1,6 @@
 source 'http://rubygems.org'
 
-git "git://github.com/middleman/middleman.git", :branch => "master" do
-  # gem "middleman"
-  gem "middleman-core"
-  gem "middleman-more"
-end
+gem "middleman", "~> 3.0.0"
 
 # Specify your gem's dependencies in middleman-blog.gemspec
 gemspec

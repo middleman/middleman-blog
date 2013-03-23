@@ -4,8 +4,25 @@ module Middleman
     # A sitemap plugin that splits indexes (including tag
     # and calendar indexes) over multiple pages
     class Paginator
-      def initialize(app)
+      def initialize(app, controller=nil)
         @app = app
+        @blog_controller = controller
+      end
+
+      def blog_data
+        if @blog_controller
+          @blog_controller.data
+        else
+          @app.blog
+        end
+      end
+
+      def blog_options
+        if @blog_controller
+          @blog_controller.options
+        else
+          @app.blog.options
+        end
       end
 
       # Substitute the page number into the resource URL.
@@ -38,11 +55,11 @@ module Middleman
             # "articles" local variable is populated by Calendar and Tag page generators
             # If it's not set then use the complete list of articles
             # TODO: Some way to allow the frontmatter to specify the article filter?
-            articles = md[:locals]["articles"] || @app.blog.articles
+            articles = md[:locals]["articles"] || self.blog_data.articles
 
             # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
-            per_page  = md[:page]["per_page"] || @app.blog.options.per_page
-            page_link = md[:page]["page_link"] || @app.blog.options.page_link
+            per_page  = md[:page]["per_page"] || self.blog_options.per_page
+            page_link = md[:page]["page_link"] || self.blog_options.page_link
 
             num_pages = (articles.length / per_page.to_f).ceil
 

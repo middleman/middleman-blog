@@ -5,6 +5,26 @@ module Middleman
   module Blog
     # A module that adds blog-article methods to Resources.
     module BlogArticle
+      def self.extended(base)
+        base.class.send(:attr_accessor, :blog_controller)
+      end
+
+      def blog_data
+        if self.blog_controller
+          self.blog_controller.data
+        else
+          app.blog
+        end
+      end
+
+      def blog_options
+        if self.blog_controller
+          self.blog_controller.options
+        else
+          app.blog.options
+        end
+      end
+
       # Render this resource
       # @return [String]
       def render(opts={}, locs={}, &block)
@@ -12,15 +32,15 @@ module Middleman
           if metadata[:options] && !metadata[:options][:layout].nil?
             opts[:layout] = metadata[:options][:layout]
           end
-          opts[:layout] = app.blog.options.layout if opts[:layout].nil?
+          opts[:layout] = blog_options.layout if opts[:layout].nil?
           opts[:layout] = opts[:layout].to_s if opts[:layout].is_a? Symbol
         end
 
         content = super(opts, locs, &block)
 
         unless opts[:keep_separator]
-          if content.match(app.blog.options.summary_separator)
-            content.sub!(app.blog.options.summary_separator, "")
+          if content.match(blog_options.summary_separator)
+            content.sub!(blog_options.summary_separator, "")
           end
         end
 
@@ -43,7 +63,7 @@ module Middleman
       # @return [Boolean]
       def published?
         (data["published"] != false) and
-          (app.blog.options.publish_future_dated || date <= Time.current)
+          (blog_options.publish_future_dated || date <= Time.current)
       end
 
       # The body of this article, in HTML. This is for
@@ -68,13 +88,13 @@ module Middleman
       # @param [Number] length How many characters to trim the summary to.
       # @param [Number] length The ellipsis string to use when content is trimmed.
       # @return [String]
-      def summary(length=app.blog.options.summary_length, ellipsis='...')
+      def summary(length=blog_options.summary_length, ellipsis='...')
         rendered = render(:layout => false, :keep_separator => true)
 
-        if app.blog.options.summary_separator && rendered.match(app.blog.options.summary_separator)
-          rendered.split(app.blog.options.summary_separator).first
-        elsif app.blog.options.summary_generator
-          app.blog.options.summary_generator.call(self, rendered, length, ellipsis)
+        if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
+          rendered.split(blog_options.summary_separator).first
+        elsif blog_options.summary_generator
+          blog_options.summary_generator.call(self, rendered, length, ellipsis)
         else
           default_summary_generator(rendered, length, ellipsis)
         end
@@ -83,8 +103,8 @@ module Middleman
       def default_summary_generator(rendered, length, ellipsis)
         require 'middleman-blog/truncate_html'
 
-        if rendered =~ app.blog.options.summary_separator
-          rendered.split(app.blog.options.summary_separator).first
+        if rendered =~ blog_options.summary_separator
+          rendered.split(blog_options.summary_separator).first
         elsif length
           TruncateHTML.truncate_html(rendered, length, ellipsis)
         else
@@ -108,9 +128,9 @@ module Middleman
       # @param [String] The part of the path, e.g. "year", "month", "day", "title"
       # @return [String]
       def path_part(part)
-        @_path_parts ||= app.blog.path_matcher.match(path).captures
+        @_path_parts ||= blog_data.path_matcher.match(path).captures
 
-        @_path_parts[app.blog.matcher_indexes[part]]
+        @_path_parts[blog_data.matcher_indexes[part]]
       end
 
       # Attempt to figure out the date of the post. The date should be
@@ -132,9 +152,9 @@ module Middleman
         end
 
         # Next figure out the date from the filename
-        if app.blog.options.sources.include?(":year") &&
-            app.blog.options.sources.include?(":month") &&
-            app.blog.options.sources.include?(":day")
+        if blog_options.sources.include?(":year") &&
+            blog_options.sources.include?(":month") &&
+            blog_options.sources.include?(":day")
 
           filename_date = Time.zone.local(path_part("year").to_i, path_part("month").to_i, path_part("day").to_i)
           if @_date
@@ -159,14 +179,14 @@ module Middleman
       # or nil if this is the first article.
       # @return [Middleman::Sitemap::Resource]
       def previous_article
-        app.blog.articles.find {|a| a.date < self.date }
+        blog_data.articles.find {|a| a.date < self.date }
       end
       
       # The next (chronologically later) article after this one
       # or nil if this is the most recent article.
       # @return [Middleman::Sitemap::Resource]
       def next_article
-        app.blog.articles.reverse.find {|a| a.date > self.date }
+        blog_data.articles.reverse.find {|a| a.date > self.date }
       end
     end
   end

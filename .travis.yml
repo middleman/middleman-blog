@@ -8,7 +8,7 @@ rvm:
 
 gemfile:
   - Gemfile
-  - Gemfile-3.0
+  - Gemfile-3.1
 
 script: "bundle exec rake test"
 

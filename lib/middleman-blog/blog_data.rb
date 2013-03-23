@@ -16,10 +16,13 @@ module Middleman
       # @return [Thor::CoreExt::HashWithIndifferentAccess]
       attr_reader :options
 
+      attr_reader :controller
+
       # @private
-      def initialize(app, options={})
+      def initialize(app, options={}, controller=nil)
         @app = app
         @options = options
+        @controller = controller
 
         # A list of resources corresponding to blog articles
         @_articles = []
@@ -92,6 +95,10 @@ module Middleman
         resources.each do |resource|
           if resource.path =~ path_matcher
             resource.extend BlogArticle
+
+            if @controller
+              resource.blog_controller = controller
+            end
 
             # Skip articles that are not published (in non-development environments)
             next unless @app.environment == :development || resource.published?
