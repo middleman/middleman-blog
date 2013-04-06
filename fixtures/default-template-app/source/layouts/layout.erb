@@ -5,17 +5,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-  <% if current_page.data.title %>
-    <title>Deep Thoughts: <%= current_page.data.title %></title>
-  <% elsif is_blog_article? %>
-    <title>Deep Thoughts: <%= current_article.title %></title>
-  <% else %>
-    <title>Deep Thoughts</title>
-  <% end %>
-
-  <%= stylesheet_link_tag :app %>
+  <title><%= page_title %></title>
   <%= javascript_include_tag :modernizr %>
+  <%= stylesheet_link_tag :app %>
 </head>
 <body>
   <div class="contain-to-grid">
@@ -41,7 +33,7 @@
     <div class="row">
       <div class="large-12 columns">
         <div class="bar large-2 columns large-centered hide-for-small"></div>
-        <h1>Deep Thoughts <small>by Nick Adams</small></h1>
+        <h1><%= blog_name %> <small>by <%= blog_author %></small></h1>
       </div>
     </div>
   </header>
