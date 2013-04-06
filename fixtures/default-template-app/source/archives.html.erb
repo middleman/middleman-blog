@@ -1,0 +1,10 @@
+<section id="recent">
+  <h2>
+    Archive
+  </h2>
+  <ul class="disc">
+    <% blog.articles.each do |article| %>
+      <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+    <% end %>
+  </ul>
+</section>

@@ -1,10 +1,11 @@
 *.gem
 .bundle
-Gemfile.lock
+Gemfile*.lock
 pkg/*
 .rvmrc
 .DS_Store
 .rbenv-version
+.ruby-version
 tmp
 doc
 .yardoc
