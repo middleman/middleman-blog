@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  <% if data.page.title %>
-    <title><%= data.page.title %></title>
+  <% if current_page.data.title %>
+    <title>Deep Thoughts: <%= current_page.data.title %></title>
   <% elsif is_blog_article? %>
-    <title><%= current_article.title %></title>
+    <title>Deep Thoughts: <%= current_article.title %></title>
   <% else %>
     <title>Deep Thoughts</title>
   <% end %>
