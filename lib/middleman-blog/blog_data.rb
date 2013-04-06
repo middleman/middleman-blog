@@ -29,9 +29,9 @@ module Middleman
         
         matcher = Regexp.escape(options.sources).
             sub(/^\//, "").
-            sub(":year",  "(\\d{4})").
-            sub(":month", "(\\d{2})").
-            sub(":day",   "(\\d{2})").
+            gsub(":year",  "(\\d{4})").
+            gsub(":month", "(\\d{2})").
+            gsub(":day",   "(\\d{2})").
             sub(":title", "([^/]+)")
 
         subdir_matcher = matcher.sub(/\\\.[^.]+$/, "(/.*)$")
