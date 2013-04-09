@@ -1,5 +1,6 @@
 module Middleman
   class BlogExtension < Extension
+    option :name, nil, 'Unique ID for telling multiple blogs apart'
     option :prefix, nil, 'Prefix to mount the blog at'
     option :permalink, "/:year/:month/:day/:title.html", 'HTTP path to host articles at'
     option :sources, ":year-:month-:day-:title.html", 'How to extract metadata from on-disk files'
@@ -25,15 +26,15 @@ module Middleman
     attr_accessor :data, :uid
 
     def initialize(app, options_hash={}, &block)
-      @uid = options_hash.delete(:name)
-
       super
+
+      @uid = options.name
 
       require 'middleman-blog/blog_data'
       require 'middleman-blog/blog_article'
       require 'active_support/core_ext/time/zones'
 
-      app.set :time_zone, 'UTC'
+      # app.set :time_zone, 'UTC'
 
       app.send :include, Helpers
 
@@ -67,7 +68,7 @@ module Middleman
 
       @uid ||= "blog#{@app.blog_instances.keys.length}"
 
-      @app.blog_instances[@uid] = self
+      @app.blog_instances[@uid.to_sym] = self
 
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
       # allowing people to set their desired time zone via Time.zone or
@@ -123,7 +124,7 @@ module Middleman
     module Helpers
       def blog_controller(key=nil)
         key ||= blog_instances.keys.first
-        blog_instances[key]
+        blog_instances[key.to_sym]
       end
 
       def blog(key=nil)
@@ -189,12 +190,12 @@ module Middleman
 
       # Returns the list of articles to display on this page.
       # @return [Array<Middleman::Sitemap::Resource>]
-      def page_articles
+      def page_articles(key=nil)
         limit = (current_resource.metadata[:page]["per_page"] || 0) - 1
 
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
-        (current_resource.metadata[:locals]["articles"] || blog.articles)[0..limit]
+        (current_resource.metadata[:locals]["articles"] || blog(key).articles)[0..limit]
       end
     end
   end

@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge;chrome=1' />
+    
+    <% if is_blog_article? %>
+      <title><%= current_article.title %></title>
+    <% end %>
+  </head>
+  <body>
+    
+    <div id="main" role="main">
+      <% if is_blog_article? %>
+        <article class="hentry">
+          <h1 class="entry-title">
+            <%= current_article.title %> 
+            <time class="updated"><%= current_article.date.strftime('%b %e %Y') %></time>
+          </h1>
+
+          <div class="entry-content">
+            <%= yield %>
+          </div>
+        </article>
+      <% else %>
+        <%= yield %>
+      <% end %>
+    </div>
+  </body>
+</html>

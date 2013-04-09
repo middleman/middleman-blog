@@ -1,0 +1,7 @@
+<p>Default blog length: <%= blog.articles.length %></p>
+
+<p>blog_number_1 length: <%= blog(:blog_number_1).articles.length %></p>
+<p>blog_number_1 title: <%= blog(:blog_number_1).articles[0].data.title %></p>
+
+<p>blog_number_2 length: <%= blog("blog_number_2").articles.length %></p>
+<p>blog_number_2 title: <%= blog("blog_number_2").articles[0].data.title %></p>

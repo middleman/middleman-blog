@@ -1,0 +1,15 @@
+ <% blog(:blog_name_1).articles[0...12].each do |article| %>
+      <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+    <% end %>
+
+ <% blog(:blog_name_2).articles[0...12].each do |article| %>
+      <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+    <% end %>
+
+Year Path1: '<%= blog_year_path(2011, :blog_name_1) %>'
+Month Path1: '<%= blog_month_path(2011,1, :blog_name_1) %>'
+Day Path1: '<%= blog_day_path(2011,1,1, :blog_name_1) %>'
+
+Year Path2: '<%= blog_year_path(2011, :blog_name_2) %>'
+Month Path2: '<%= blog_month_path(2011,1, :blog_name_2) %>'
+Day Path2: '<%= blog_day_path(2011,1,1, :blog_name_2) %>'
