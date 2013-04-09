@@ -20,8 +20,8 @@ gem "rspec",    "~> 2.7"
 gem "timecop",  "~> 0.4.0"
 gem "nokogiri"
 
-gem "pry"
-gem "pry-debugger"
+# gem "pry"
+# gem "pry-debugger"
 
 platforms :ruby do
   gem "redcarpet", "~> 2.1.1"
