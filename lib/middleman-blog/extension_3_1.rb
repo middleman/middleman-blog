@@ -85,7 +85,7 @@ module Middleman
       @data = ::Middleman::Blog::BlogData.new(@app, options, self)
       
       @app.sitemap.register_resource_list_manipulator(
-        :"blog#{uid}_articles",
+        :"blog_#{uid}_articles",
         @data,
         false
       )
@@ -95,7 +95,7 @@ module Middleman
 
         require 'middleman-blog/tag_pages'
         @app.sitemap.register_resource_list_manipulator(
-          :"blog#{uid}_tags",
+          :"blog_#{uid}_tags",
           ::Middleman::Blog::TagPages.new(@app, self),
           false
         )
@@ -104,7 +104,7 @@ module Middleman
       if options.year_template || options.month_template || options.day_template
         require 'middleman-blog/calendar_pages'
         @app.sitemap.register_resource_list_manipulator(
-          :"blog#{uid}_calendar",
+          :"blog_#{uid}_calendar",
           ::Middleman::Blog::CalendarPages.new(@app, self),
           false
         )
@@ -113,7 +113,7 @@ module Middleman
       if options.paginate
         require 'middleman-blog/paginator'
         @app.sitemap.register_resource_list_manipulator(
-          :"blog#{uid}_paginate",
+          :"blog_#{uid}_paginate",
           ::Middleman::Blog::Paginator.new(@app, self),
           false
         )
@@ -195,7 +195,7 @@ module Middleman
 
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
-        (current_resource.metadata[:locals]["articles"] || blog(key).articles)[0..limit]
+        d = (current_resource.metadata[:locals]["articles"] || blog(key).articles)[0..limit]
       end
     end
   end

@@ -72,7 +72,8 @@ module Middleman
             p.add_metadata :locals => {
               'page_type' => 'year',
               'year' => year,
-              'articles' => year_articles
+              'articles' => year_articles,
+              'blog_controller' => @blog_controller
             }
             # Add metadata in instance variables for backwards compatibility
             p.add_metadata do
@@ -99,7 +100,8 @@ module Middleman
                 'page_type' => 'month',
                 'year' => year,
                 'month' => month,
-                'articles' => month_articles
+                'articles' => month_articles,
+                'blog_controller' => @blog_controller
               }
               p.add_metadata do
                 @year = year
@@ -127,7 +129,8 @@ module Middleman
                   'year' => year,
                   'month' => month,
                   'day' => day,
-                  'articles' => day_articles
+                  'articles' => day_articles,
+                  'blog_controller' => @blog_controller
                 }
                 p.add_metadata do
                   @year = year

@@ -52,7 +52,8 @@ module Middleman
           p.add_metadata :locals => {
             'page_type' => 'tag',
             'tagname' => tag,
-            'articles' => articles
+            'articles' => articles,
+            'blog_controller' => @blog_controller
           }
           # Add metadata in instance variables for backwards compatibility
           p.add_metadata do

@@ -49,8 +49,12 @@ module Middleman
 
         resources.each do |res|
           next if res.ignored?
-
+          
           md = res.metadata
+
+          next if (@blog_controller != md[:locals]["blog_controller"]) &&
+                  (@blog_controller != res.blog_controller)
+
           if md[:page]["pageable"]
             # "articles" local variable is populated by Calendar and Tag page generators
             # If it's not set then use the complete list of articles

@@ -1,0 +1,19 @@
+Tag3: <%= tagname %>
+
+Paginate3: <%= paginate %>
+Article Count3: <%= page_articles.size %>
+<% if paginate %>
+Page Num3: <%= page_number %>
+Num Pages3: <%= num_pages %>
+Per Page3: <%= per_page %>
+Page Start3: <%= page_start %>
+Page End3: <%= page_end %>
+Next Page3: '<%= next_page.url if next_page %>'
+Prev Page3: '<%= prev_page.url if prev_page %>'
+<% end %>
+
+<% if page_articles %>
+  <% page_articles.each do |article| %>
+    <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+  <% end %>
+<% end %>
