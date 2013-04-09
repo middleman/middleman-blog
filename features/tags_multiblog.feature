@@ -28,11 +28,11 @@ Feature: Tag pages with multiple blogs
     When I cd to "build"
     Then the following files should exist:
     | blog1/tags/foox.html |
-    | blog1/tags/barX.html |
+    | blog1/tags/barx.html |
     | blog1/tags/foo1.html |
     | blog1/tags/bar1.html |
     | blog2/tags/foox.html |
-    | blog2/tags/barX.html |
+    | blog2/tags/barx.html |
     | blog2/tags/foo2.html |
     | blog2/tags/bar2.html |
     Then the following files should not exist:
@@ -49,10 +49,10 @@ Feature: Tag pages with multiple blogs
     And the file "blog1/tags/foo1.html" should contain "/blog1/2011-01-01-new-article.html"
     And the file "blog1/tags/foo1.html" should contain "/blog1/2011-01-02-another-article.html"
 
-    And the file "blog1/tags/barX.html" should contain "Tag1: barX"
-    And the file "blog1/tags/barX.html" should contain "/blog1/2011-01-01-new-article.html"
-    And the file "blog1/tags/barX.html" should not contain "/blog1/2011-01-02-another-article.html"
-    And the file "blog1/tags/barX.html" should not contain "/blog2/2011-01-01-new-article.html"
+    And the file "blog1/tags/barx.html" should contain "Tag1: barX"
+    And the file "blog1/tags/barx.html" should contain "/blog1/2011-01-01-new-article.html"
+    And the file "blog1/tags/barx.html" should not contain "/blog1/2011-01-02-another-article.html"
+    And the file "blog1/tags/barx.html" should not contain "/blog2/2011-01-01-new-article.html"
 
     And the file "blog1/tags/bar1.html" should contain "Tag1: bar1"
     And the file "blog1/tags/bar1.html" should contain "/blog1/2011-01-01-new-article.html"
@@ -69,10 +69,10 @@ Feature: Tag pages with multiple blogs
     And the file "blog2/tags/foo2.html" should contain "/blog2/2011-01-01-new-article.html"
     And the file "blog2/tags/foo2.html" should contain "/blog2/2011-01-02-another-article.html"
 
-    And the file "blog2/tags/barX.html" should contain "Tag2: barX"
-    And the file "blog2/tags/barX.html" should contain "/blog2/2011-01-01-new-article.html"
-    And the file "blog2/tags/barX.html" should not contain "/blog2/2011-01-02-another-article.html"
-    And the file "blog2/tags/barX.html" should not contain "/blog1/2011-01-01-new-article.html"
+    And the file "blog2/tags/barx.html" should contain "Tag2: barX"
+    And the file "blog2/tags/barx.html" should contain "/blog2/2011-01-01-new-article.html"
+    And the file "blog2/tags/barx.html" should not contain "/blog2/2011-01-02-another-article.html"
+    And the file "blog2/tags/barx.html" should not contain "/blog1/2011-01-01-new-article.html"
 
     And the file "blog2/tags/bar2.html" should contain "Tag2: bar2"
     And the file "blog2/tags/bar2.html" should contain "/blog2/2011-01-01-new-article.html"
