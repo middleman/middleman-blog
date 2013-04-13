@@ -52,8 +52,9 @@ module Middleman
           
           md = res.metadata
 
-          next if (@blog_controller != md[:locals]["blog_controller"]) &&
-                  (@blog_controller != res.blog_controller)
+          # Skip other blogs' resources
+          res_controller = md[:locals]["blog_controller"] || res.blog_controller
+          next if @blog_controller && res_controller && (res_controller != @blog_controller)
 
           if md[:page]["pageable"]
             # "articles" local variable is populated by Calendar and Tag page generators
@@ -93,7 +94,8 @@ module Middleman
 
               # Include the articles so that non-proxied pages can use "articles" instead
               # of "blog.articles" for consistency with the calendar and tag templates.
-              'articles' => articles
+              'articles' => articles,
+              'blog_controller' => @blog_controller
             }
 
             prev_page_res = res
@@ -126,7 +128,8 @@ module Middleman
                 'next_page' => nil,
                 'prev_page' => prev_page_res,
                 'page_articles' => articles[page_start..page_end],
-                'articles' => articles
+                'articles' => articles,
+                'blog_controller' => @blog_controller
               }
 
               # Add a reference in the previous page to this page
