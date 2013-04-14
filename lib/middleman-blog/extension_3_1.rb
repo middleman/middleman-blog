@@ -62,10 +62,6 @@ module Middleman
     end
 
     def after_configuration
-      if !@app.respond_to?(:blog_instances)
-        @app.set :blog_instances, {}
-      end
-
       @uid ||= "blog#{@app.blog_instances.keys.length}"
 
       @app.blog_instances[@uid.to_sym] = self
@@ -122,6 +118,10 @@ module Middleman
 
     # Helpers for use within templates and layouts.
     module Helpers
+      def blog_instances
+        @blog_instances ||= {}
+      end
+
       def blog_controller(key=nil)
         key ||= blog_instances.keys.first
         blog_instances[key.to_sym]
