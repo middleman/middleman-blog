@@ -41,8 +41,10 @@ module Middleman
             sub(':day', @date.day.to_s.rjust(2,'0')).
             sub(':title', @slug)
 
-          if File.file?(shared_instance.source_dir + '/customArticle.tt')
-            template shared_instance.source_dir + '/customArticle.tt' , File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          custom_template = shared_instance.source_dir + '/customArticle.tt'
+
+          if File.file?(custom_template)
+            template custom_template , File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
           else
             template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
           end
