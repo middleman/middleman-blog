@@ -41,7 +41,11 @@ module Middleman
             sub(':day', @date.day.to_s.rjust(2,'0')).
             sub(':title', @slug)
 
-          template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          if File.file?(shared_instance.source_dir + '/customArticle.tt')
+            template shared_instance.source_dir + '/customArticle.tt' , File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          else
+            template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          end
         else
           raise Thor::Error.new "You need to activate the blog extension in config.rb before you can create an article"
         end
