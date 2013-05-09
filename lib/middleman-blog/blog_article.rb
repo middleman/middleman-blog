@@ -86,7 +86,7 @@ module Middleman
       # desired length to trim the summary to, and the ellipsis string to use.
       #
       # @param [Number] length How many characters to trim the summary to.
-      # @param [Number] length The ellipsis string to use when content is trimmed.
+      # @param [String] ellipsis The ellipsis string to use when content is trimmed.
       # @return [String]
       def summary(length=blog_options.summary_length, ellipsis='...')
         rendered = render(:layout => false, :keep_separator => true)
