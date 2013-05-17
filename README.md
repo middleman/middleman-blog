@@ -1,61 +1,66 @@
-# middleman-blog
+# Middleman-Blog
 
-middleman-blog is an extension for the [Middleman](http://middlemanapp.com) static site generator that adds blog-specific functionality. This includes handling blog articles, helpers for listing articles, and tagging support.
+`middleman-blog` is an extension for the [Middleman] static site generator that adds blog-specific functionality. This includes handling blog articles, helpers for listing articles, and tagging support.
 
-# Install
-If you're just getting started, install the `middleman` and `middleman-blog` gems and generate a new project:
+## Installation
+
+If you're just getting started, install the `middleman` gem and generate a new project:
 
 ```
 gem install middleman
-gem install middleman-blog
-middleman init MY_BLOG_PROJECT --template=blog
+middleman init MY_PROJECT
 ```
 
-If you already have a Middleman project:
-Add `middleman-blog` to your `Gemfile`, and open your `config.rb` and add:
+If you already have a Middleman project: Add `gem "middleman-blog"` to your `Gemfile` and run `bundle install`
+
+## Configuration
 
 ```
 activate :blog
 ```
 
-# Learn More
+## Learn More
 
 See [the blog extension guide](http://middlemanapp.com/blogging/) for detailed information on configuring and using the blog extension.
 
-Up-to-date generated code documentation is available on RubyDoc: 
-http://rubydoc.info/github/middleman/middleman-blog
+Additionally, up-to-date generated code documentation is available on [RubyDoc].
 
-# Community
+## Build & Dependency Status
 
-The official community forum is available at:
+[![Gem Version](https://badge.fury.io/rb/middleman-blog.png)][gem]
+[![Build Status](https://travis-ci.org/middleman/middleman-blog.png)][travis]
+[![Dependency Status](https://gemnasium.com/middleman/middleman-blog.png?travis)][gemnasium]
+[![Code Quality](https://codeclimate.com/github/middleman/middleman-blog.png)][codeclimate]
 
-  http://forum.middlemanapp.com/
+## Community
 
-# Bug Reports
+The official community forum is available at: http://forum.middlemanapp.com
 
-GitHub Issues are used for managing bug reports and feature requests. If you run into issues, please search the issues and submit new problems:
+## Bug Reports
 
-https://github.com/middleman/middleman-blog/issues
+Github Issues are used for managing bug reports and feature requests. If you run into issues, please search the issues and submit new problems: https://github.com/middleman/middleman-blog/issues
 
-The best way to get quick responses to your issues and swift fixes to your bugs is to submit detailed bug reports, include test cases and respond to developer questions in a timely manner. Even better, if you know Ruby, you can submit Pull Requests containing Cucumber Features which describe how your feature should work or exploit the bug you are submitting.
+The best way to get quick responses to your issues and swift fixes to your bugs is to submit detailed bug reports, include test cases and respond to developer questions in a timely manner. Even better, if you know Ruby, you can submit [Pull Requests](https://help.github.com/articles/using-pull-requests) containing Cucumber Features which describe how your feature should work or exploit the bug you are submitting.
 
-# Build & Dependency Status
-
-[![Build Status](https://travis-ci.org/middleman/middleman-blog.png)](https://travis-ci.org/middleman/middleman-blog)
-
-# How to Run Cucumber Tests
+## How to Run Cucumber Tests
 
 1. Checkout Repository: `git clone https://github.com/middleman/middleman-blog.git`
 2. Install Bundler: `gem install bundler`
 3. Run `bundle install` inside the project root to install the gem dependencies.
 4. Run test cases: `bundle exec rake test`
 
-# Donate
+## Donate
 
-Please, [help support the Middleman team with a donation](https://spb.io/s/4dXbHBorC3).
+[Click here to lend your support to Middleman](https://spacebox.io/s/4dXbHBorC3)
 
-# License
+## License
 
-Copyright (c) 2010 Thomas Reynolds. MIT Licensed, see [LICENSE] for details.
+Copyright (c) 2010-2013 Thomas Reynolds. MIT Licensed, see [LICENSE] for details.
 
-[LICENSE]: https://github.com/middleman/middleman-blog/blob/master/LICENSE
+[middleman]: http://middlemanapp.com
+[gem]: https://rubygems.org/gems/middleman-blog
+[travis]: http://travis-ci.org/middleman/middleman-blog
+[gemnasium]: https://gemnasium.com/middleman/middleman-blog
+[codeclimate]: https://codeclimate.com/github/middleman/middleman-blog
+[rubydoc]: http://rubydoc.info/github/middleman/middleman-blog
+[LICENSE]: https://github.com/middleman/middleman-blog/blob/master/LICENSE.md
