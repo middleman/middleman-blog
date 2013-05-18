@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.test_files = `git ls-files -z -- {fixtures,features}/*`.split("\0")
   s.require_paths = ["lib"]
   s.add_dependency("middleman-core", ["~> 3.0"])
-  s.add_dependency("maruku", ["~> 0.6.0"])
+  s.add_dependency("padrino-helpers", ["0.10.7"])
   s.add_dependency("tzinfo", ["~> 0.3.0"])
-  s.add_dependency("zurb-foundation", ["~> 4.0.0"])
 end

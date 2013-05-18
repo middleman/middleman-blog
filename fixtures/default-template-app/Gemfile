@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+gem "middleman", :github => "middleman/middleman"
+gem "middleman-blog", :github => "middleman/middleman-blog"
+gem "middleman-syntax", :github => "middleman/middleman-syntax"
+gem "zurb-foundation", "~> 4.0.0"
