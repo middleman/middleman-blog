@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 git "git://github.com/middleman/middleman.git", :branch => "master" do
   # gem "middleman"
   gem "middleman-core"
-  gem "middleman-more"
 end
 
 # Specify your gem's dependencies in middleman-blog.gemspec
