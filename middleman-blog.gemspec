@@ -17,6 +17,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_dependency("middleman-core", ["~> 3.0"])
   s.add_dependency("kramdown", ["~> 1.0.0"])
-  s.add_dependency("padrino-helpers", ["0.10.7"])
   s.add_dependency("tzinfo", ["~> 0.3.0"])
 end
