@@ -1,5 +1,7 @@
 module Middleman
   class BlogExtension < Extension
+    self.supports_multiple_instances = true
+
     option :name, nil, 'Unique ID for telling multiple blogs apart'
     option :prefix, nil, 'Prefix to mount the blog at'
     option :permalink, "/:year/:month/:day/:title.html", 'HTTP path to host articles at'
@@ -36,8 +38,6 @@ module Middleman
 
       # app.set :time_zone, 'UTC'
 
-      app.send :include, Helpers
-
       # optional: :tag_template
       # optional: :year_template
       # optional: :month_template
@@ -63,6 +63,11 @@ module Middleman
 
     def after_configuration
       @uid ||= "blog#{@app.blog_instances.keys.length}"
+
+      @app.ignore(options.calendar_template) if options.calendar_template
+      @app.ignore(options.year_template) if options.year_template
+      @app.ignore(options.month_template) if options.month_template
+      @app.ignore(options.day_template) if options.day_template
 
       @app.blog_instances[@uid.to_sym] = self
 
@@ -117,7 +122,7 @@ module Middleman
     end
 
     # Helpers for use within templates and layouts.
-    module Helpers
+    helpers do
       def blog_instances
         @blog_instances ||= {}
       end

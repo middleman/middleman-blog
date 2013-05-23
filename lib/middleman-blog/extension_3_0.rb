@@ -97,6 +97,11 @@ module Middleman
           end
           Time.zone_default = zone_default
 
+          ignore(options.calendar_template) if options.calendar_template
+          ignore(options.year_template) if options.year_template
+          ignore(options.month_template) if options.month_template
+          ignore(options.day_template) if options.day_template
+
           # Initialize blog with options
           blog(options)
           

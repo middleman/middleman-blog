@@ -54,11 +54,10 @@ module Middleman
       # @return [void]
       def manipulate_resource_list(resources)
         new_resources = []
+
         # Set up date pages if the appropriate templates have been specified
         self.blog_data.articles.group_by {|a| a.date.year }.each do |year, year_articles|
           if self.blog_options.year_template
-            @app.ignore self.blog_options.year_template
-
             path = CalendarPages.link(self.blog_options, year)
           
             p = ::Middleman::Sitemap::Resource.new(
@@ -86,8 +85,6 @@ module Middleman
             
           year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
             if self.blog_options.month_template
-              @app.ignore self.blog_options.month_template
-
               path = CalendarPages.link(self.blog_options, year, month)
           
               p = ::Middleman::Sitemap::Resource.new(
@@ -114,8 +111,6 @@ module Middleman
             
             month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
               if self.blog_options.day_template
-                @app.ignore self.blog_options.day_template
-
                 path = CalendarPages.link(self.blog_options, year, month, day)
 
                 p = ::Middleman::Sitemap::Resource.new(
