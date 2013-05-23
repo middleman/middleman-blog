@@ -1,10 +1,11 @@
 xml.instruct!
 xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
+  site_url = "http://blog.url.com/"
   xml.title "Blog Name"
   xml.subtitle "Blog subtitle"
-  xml.id "http://blog.url.com/"
-  xml.link "href" => "http://blog.url.com/"
-  xml.link "href" => "http://blog.url.com/feed.xml", "rel" => "self"
+  xml.id URI.join(site_url, blog.options.prefix.to_s)
+  xml.link "href" => URI.join(site_url, blog.options.prefix.to_s)
+  xml.link "href" => URL.join(site_url, current_page.path), "rel" => "self"
   xml.updated blog.articles.first.date.to_time.iso8601
   xml.author { xml.name "Blog Author" }
 
