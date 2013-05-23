@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.test_files = `git ls-files -z -- {fixtures,features}/*`.split("\0")
   s.require_paths = ["lib"]
   s.add_dependency("middleman-core", ["~> 3.0"])
+  s.add_dependency("middleman-more", ["~> 3.0"])
   s.add_dependency("kramdown", ["~> 1.0.0"])
   s.add_dependency("tzinfo", ["~> 0.3.0"])
 end
