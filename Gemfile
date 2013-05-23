@@ -18,6 +18,9 @@ gem "rspec",    "~> 2.12"
 gem "timecop",  "~> 0.4.0"
 gem "nokogiri"
 
+# Code Quality
+gem "cane", :platforms => [:mri_19, :mri_20], :require => false
+
 platforms :ruby do
   gem "redcarpet", "~> 2.3.0"
 end
