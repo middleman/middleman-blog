@@ -2,7 +2,7 @@
 pageable: true
 per_page: 10
 ---
-<% if paginate %>
+<% if paginate && num_pages > 1 %>
   <p>Page <%= page_number %> of <%= num_pages %></p>
 
   <% if prev_page %>
