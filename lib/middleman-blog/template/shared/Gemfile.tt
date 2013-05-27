@@ -4,6 +4,3 @@ source 'http://rubygems.org'
 
 gem "middleman", "~> <%= Middleman::VERSION %>"
 gem "middleman-blog", "~> <%= Middleman::Blog::VERSION %>"
-
-# For feed.xml.builder
-gem "builder", "~> 3.0.0"
