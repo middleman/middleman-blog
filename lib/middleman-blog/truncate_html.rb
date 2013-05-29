@@ -8,7 +8,8 @@ end
 # MIT license
 module TruncateHTML
   def self.truncate_html(text, max_length, ellipsis = "...")
-    ellipsis_length = ellipsis.length     
+    ellipsis_length = ellipsis.length
+    text = text.encode('UTF-8') if text.respond_to?(:encode)
     doc = Nokogiri::HTML::DocumentFragment.parse text
     content_length = doc.inner_text.length
     actual_length = max_length - ellipsis_length
