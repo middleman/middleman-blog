@@ -35,11 +35,9 @@ module Middleman
         end
       end
     end
-    
+
     class << self
       def registered(app, options_hash={}, &block)
-        app.set :markdown_engine, :kramdown
-
         require 'middleman-blog/blog_data'
         require 'middleman-blog/blog_article'
         require 'active_support/core_ext/time/zones'
