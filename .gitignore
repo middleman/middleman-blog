@@ -11,3 +11,4 @@ doc
 .yardoc
 build/
 .sass-cache
+coverage

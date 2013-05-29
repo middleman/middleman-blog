@@ -14,6 +14,7 @@ gem "cucumber", "~> 1.3.1"
 gem "fivemat"
 gem "aruba",    "~> 0.5.1"
 gem "rspec",    "~> 2.12"
+gem "simplecov"
 
 gem "timecop",  "~> 0.4.0"
 gem "nokogiri"
