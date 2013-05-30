@@ -5,7 +5,7 @@
 @charset "UTF-8";
 
 // This includes all of the foundation global elements that are needed to work with any of the other files.
-@import "foundation/foundation-global";
+@import "foundation/variables";
 
 $topbar-bg: #262626;
 $topbar-height: 35px;
@@ -69,7 +69,7 @@ nav {
 header {
   background: #333333;
 
-  .row { 
+  .row {
     padding: emCalc(15px) 0;
     @media #{$small} {
       padding: emCalc(55px) 0;
