@@ -36,3 +36,8 @@ Feature: Article summary generation
     Then I should not see "Summary from article with no separator"
     Then I should not see "Extended part from article"
 
+  Scenario: Article has comments in the summary and no summary separator
+    Given the Server is running at "summary-app"
+    When I go to "/index.html"
+    Then I should see "Summary from article with no summary separator and comments in the summary."
+    Then I should not see "Extended part from article from article with no summary separator and comments in the summary."
