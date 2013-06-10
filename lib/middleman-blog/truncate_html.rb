@@ -47,8 +47,16 @@ module NokogiriTruncator
     end
   end
 
+  module CommentNode
+    def truncate(*args)
+      # Don't truncate comments, since they aren't visible
+      self
+    end
+  end
+
 end
 
 Nokogiri::HTML::DocumentFragment.send(:include, NokogiriTruncator::NodeWithChildren)
 Nokogiri::XML::Element.send(:include, NokogiriTruncator::NodeWithChildren)
 Nokogiri::XML::Text.send(:include, NokogiriTruncator::TextNode)
+Nokogiri::XML::Comment.send(:include, NokogiriTruncator::CommentNode)
