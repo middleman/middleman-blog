@@ -17,7 +17,7 @@ gem "rspec",    "~> 2.12"
 gem "simplecov"
 
 gem "timecop",  "~> 0.4.0"
-gem "nokogiri"
+gem "nokogiri", "~> 1.5.0"
 gem "kramdown"
 
 # Code Quality

@@ -14,7 +14,7 @@ gem "rspec",    "~> 2.12"
 gem "simplecov"
 
 gem "timecop",  "~> 0.4.0"
-gem "nokogiri"
+gem "nokogiri", "~> 1.5.0"
 
 # Code Quality
 gem "cane", :platforms => [:mri_19, :mri_20], :require => false
