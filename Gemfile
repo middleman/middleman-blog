@@ -26,3 +26,8 @@ gem "cane", :platforms => [:mri_19, :mri_20], :require => false
 platforms :ruby do
   gem "redcarpet", "~> 2.3.0"
 end
+
+# Cross-templating language block fix for Ruby 1.8
+platforms :mri_18 do
+  gem "ruby18_source_location"
+end
