@@ -84,7 +84,7 @@ module Middleman
       # Initialize blog with options
 
       @data = ::Middleman::Blog::BlogData.new(@app, options, self)
-      
+
       @app.sitemap.register_resource_list_manipulator(
         :"blog_#{uid}_articles",
         @data,
@@ -169,7 +169,7 @@ module Middleman
       end
 
       # Get a path to the given month-based calendar page, based on the :month_link setting.
-      # @param [Number] year        
+      # @param [Number] year
       # @param [Number] month
       # @return [String]
       def blog_month_path(year, month, key=nil)
@@ -177,7 +177,7 @@ module Middleman
       end
 
       # Get a path to the given day-based calendar page, based on the :day_link setting.
-      # @param [Number] year        
+      # @param [Number] year
       # @param [Number] month
       # @param [Number] day
       # @return [String]
