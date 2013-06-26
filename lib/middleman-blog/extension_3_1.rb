@@ -74,6 +74,7 @@ module Middleman
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
       # allowing people to set their desired time zone via Time.zone or
       # set :time_zone
+      Time.zone = app.config[:time_zone] if app.config[:time_zone]
       time_zone = Time.zone if Time.zone
       zone_default = Time.find_zone!(time_zone || 'UTC')
       unless zone_default

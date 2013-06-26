@@ -42,8 +42,6 @@ module Middleman
         require 'middleman-blog/blog_article'
         require 'active_support/core_ext/time/zones'
 
-        app.set :time_zone, 'UTC'
-
         app.send :include, Helpers
 
         options = Options.new(options_hash)
@@ -90,6 +88,7 @@ module Middleman
           # Make sure ActiveSupport's TimeZone stuff has something to work with,
           # allowing people to set their desired time zone via Time.zone or
           # set :time_zone
+          Time.zone = self.time_zone if self.respond_to?(:time_zone)
           time_zone = Time.zone if Time.zone
           zone_default = Time.find_zone!(time_zone || 'UTC')
           unless zone_default
