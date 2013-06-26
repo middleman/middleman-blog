@@ -74,6 +74,7 @@ module Middleman
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
       # allowing people to set their desired time zone via Time.zone or
       # set :time_zone
+      Time.zone = app.config[:time_zone] if app.config[:time_zone]
       time_zone = Time.zone if Time.zone
       zone_default = Time.find_zone!(time_zone || 'UTC')
       unless zone_default
@@ -84,7 +85,7 @@ module Middleman
       # Initialize blog with options
 
       @data = ::Middleman::Blog::BlogData.new(@app, options, self)
-      
+
       @app.sitemap.register_resource_list_manipulator(
         :"blog_#{uid}_articles",
         @data,
@@ -169,7 +170,7 @@ module Middleman
       end
 
       # Get a path to the given month-based calendar page, based on the :month_link setting.
-      # @param [Number] year        
+      # @param [Number] year
       # @param [Number] month
       # @return [String]
       def blog_month_path(year, month, key=nil)
@@ -177,7 +178,7 @@ module Middleman
       end
 
       # Get a path to the given day-based calendar page, based on the :day_link setting.
-      # @param [Number] year        
+      # @param [Number] year
       # @param [Number] month
       # @param [Number] day
       # @return [String]
