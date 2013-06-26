@@ -24,11 +24,11 @@ module Middleman
               :page_link,
               :publish_future_dated
              ]
-      
+
       KEYS.each do |name|
         attr_accessor name
       end
-      
+
       def initialize(options={})
         options.each do |k,v|
           self.send(:"#{k}=", v)
@@ -42,13 +42,11 @@ module Middleman
         require 'middleman-blog/blog_article'
         require 'active_support/core_ext/time/zones'
 
-        app.set :time_zone, 'UTC'
-
         app.send :include, Helpers
-        
+
         options = Options.new(options_hash)
         yield options if block_given?
-        
+
         options.permalink            ||= "/:year/:month/:day/:title.html"
         options.sources              ||= ":year-:month-:day-:title.html"
         options.taglink              ||= "tags/:tag.html"
@@ -90,6 +88,7 @@ module Middleman
           # Make sure ActiveSupport's TimeZone stuff has something to work with,
           # allowing people to set their desired time zone via Time.zone or
           # set :time_zone
+          Time.zone = self.time_zone if self.respond_to?(:time_zone)
           time_zone = Time.zone if Time.zone
           zone_default = Time.find_zone!(time_zone || 'UTC')
           unless zone_default
@@ -104,7 +103,7 @@ module Middleman
 
           # Initialize blog with options
           blog(options)
-          
+
           sitemap.register_resource_list_manipulator(
                                                      :blog_articles,
                                                      blog,
@@ -122,8 +121,8 @@ module Middleman
                                                        )
           end
 
-          if options.year_template || 
-              options.month_template || 
+          if options.year_template ||
+              options.month_template ||
               options.day_template
 
             require 'middleman-blog/calendar_pages'
@@ -183,7 +182,7 @@ module Middleman
       end
 
       # Get a path to the given month-based calendar page, based on the :month_link setting.
-      # @param [Number] year        
+      # @param [Number] year
       # @param [Number] month
       # @return [String]
       def blog_month_path(year, month)
@@ -191,7 +190,7 @@ module Middleman
       end
 
       # Get a path to the given day-based calendar page, based on the :day_link setting.
-      # @param [Number] year        
+      # @param [Number] year
       # @param [Number] month
       # @param [Number] day
       # @return [String]
