@@ -12,3 +12,8 @@ Feature: Flexible article sources
     Given the Server is running at "no-day-app"
     When I go to "/2012/08/01/testing.html"
     Then I should see "Testing Article"
+
+  Scenario: Blog article sources can omit the title part
+    Given the Server is running at "no-title-app"
+    When I go to "/2013/08/07/testing-article.html"
+    Then I should see "Testing Article"

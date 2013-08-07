@@ -172,7 +172,11 @@ module Middleman
       # The "slug" of the article that shows up in its URL.
       # @return [String]
       def slug
-        @_slug ||= path_part("title")
+        @_slug ||= if blog_options.sources.include?(":title")
+          path_part("title")
+        else
+          title.parameterize
+        end
       end
 
       # The previous (chronologically earlier) article before this one
