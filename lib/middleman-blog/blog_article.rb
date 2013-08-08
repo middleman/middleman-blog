@@ -172,7 +172,13 @@ module Middleman
       # The "slug" of the article that shows up in its URL.
       # @return [String]
       def slug
-        @_slug ||= path_part("title")
+        @_slug ||= data["slug"]
+
+        @_slug ||= if blog_options.sources.include?(":title")
+          path_part("title")
+        else
+          title.parameterize
+        end
       end
 
       # The previous (chronologically earlier) article before this one
@@ -181,7 +187,7 @@ module Middleman
       def previous_article
         blog_data.articles.find {|a| a.date < self.date }
       end
-      
+
       # The next (chronologically later) article after this one
       # or nil if this is the most recent article.
       # @return [Middleman::Sitemap::Resource]
