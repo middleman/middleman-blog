@@ -17,3 +17,11 @@ Feature: Flexible article sources
     Given the Server is running at "no-title-app"
     When I go to "/2013/08/07/testing-article.html"
     Then I should see "Testing Article"
+
+  Scenario: Slug can be specified in frontmatter
+    Given the Server is running at "no-title-app"
+    When I go to "/2013/08/08/slug-from-frontmatter.html"
+    Then I should see "Article with slug specified in frontmatter"
+    Given the Server is running at "blog-sources-app"
+    When I go to "/2013/08/08/slug-from-frontmatter.html"
+    Then I should see "Article with slug specified in frontmatter"
