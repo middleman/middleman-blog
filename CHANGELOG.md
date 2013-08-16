@@ -1,3 +1,25 @@
+master
+===
+
+* Experimental support for multiple blogs in a single site by activating
+  `:blog` multiple times.
+* Works as a Middleman 3.1-style extension.
+* New, pretty default blog template.
+* Add `:blog_name`, `:blog_author`, `:blog_avatar` options and a `page_title` helper
+  that incorporates `:blog_name`.
+* Allow options.sources to contain the same date component multiple
+  times. #112
+* Improve `feed.xml.builder` template to support `blog.prefix`. #126
+* Hide page numbers in template if only one page per index. #125
+* URLs in the feed.xml template are now absolute. #130
+* ASCII-8BIT text is reencoded to UTF-8 to avoid Nokogiri problems when
+  generating summaries.
+* `summary` will no longer explode when encountering comments in the
+  article. #136
+* Fix setting time zone with `set :time_zone` in `config.rb`. #140
+* Articles can omit their :title from the filename and specify it in frontmatter
+  instead. #148
+
 3.2.0
 ====
 
