@@ -129,7 +129,7 @@ module Middleman
       end
 
       def blog_controller(key=nil)
-        key ||= blog_instances.keys.first
+        key ||= (current_resource && current_resource.metadata[:page]["blog"]) || blog_instances.keys.first
         blog_instances[key.to_sym]
       end
 
