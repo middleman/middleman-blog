@@ -1,0 +1,27 @@
+---
+blog: blog_name_1
+pageable: true
+---
+Index: blog1
+
+Paginate1: <%= paginate %>
+Article Count1: <%= page_articles.size %>
+<% if paginate %>
+Page Num1: <%= page_number %>
+Num Pages1: <%= num_pages %>
+Per Page1: <%= per_page %>
+Page Start1: <%= page_start %>
+Page End1: <%= page_end %>
+Next Page1: '<%= next_page.url if next_page %>'
+Prev Page1: '<%= prev_page.url if prev_page %>'
+<% end %>
+
+<% page_articles.each_with_index do |article, i| %>
+  <article class="<%= (i == 0) ? 'first' : '' %>">
+    <h1><a href="<%= article.url %>"><%= article.title %></a> <span><%= article.date.strftime('%b %e %Y') %></span></h1>
+
+    <%= article.summary %>
+
+    <div class="more"><a href="<%= article.url %>">read on &raquo;</a></div>
+  </article>
+<% end %>

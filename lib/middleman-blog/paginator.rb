@@ -55,6 +55,8 @@ module Middleman
           # Skip other blogs' resources
           res_controller = md[:locals]["blog_controller"] || res.blog_controller
           next if @blog_controller && res_controller && (res_controller != @blog_controller)
+          override_controller = md[:page]["blog"]
+          next if @blog_controller && override_controller && override_controller != @blog_controller.uid
 
           if md[:page]["pageable"]
             # "articles" local variable is populated by Calendar and Tag page generators
