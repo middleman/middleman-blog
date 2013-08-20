@@ -3,6 +3,84 @@
 Feature: Pagination with Multiblog
   Scenario: Index pages are accessible from preview server
     Given the Server is running at "paginate-multiblog-app"
+    When I go to "/blog1/index.html"
+    Then I should see "Paginate1: true"
+    Then I should see "Article Count1: 5"
+    Then I should see "Page Num1: 1"
+    Then I should see "Num Pages1: 2"
+    Then I should see "Per Page1: 5"
+    Then I should see "Page Start1: 1"
+    Then I should see "Page End1: 5"
+    Then I should see "Next Page1: '/blog1/page/2/'"
+    Then I should see "Prev Page1: ''"
+    Then I should not see "/blog1/2011-01-01-test-article.html"
+    Then I should see "/blog1/2011-01-02-test-article.html"
+    Then I should see "/blog1/2011-01-03-test-article.html"
+    Then I should see "/blog1/2011-01-04-test-article.html"
+    Then I should see "/blog1/2011-01-05-test-article.html"
+    Then I should see "/blog1/2011-02-01-test-article.html"
+    Then I should not see "/blog2/2011-01-01-test-article.html"
+    Then I should not see "/blog2/2011-01-02-test-article.html"
+    Then I should not see "/blog2/2011-01-03-test-article.html"
+    Then I should not see "/blog2/2011-01-04-test-article.html"
+    Then I should not see "/blog2/2011-01-05-test-article.html"
+
+    When I go to "/blog2/index.html"
+    Then I should see "Paginate2: true"
+    Then I should see "Article Count2: 3"
+    Then I should see "Page Num2: 1"
+    Then I should see "Num Pages2: 2"
+    Then I should see "Per Page2: 3"
+    Then I should see "Page Start2: 1"
+    Then I should see "Page End2: 3"
+    Then I should see "Next Page2: '/blog2/page/2/'"
+    Then I should see "Prev Page2: ''"
+    Then I should not see "/blog2/2011-01-01-test-article.html"
+    Then I should not see "/blog2/2011-01-02-test-article.html"
+    Then I should see "/blog2/2011-01-03-test-article.html"
+    Then I should see "/blog2/2011-01-04-test-article.html"
+    Then I should see "/blog2/2011-01-05-test-article.html"
+    Then I should not see "/blog1/2011-01-02-test-article.html"
+    Then I should not see "/blog1/2011-01-03-test-article.html"
+    Then I should not see "/blog1/2011-01-04-test-article.html"
+    Then I should not see "/blog1/2011-01-05-test-article.html"
+    Then I should not see "/blog1/2011-02-01-test-article.html"
+
+    When I go to "/blog3/index.html"
+    Then I should see "Paginate3: false"
+    Then I should see "Article Count3: 7"
+    Then I should see "/blog3/2011-01-01-test-article.html"
+    Then I should see "/blog3/2011-01-02-test-article.html"
+    Then I should see "/blog3/2011-01-03-test-article.html"
+    Then I should see "/blog3/2011-01-04-test-article.html"
+    Then I should see "/blog3/2011-01-05-test-article.html"
+    Then I should see "/blog3/2011-02-01-test-article.html"
+    Then I should see "/blog3/2011-02-02-test-article.html"
+    Then I should not see "/blog1/2011-01-02-test-article.html"
+    Then I should not see "/blog1/2011-01-03-test-article.html"
+    Then I should not see "/blog1/2011-01-04-test-article.html"
+    Then I should not see "/blog1/2011-01-05-test-article.html"
+    Then I should not see "/blog1/2011-02-01-test-article.html"
+    Then I should not see "/blog2/2011-01-01-test-article.html"
+    Then I should not see "/blog2/2011-01-02-test-article.html"
+    Then I should not see "/blog2/2011-01-03-test-article.html"
+    Then I should not see "/blog2/2011-01-04-test-article.html"
+    Then I should not see "/blog2/2011-01-05-test-article.html"
+
+    When I go to "/blog1/page/2/index.html"
+    Then I should see "Article Count1: 1"
+    Then I should see "Page Num1: 2"
+    Then I should see "Page Start1: 6"
+    Then I should see "Page End1: 6"
+    Then I should see "Next Page1: ''"
+    Then I should see "Prev Page1: '/blog1/'"
+    Then I should see "/blog1/2011-01-01-test-article.html"
+    Then I should not see "/blog1/2011-01-02-test-article.html"
+    Then I should not see "/blog1/2011-01-03-test-article.html"
+    Then I should not see "/blog1/2011-01-04-test-article.html"
+    Then I should not see "/blog1/2011-01-05-test-article.html"
+    Then I should not see "/blog1/2011-02-01-test-article.html"
+
     When I go to "/blog1/2011.html"
     Then I should see "Paginate1: true"
     Then I should see "Article Count1: 5"
@@ -117,11 +195,14 @@ Feature: Pagination with Multiblog
     Given a successfully built app at "paginate-multiblog-app"
     When I cd to "build"
     Then the following files should exist:
+    | blog1/index.html           |
+    | blog1/page/2/index.html    |
     | blog1/tags/foo.html        |
     | blog1/tags/bar.html        |
     | blog1/tags/bar/page/2.html |
     | blog1/2011.html            |
     | blog1/2011/page/2.html     |
+    | blog2/index.html           | 
     | blog2/tags/foo.html        |
     | blog2/tags/bar.html        |
     | blog2/tags/bar/page/2.html |
