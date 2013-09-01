@@ -53,6 +53,12 @@ module Middleman
         data["title"]
       end
 
+      # The author of entry.
+      # @return [String]
+      def author
+        data["author"]
+      end
+
       # Whether or not this article has been published
       #
       # An article is considered published in the following scenarios:
