@@ -4,7 +4,6 @@ master
 * Experimental support for multiple blogs in a single site by activating
   `:blog` multiple times.
 * Works as a Middleman 3.1-style extension.
-* New, pretty default blog template.
 * Add `:blog_name`, `:blog_author`, `:blog_avatar` options and a `page_title` helper
   that incorporates `:blog_name`.
 * Allow options.sources to contain the same date component multiple
