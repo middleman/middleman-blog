@@ -148,6 +148,10 @@ module Middleman
         
         used_resources
       end
+
+      def inspect
+        "#<Middleman::Blog::BlogData: #{articles.inspect}>"
+      end
     end
   end
 end
