@@ -194,6 +194,10 @@ module Middleman
       def next_article
         blog_data.articles.reverse.find {|a| a.date > self.date }
       end
+
+      def inspect
+        "#<Middleman::Blog::BlogArticle: #{data.inspect}>"
+      end
     end
   end
 end
