@@ -16,7 +16,7 @@ gem "rspec",    "~> 2.12"
 gem "simplecov"
 
 gem "timecop",  "~> 0.4.0"
-gem "nokogiri", "~> 1.6.0"
+gem "nokogiri", "~> 1.5.0" # 1.6.0 requires Ruby 1.9+ but we still test on 1.8
 gem "kramdown"
 
 # Code Quality
