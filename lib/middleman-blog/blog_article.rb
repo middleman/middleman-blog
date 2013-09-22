@@ -129,7 +129,6 @@ module Middleman
       # @return [String]
       def path_part(part)
         @_path_parts ||= blog_data.path_matcher.match(path).captures
-
         @_path_parts[blog_data.matcher_indexes[part]]
       end
 
@@ -176,8 +175,10 @@ module Middleman
 
         @_slug ||= if blog_options.sources.include?(":title")
           path_part("title")
-        else
+        elsif title
           title.parameterize
+        else
+          raise "Can't generate a slug for #{path} because it has no :title in its path pattern or title/slug in its frontmatter."
         end
       end
 

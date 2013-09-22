@@ -7,7 +7,7 @@ module Middleman
       # A regex for matching blog article source paths
       # @return [Regex]
       attr_reader :path_matcher
-      
+
       # A hash of indexes into the path_matcher captures
       # @return [Hash]
       attr_reader :matcher_indexes
@@ -26,7 +26,7 @@ module Middleman
 
         # A list of resources corresponding to blog articles
         @_articles = []
-        
+
         matcher = Regexp.escape(options.sources).
             sub(/^\//, "").
             gsub(":year",  "(\\d{4})").
@@ -107,8 +107,8 @@ module Middleman
             #   substitute date parts to path pattern
             resource.destination_path = options.permalink.
               sub(':year', resource.date.year.to_s).
-              sub(':month', resource.date.month.to_s.rjust(2,'0')).
-              sub(':day', resource.date.day.to_s.rjust(2,'0')).
+              sub(':month', resource.date.month.to_s.rjust(2, '0')).
+              sub(':day', resource.date.day.to_s.rjust(2, '0')).
               sub(':title', resource.slug)
 
             resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
@@ -118,11 +118,10 @@ module Middleman
           elsif resource.path =~ @subdir_matcher
             match = $~.captures
 
-            article_path = options.sources.
-              sub(':year', match[@matcher_indexes["year"]]).
-              sub(':month', match[@matcher_indexes["month"]]).
-              sub(':day', match[@matcher_indexes["day"]]).
-              sub(':title', match[@matcher_indexes["title"]])
+            article_path = options.sources
+            %w(year month day title).each do |token|
+              article_path = article_path.sub(":#{token}", match[@matcher_indexes[token]]) if @matcher_indexes[token]
+            end
 
             article = @app.sitemap.find_resource_by_path(article_path)
             raise "Article for #{resource.path} not found" if article.nil?
@@ -135,7 +134,7 @@ module Middleman
             # or file extension stripped off.
             resource.destination_path = options.permalink.
               sub(':year', article.date.year.to_s).
-              sub(':month', article.date.month.to_s.rjust(2,'0')).
+              sub(':month', article.date.month.to_s.rjust(2, '0')).
               sub(':day', article.date.day.to_s.rjust(2,'0')).
               sub(':title', article.slug).
               sub(/(\/#{@app.index_file}$)|(\.[^.]+$)|(\/$)/, match[@matcher_indexes["path"]])
@@ -145,7 +144,7 @@ module Middleman
 
           used_resources << resource
         end
-        
+
         used_resources
       end
 
