@@ -1,0 +1,8 @@
+ <% blog(:blog_name_1).articles[0...12].each do |article| %>
+      <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+    <% end %>
+ <% blog(:blog_name_2).articles[0...12].each do |article| %>
+      <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+    <% end %>
+Category Path1: '<%= category_path("ruby-on-rails", :blog_name_1) %>'
+Category Path2: '<%= category_path("javascript", :blog_name_2) %>'

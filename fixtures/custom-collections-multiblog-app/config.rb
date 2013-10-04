@@ -3,7 +3,13 @@ activate :blog do |blog|
   blog.prefix       = "blog1"
   blog.sources      = ":year-:month-:day-:title.html"
   blog.permalink    = ":year-:month-:day-:title.html"
-  blog.tag_template = "tag1.html"
+
+  blog.custom_collections = {
+    :category => {
+      :link     => 'categories/:category.html',
+      :template => 'category1.html'
+    }
+  }
 end
 
 activate :blog do |blog|
@@ -11,5 +17,11 @@ activate :blog do |blog|
   blog.prefix       = "blog2"
   blog.sources      = ":year-:month-:day-:title.html"
   blog.permalink    = ":year-:month-:day-:title.html"
-  blog.tag_template = "tag2.html"
+
+  blog.custom_collections = {
+    :category => {
+      :link     => 'categories/:category.html',
+      :template => 'category2.html'
+    }
+  }
 end
