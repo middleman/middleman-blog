@@ -105,13 +105,7 @@ module Middleman
 
             # compute output path:
             #   substitute date parts to path pattern
-            resource.destination_path = options.permalink.
-              sub(':year', resource.date.year.to_s).
-              sub(':month', resource.date.month.to_s.rjust(2, '0')).
-              sub(':day', resource.date.day.to_s.rjust(2, '0')).
-              sub(':title', resource.slug)
-
-            resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
+            resource.destination_path = Middleman::Util.normalize_path parse_permalink_options(resource)
 
             @_articles << resource
 
@@ -132,11 +126,7 @@ module Middleman
 
             # The subdir path is the article path with the index file name
             # or file extension stripped off.
-            resource.destination_path = options.permalink.
-              sub(':year', article.date.year.to_s).
-              sub(':month', article.date.month.to_s.rjust(2, '0')).
-              sub(':day', article.date.day.to_s.rjust(2,'0')).
-              sub(':title', article.slug).
+            resource.destination_path = parse_permalink_options(article).
               sub(/(\/#{@app.index_file}$)|(\.[^.]+$)|(\/$)/, match[@matcher_indexes["path"]])
 
             resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
@@ -146,6 +136,14 @@ module Middleman
         end
 
         used_resources
+      end
+
+      def parse_permalink_options(resource)
+        options.permalink.
+          sub(':year', resource.date.year.to_s).
+          sub(':month', resource.date.month.to_s.rjust(2, '0')).
+          sub(':day', resource.date.day.to_s.rjust(2, '0')).
+          sub(':title', resource.slug)
       end
 
       def inspect
