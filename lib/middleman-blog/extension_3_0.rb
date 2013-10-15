@@ -22,7 +22,8 @@ module Middleman
               :paginate,
               :per_page,
               :page_link,
-              :publish_future_dated
+              :publish_future_dated,
+              :custom_collections
              ]
 
       KEYS.each do |name|
@@ -61,6 +62,7 @@ module Middleman
         options.per_page             ||= 10
         options.page_link            ||= "page/:num"
         options.publish_future_dated ||= false
+        options.custom_collections   ||= {}
 
         # optional: :tag_template
         # optional: :year_template
@@ -82,6 +84,10 @@ module Middleman
           options.year_link = File.join(options.prefix, options.year_link)
           options.month_link = File.join(options.prefix, options.month_link)
           options.day_link = File.join(options.prefix, options.day_link)
+
+          options.custom_collections.each do |key, opts|
+            opts[:link] = File.join(options.prefix, opts[:link])
+          end
         end
 
         app.after_configuration do
@@ -140,6 +146,27 @@ module Middleman
                                                        Paginator.new(self),
                                                        false
                                                        )
+          end
+
+          if options.custom_collections
+            require 'middleman-blog/custom_pages'
+            options.custom_collections.each do |property, options|
+              ignore options[:template]
+              sitemap.register_resource_list_manipulator(
+                                                          :"blog_#{property}",
+                                                          CustomPages.new(property, self),
+                                                          false
+                                                          )
+
+              m = Module.new
+              m.module_eval(%Q{
+                def #{property}_path(value, key = nil)
+                  sitemap.find_resource_by_path(CustomPages.link(self.blog.options, :#{property}, value)).try(:url)
+                end
+              })
+
+              self.class.send(:include, m)
+            end
           end
         end
       end
