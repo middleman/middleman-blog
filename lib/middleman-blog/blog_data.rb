@@ -18,6 +18,8 @@ module Middleman
 
       attr_reader :controller
 
+      DEFAULT_PERMALINK_COMPONENTS = [:year, :month, :day, :title]
+
       # @private
       def initialize(app, options={}, controller=nil)
         @app = app
@@ -105,13 +107,7 @@ module Middleman
 
             # compute output path:
             #   substitute date parts to path pattern
-            resource.destination_path = options.permalink.
-              sub(':year', resource.date.year.to_s).
-              sub(':month', resource.date.month.to_s.rjust(2, '0')).
-              sub(':day', resource.date.day.to_s.rjust(2, '0')).
-              sub(':title', resource.slug)
-
-            resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
+            resource.destination_path = Middleman::Util.normalize_path parse_permalink_options(resource)
 
             @_articles << resource
 
@@ -132,11 +128,7 @@ module Middleman
 
             # The subdir path is the article path with the index file name
             # or file extension stripped off.
-            resource.destination_path = options.permalink.
-              sub(':year', article.date.year.to_s).
-              sub(':month', article.date.month.to_s.rjust(2, '0')).
-              sub(':day', article.date.day.to_s.rjust(2,'0')).
-              sub(':title', article.slug).
+            resource.destination_path = parse_permalink_options(article).
               sub(/(\/#{@app.index_file}$)|(\.[^.]+$)|(\/$)/, match[@matcher_indexes["path"]])
 
             resource.destination_path = Middleman::Util.normalize_path(resource.destination_path)
@@ -146,6 +138,28 @@ module Middleman
         end
 
         used_resources
+      end
+
+      def parse_permalink_options(resource)
+        permalink = options.permalink.
+          sub(':year', resource.date.year.to_s).
+          sub(':month', resource.date.month.to_s.rjust(2, '0')).
+          sub(':day', resource.date.day.to_s.rjust(2, '0')).
+          sub(':title', resource.slug)
+
+        custom_permalink_components.each do |component|
+          permalink = permalink.sub(":#{component}", resource.data[component].parameterize)
+        end
+
+        permalink
+      end
+
+      def custom_permalink_components
+        permalink_url_components.reject { |component| DEFAULT_PERMALINK_COMPONENTS.include? component.to_sym }
+      end
+
+      def permalink_url_components
+        options.permalink.scan(/:([A-Za-z0-9]+)/).flatten
       end
 
       def inspect

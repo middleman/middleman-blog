@@ -24,6 +24,7 @@ module Middleman
     option :per_page, 10, 'Articles per page when paginating'
     option :page_link, "page/:num", 'HTTP path for paging'
     option :publish_future_dated, false, 'Whether to pubish articles dated in the future'
+    option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options'
 
     attr_accessor :data, :uid
 
@@ -58,6 +59,10 @@ module Middleman
         options.year_link = File.join(options.prefix, options.year_link)
         options.month_link = File.join(options.prefix, options.month_link)
         options.day_link = File.join(options.prefix, options.day_link)
+
+        options.custom_collections.each do |key, opts|
+          opts[:link] = File.join(options.prefix, opts[:link])
+        end
       end
     end
 
@@ -120,6 +125,58 @@ module Middleman
           false
         )
       end
+
+      if options.custom_collections
+        require 'middleman-blog/custom_pages'
+        register_custom_pages
+      end
+    end
+
+    # Register any custom page collections that may be set in the config
+    #
+    # A custom resource list manipulator will be generated for each key in the
+    # custom collections hash.
+    #
+    # The following will collect posts on the "category" frontmatter property:
+    #   ```
+    #   activate :blog do |blog|
+    #     blog.custom_collections = {
+    #       link: "/categories/:category.html",
+    #       template: "/category.html"
+    #     }
+    #   end
+    #   ```
+    #
+    # Category pages in the example above will use the category.html as a template file
+    # and it will be ignored when building.
+    def register_custom_pages
+      options.custom_collections.each do |property, options|
+        @app.ignore options[:template]
+        @app.sitemap.register_resource_list_manipulator(
+          :"blog_#{uid}_#{property}",
+          ::Middleman::Blog::CustomPages.new(property, @app, self),
+          false
+        )
+
+        generate_custom_helper(property)
+      end
+    end
+
+    # Generate helpers to access the path to a custom collection.
+    #
+    # For example, when using a custom property called "category" to collect articles on
+    # the method **category_path** will be generated.
+    #
+    # @param [Symbol] custom_property Custom property which is being used to collect articles on
+    def generate_custom_helper(custom_property)
+      m = Module.new
+      m.module_eval(%Q{
+        def #{custom_property}_path(value, key = nil)
+          sitemap.find_resource_by_path(::Middleman::Blog::CustomPages.link(blog_controller(key).options, :#{custom_property}, value)).try(:url)
+        end
+      })
+
+      app.class.send(:include, m)
     end
 
     # Helpers for use within templates and layouts.

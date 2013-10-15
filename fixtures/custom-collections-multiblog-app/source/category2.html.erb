@@ -1,0 +1,7 @@
+Category2: <%= category %>
+
+<% if articles %>
+  <% articles[0...12].each do |article| %>
+    <li><a href="<%= article.url %>"><%= article.title %></a> <time><%= article.date.strftime('%b %e') %></time></li>
+  <% end %>
+<% end %>
