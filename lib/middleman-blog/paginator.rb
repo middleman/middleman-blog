@@ -49,11 +49,11 @@ module Middleman
 
         resources.each do |res|
           next if res.ignored?
-          
+
           md = res.metadata
 
           # Skip other blogs' resources
-          res_controller = md[:locals]["blog_controller"] || res.blog_controller
+          res_controller = md[:locals]["blog_controller"] || (res.respond_to?(:blog_controller) && res.blog_controller)
           next if @blog_controller && res_controller && (res_controller != @blog_controller)
           override_controller = md[:page]["blog"]
           next if @blog_controller && override_controller && override_controller != @blog_controller.uid
