@@ -186,7 +186,16 @@ module Middleman
       end
 
       def blog_controller(key=nil)
-        key ||= (current_resource && current_resource.metadata[:page]["blog"]) || blog_instances.keys.first
+        if !key && current_resource
+          key ||= current_resource.metadata[:page]["blog"]
+        end
+
+        # In multiblog situations, force people to specify the blog
+        if !key && blog_instances.size > 1
+          raise "You must either specify the blog name in calling this method or in your page frontmatter (using the 'blog' key)"
+        end
+
+        key ||= blog_instances.keys.first
         blog_instances[key.to_sym]
       end
 
