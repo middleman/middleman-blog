@@ -187,7 +187,11 @@ module Middleman
 
       def blog_controller(key=nil)
         if !key && current_resource
-          key ||= current_resource.metadata[:page]["blog"]
+          key = current_resource.metadata[:page]["blog"]
+
+          if !key && current_resource.respond_to?(:blog_controller) && current_resource.blog_controller
+            return current_resource.blog_controller
+          end
         end
 
         # In multiblog situations, force people to specify the blog
