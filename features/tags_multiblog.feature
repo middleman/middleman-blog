@@ -89,7 +89,7 @@ Feature: Tag pages with multiple blogs
     Then I should see "Not Found"
     And the file "source/blog1/2011-01-01-new-article.html.markdown" has the contents
       """
-      --- 
+      ---
       title: "Newest Article"
       date: 2011-01-01
       tags: newtag1, newtagX
@@ -99,7 +99,7 @@ Feature: Tag pages with multiple blogs
       """
     And the file "source/blog2/2011-01-01-new-article.html.markdown" has the contents
       """
-      --- 
+      ---
       title: "Newest Article"
       date: 2011-01-01
       tags: newtag2, newtagX
@@ -123,3 +123,29 @@ Feature: Tag pages with multiple blogs
     When I go to "/blog2/tags/newtagx.html"
     Then I should see "/blog2/2011-01-01-new-article.html"
     Then I should not see "/blog1/2011-01-01-new-article.html"
+
+  Scenario: Blog data should work when blog name is specified
+    Given the Server is running at "tags-multiblog-app"
+    When I go to "/blog1/named_blog_tags.html"
+    Then I should see "foo1 (2)"
+    Then I should see "bar1 (1)"
+    Then I should see "fooX (2)"
+    Then I should see "barX (1)"
+    When I go to "/blog2/named_blog_tags.html"
+    Then I should see "foo2 (2)"
+    Then I should see "bar2 (1)"
+    Then I should see "fooX (2)"
+    Then I should see "barX (1)"
+
+  Scenario: Blog data should use blog name in frontmatter
+    Given the Server is running at "tags-multiblog-app"
+    When I go to "/blog1/frontmatter_blog_tags.html"
+    Then I should see "foo1 (2)"
+    Then I should see "bar1 (1)"
+    Then I should see "fooX (2)"
+    Then I should see "barX (1)"
+    When I go to "/blog2/frontmatter_blog_tags.html"
+    Then I should see "foo2 (2)"
+    Then I should see "bar2 (1)"
+    Then I should see "fooX (2)"
+    Then I should see "barX (1)"
