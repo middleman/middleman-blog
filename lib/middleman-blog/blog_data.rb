@@ -18,7 +18,7 @@ module Middleman
 
       attr_reader :controller
 
-      DEFAULT_PERMALINK_COMPONENTS = [:year, :month, :day, :title]
+      DEFAULT_PERMALINK_COMPONENTS = [:lang, :year, :month, :day, :title]
 
       # @private
       def initialize(app, options={}, controller=nil)
@@ -31,6 +31,7 @@ module Middleman
 
         matcher = Regexp.escape(options.sources).
             sub(/^\//, "").
+            gsub(":lang",  "(\\w{2}(?:-\\w{2})?)").
             gsub(":year",  "(\\d{4})").
             gsub(":month", "(\\d{2})").
             gsub(":day",   "(\\d{2})").
@@ -43,7 +44,7 @@ module Middleman
 
         # Build a hash of part name to capture index, e.g. {"year" => 0}
         @matcher_indexes = {}
-        options.sources.scan(/:year|:month|:day|:title/).
+        options.sources.scan(/:lang|:year|:month|:day|:title/).
           each_with_index do |key, i|
             @matcher_indexes[key[1..-1]] = i
           end
@@ -55,6 +56,17 @@ module Middleman
       # @return [Array<Middleman::Sitemap::Resource>]
       def articles
         @_articles.sort_by(&:date).reverse
+      end
+
+      # A list of all blog articles with language, witch match
+      # selected, sorted by descending date
+      #
+      # @param [Symbol] lang Language to match (optional, defaults to I18n.locale).
+      # @return [Array<Middleman::Sitemap::Resource>]
+      def local_articles(lang=nil)
+        lang ||= I18n.locale
+        lang = lang.to_sym if lang.kind_of? String
+        articles.select{ |article| article.lang == lang }
       end
 
       # The BlogArticle for the given path, or nil if one doesn't exist.
@@ -102,6 +114,8 @@ module Middleman
               resource.blog_controller = controller
             end
 
+            resource.normalize_lang! unless options.preserve_locale
+
             # Skip articles that are not published (in non-development environments)
             next unless @app.environment == :development || resource.published?
 
@@ -115,13 +129,15 @@ module Middleman
             match = $~.captures
 
             article_path = options.sources
-            %w(year month day title).each do |token|
-              article_path = article_path.sub(":#{token}", match[@matcher_indexes[token]]) if @matcher_indexes[token]
+            %w(lang year month day title).each do |token|
+              article_path = article_path.gsub(":#{token}", match[@matcher_indexes[token]]) if @matcher_indexes[token]
             end
 
             article = @app.sitemap.find_resource_by_path(article_path)
             raise "Article for #{resource.path} not found" if article.nil?
             article.extend BlogArticle
+
+            article.normalize_lang! unless options.preserve_locale
 
             # Skip files that belong to articles that are not published (in non-development environments)
             next unless @app.environment == :development || article.published?
@@ -142,9 +158,10 @@ module Middleman
 
       def parse_permalink_options(resource)
         permalink = options.permalink.
-          sub(':year', resource.date.year.to_s).
-          sub(':month', resource.date.month.to_s.rjust(2, '0')).
-          sub(':day', resource.date.day.to_s.rjust(2, '0')).
+          gsub(':lang', resource.lang.to_s).
+          gsub(':year', resource.date.year.to_s).
+          gsub(':month', resource.date.month.to_s.rjust(2, '0')).
+          gsub(':day', resource.date.day.to_s.rjust(2, '0')).
           sub(':title', resource.slug)
 
         custom_permalink_components.each do |component|

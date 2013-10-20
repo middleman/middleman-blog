@@ -25,6 +25,7 @@ module Middleman
     option :page_link, "page/:num", 'HTTP path for paging'
     option :publish_future_dated, false, 'Whether to pubish articles dated in the future'
     option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options'
+    option :preserve_locale, false, 'Whether to use a global Middleman\'s I18n.locale instead of the article\'s one on rendering'
 
     attr_accessor :data, :uid
 
