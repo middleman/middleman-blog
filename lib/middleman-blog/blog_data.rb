@@ -54,7 +54,11 @@ module Middleman
       # A list of all blog articles, sorted by descending date
       # @return [Array<Middleman::Sitemap::Resource>]
       def articles
-        @_articles.sort_by(&:date).reverse
+        if @app.environment != :development
+          @_articles.reject{|a| a.data.public_draft }.sort_by(&:date).reverse
+        else
+          @_articles.sort_by(&:date).reverse
+        end
       end
 
       # The BlogArticle for the given path, or nil if one doesn't exist.
