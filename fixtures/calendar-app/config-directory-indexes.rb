@@ -6,5 +6,4 @@ activate :blog do |blog|
   blog.calendar_template = 'calendar.html'
 end
 
-require "middleman-more"
 activate :directory_indexes

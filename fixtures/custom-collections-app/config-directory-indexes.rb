@@ -10,5 +10,4 @@ activate :blog do |blog|
   }
 end
 
-require "middleman-more"
 activate :directory_indexes

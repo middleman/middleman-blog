@@ -4,5 +4,4 @@ activate :blog do |blog|
   blog.permalink    = "blog/:category/:title.html"
 end
 
-require "middleman-more"
 activate :directory_indexes

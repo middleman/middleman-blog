@@ -5,5 +5,4 @@ activate :blog do |blog|
   blog.tag_template = "/tag.html"
 end
 
-require "middleman-more"
 activate :directory_indexes
