@@ -1,13 +1,7 @@
 rvm:
-  - 1.8.7
   - 1.9.3
   - 2.0.0
-  - jruby-18mode
   - jruby-19mode
-
-gemfile:
-  - Gemfile
-  - Gemfile-3.0
 
 script: "bundle exec rake test"
 
