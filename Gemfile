@@ -23,7 +23,7 @@ gem "kramdown"
 gem "cane", :platforms => [:mri_19, :mri_20], :require => false
 
 platforms :ruby do
-  gem "redcarpet", /^1\.8/.match(RUBY_VERSION) ? "~> 2.0" : "~> 3.0"
+  gem "redcarpet", "~> 3.0"
 end
 
 # Cross-templating language block fix for Ruby 1.8
