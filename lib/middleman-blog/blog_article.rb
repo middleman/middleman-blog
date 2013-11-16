@@ -93,6 +93,8 @@ module Middleman
 
         if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
           rendered.split(blog_options.summary_separator).first
+        elsif blog_options.summary_separator && length < 0
+          rendered
         elsif blog_options.summary_generator
           blog_options.summary_generator.call(self, rendered, length, ellipsis)
         else
