@@ -1,4 +1,4 @@
-require 'middleman-core/cli'
+﻿require 'middleman-core/cli'
 require 'date'
 
 module Middleman
@@ -25,7 +25,10 @@ module Middleman
       desc "article TITLE", "Create a new blog article"
       method_option "date",
         :aliases => "-d",
-        :desc => "The date to create the post with (defaults to now)"      
+        :desc => "The date to create the post with (defaults to now)"
+      method_option "lang",
+        :aliases => "-l",
+        :desc => "The language to create the post with (defaults to I18n.default_locale if avaliable)"
       def article(title)
         shared_instance = ::Middleman::Application.server.inst
 
@@ -34,8 +37,10 @@ module Middleman
           @title = title
           @slug = title.parameterize
           @date = options[:date] ? Time.zone.parse(options[:date]) : Time.zone.now
+          @lang = options[:lang] || ( I18n.default_locale if defined? I18n )
 
           article_path = shared_instance.blog.options.sources.
+            sub(':lang', @lang.to_s).
             sub(':year', @date.year.to_s).
             sub(':month', @date.month.to_s.rjust(2,'0')).
             sub(':day', @date.day.to_s.rjust(2,'0')).

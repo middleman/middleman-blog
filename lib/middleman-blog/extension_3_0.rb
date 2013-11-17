@@ -23,7 +23,8 @@ module Middleman
               :per_page,
               :page_link,
               :publish_future_dated,
-              :custom_collections
+              :custom_collections,
+              :preserve_locale
              ]
 
       KEYS.each do |name|
@@ -63,6 +64,7 @@ module Middleman
         options.page_link            ||= "page/:num"
         options.publish_future_dated ||= false
         options.custom_collections   ||= {}
+        options.preserve_locale      ||= false
 
         # optional: :tag_template
         # optional: :year_template

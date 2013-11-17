@@ -1,4 +1,4 @@
-require 'active_support/time_with_zone'
+﻿require 'active_support/time_with_zone'
 require 'active_support/core_ext/time/calculations'
 
 module Middleman
@@ -125,11 +125,46 @@ module Middleman
       end
 
       # Retrieve a section of the source path
-      # @param [String] The part of the path, e.g. "year", "month", "day", "title"
+      # @param [String] The part of the path, e.g. "lang", "year", "month", "day", "title"
       # @return [String]
       def path_part(part)
         @_path_parts ||= blog_data.path_matcher.match(path).captures
         @_path_parts[blog_data.matcher_indexes[part]]
+      end
+
+      # The language of the article. The language can be present in the
+      # frontmatter or in the source path. If both labels present, they
+      # must match. If none labels present, I18n's default_locale will
+      # be returned. If it is set to nil, or i18n extension is not
+      # activated at all, :none will be returned.
+      #
+      # @return [Symbol]
+      def lang
+        return @_lang if @_lang
+
+        frontmatter_lang = data["lang"]
+
+        if blog_options.sources.include? ":lang"
+          filename_lang = path_part "lang"
+          raise "The lang in #{path}'s filename doesn't match the lang in its frontmatter" if frontmatter_lang and filename_lang and not frontmatter_lang == filename_lang
+        end
+
+        if defined? I18n
+          locale_lang = I18n.default_locale
+        end
+
+        lang = frontmatter_lang || filename_lang || locale_lang || :none
+        lang = lang.to_sym if lang.kind_of? String
+
+        @_lang = lang
+      end
+
+      # Normalize information about article's language in it's metadata
+      def normalize_lang!
+        return false if lang == :none
+        data = { :lang => lang }
+        add_metadata(:options => data, :locals => data){ @lang = @_lang }
+        return true
       end
 
       # Attempt to figure out the date of the post. The date should be
