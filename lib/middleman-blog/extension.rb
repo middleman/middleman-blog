@@ -3,29 +3,29 @@ module Middleman
     self.supports_multiple_instances = true
 
     option :name, nil, 'Unique ID for telling multiple blogs apart'
-    option :prefix, nil, 'Prefix to mount the blog at'
-    option :permalink, "/:year/:month/:day/:title.html", 'HTTP path to host articles at'
-    option :sources, ":year-:month-:day-:title.html", 'How to extract metadata from on-disk files'
-    option :taglink, "tags/:tag.html", 'HTTP path to host tag pages at'
+    option :prefix, nil, 'Prefix to mount the blog at (modifies permalink, sources, taglink, year_link, month_link, day_link to start with the prefix)'
+    option :permalink, "/:year/:month/:day/:title.html", 'Path articles are generated at. Tokens can be omitted or duplicated, and you can use tokens defined in article frontmatter.'
+    option :sources, ":year-:month-:day-:title.html", 'Pattern for matching source blog articles (no template extensions)'
+    option :taglink, "tags/:tag.html", 'Path tag pages are generated at.'
     option :layout, "layout", 'Article-specific layout'
-    option :summary_separator, /(READMORE)/, 'How to split article summaries around a delimeter'
-    option :summary_length, 250, 'Length of words in automatic summaries'
-    option :summary_generator, nil, 'Block to definte how summaries are extracted'
-    option :year_link, "/:year.html", 'HTTP path for yearly archives'
-    option :month_link, "/:year/:month.html", 'HTTP path for monthly archives'
-    option :day_link, "/:year/:month/:day.html", 'HTTP path for daily archives'
-    option :default_extension, ".markdown", 'Default article extension'
-    option :calendar_template, nil, 'Template for calendar pages'
-    option :year_template, nil, 'Template for yearly archive pages'
-    option :month_template, nil, 'Template for monthyl archive pages'
-    option :day_template, nil, 'Template for daily archive pages'
-    option :tag_template, nil, 'Template for tag archive pages'
-    option :paginate, false, 'Whether to paginate pages'
-    option :per_page, 10, 'Articles per page when paginating'
-    option :page_link, "page/:num", 'HTTP path for paging'
-    option :publish_future_dated, false, 'Whether to pubish articles dated in the future'
-    option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options'
-    option :preserve_locale, false, 'Whether to use a global Middleman\'s I18n.locale instead of the article\'s one on rendering'
+    option :summary_separator, /(READMORE)/, 'Regex or string that delimits the article summary from the rest of the article.'
+    option :summary_length, 250, 'Truncate summary to be <= this number of characters. Set to -1 to disable summary truncation.'
+    option :summary_generator, nil, 'A block that defines how summaries are extracted. It will be passed the rendered article content, max summary length, and ellipsis string as arguments.'
+    option :year_link, "/:year.html", 'Path yearly archive pages are generated at.'
+    option :month_link, "/:year/:month.html", 'Path monthly archive pages are generated at.'
+    option :day_link, "/:year/:month/:day.html", 'Path daily archive pages are generated at.'
+    option :default_extension, ".markdown", 'Default template extension for articles (used by "middleman article")'
+    option :calendar_template, nil, 'Template path (no template extension) for calendar pages (year/month/day archives).'
+    option :year_template, nil, 'Template path (no template extension) for yearly archive pages. Defaults to the :calendar_template.'
+    option :month_template, nil, 'Template path (no template extension) for monthly archive pages. Defaults to the :calendar_template.'
+    option :day_template, nil, 'Template path (no template extension) for daily archive pages. Defaults to the :calendar_template.'
+    option :tag_template, nil, 'Template path (no template extension) for tag archive pages.'
+    option :paginate, false, 'Whether to paginate lists of articles'
+    option :per_page, 10, 'Number of articles per page when paginating'
+    option :page_link, "page/:num", 'Path to append for additional pages when paginating'
+    option :publish_future_dated, false, 'Whether articles with a date in the future should be considered published'
+    option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options (link, template)'
+    option :preserve_locale, false, 'Use the global Middleman I18n.locale instead of the lang in the article\'s frontmatter'
 
     attr_accessor :data, :uid
 
@@ -142,8 +142,10 @@ module Middleman
     #   ```
     #   activate :blog do |blog|
     #     blog.custom_collections = {
-    #       link: "/categories/:category.html",
-    #       template: "/category.html"
+    #       category: {
+    #         link: "/categories/:category.html",
+    #         template: "/category.html"
+    #       }
     #     }
     #   end
     #   ```
