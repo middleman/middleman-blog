@@ -69,17 +69,6 @@ module Middleman
         articles.select{ |article| article.lang == lang }
       end
 
-      # The BlogArticle for the given path, or nil if one doesn't exist.
-      # @return [Middleman::Sitemap::Resource]
-      def article(path)
-        article = @app.sitemap.find_resource_by_path(path.to_s)
-        if article && article.is_a?(BlogArticle)
-          article
-        else
-          nil
-        end
-      end
-
       # Returns a map from tag name to an array
       # of BlogArticles associated with that tag.
       # @return [Hash<String, Array<Middleman::Sitemap::Resource>>]
@@ -109,7 +98,6 @@ module Middleman
         resources.each do |resource|
           if resource.path =~ path_matcher
             resource.extend BlogArticle
-
             if @controller
               resource.blog_controller = controller
             end
@@ -135,7 +123,11 @@ module Middleman
 
             article = @app.sitemap.find_resource_by_path(article_path)
             raise "Article for #{resource.path} not found" if article.nil?
+
             article.extend BlogArticle
+            if @controller
+              article.blog_controller = controller
+            end
 
             article.normalize_lang! unless options.preserve_locale
 

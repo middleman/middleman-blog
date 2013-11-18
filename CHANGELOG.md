@@ -3,6 +3,7 @@ master
 
 * Add support for internationalization and locale-specific articles. #156
 * Drop support for Ruby 1.8 and Middleman 3.0.
+* Removed backwards compatibility patch that set instance variables for tag and calendar pages. Use locals instead.
 
 3.4.1
 ====

@@ -1,4 +1,5 @@
-﻿require 'active_support/time_with_zone'
+# -*- coding: utf-8 -*-
+require 'active_support/time_with_zone'
 require 'active_support/core_ext/time/calculations'
 
 module Middleman
@@ -10,19 +11,11 @@ module Middleman
       end
 
       def blog_data
-        if self.blog_controller
-          self.blog_controller.data
-        else
-          app.blog
-        end
+        blog_controller.data
       end
 
       def blog_options
-        if self.blog_controller
-          self.blog_controller.options
-        else
-          app.blog.options
-        end
+        blog_controller.options
       end
 
       # Render this resource

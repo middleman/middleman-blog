@@ -1,30 +1,50 @@
 module Middleman
   module Blog
     module Helpers
+      # All the blog instances known to this Middleman app. A new blog is added
+      # every time the blog extension is activated. Name them by setting the :name
+      # option when activating.
+      #
+      # @return [Hash] a hash of all blog instances by name
       def blog_instances
         @blog_instances ||= {}
       end
 
-      def blog_controller(key=nil)
-        if !key && current_resource
-          key = current_resource.metadata[:page]["blog"]
+      # Retrieve a {BlogExtension} instance.
+      # If "blog_name" is provided, the instance with that name will be returned.
+      # Otherwise, an attempt is made to find the appropriate blog controller
+      # for the current resource. For articles this is always available, but
+      # for other pages it may be necessary to name the blog in frontmatter
+      # using the "blog" blog_name. If there is only one blog, this method will
+      # always return that blog.
+      #
+      # @param [Symbol, String] blog_name the name of the blog to get a controller for.
+      # @return [Middleman::BlogExtension]
+      def blog_controller(blog_name=nil)
+        if !blog_name && current_resource
+          blog_name = current_resource.metadata[:page]["blog"]
 
-          if !key && current_resource.respond_to?(:blog_controller) && current_resource.blog_controller
+          if !blog_name && current_resource.try(:blog_controller)
             return current_resource.blog_controller
           end
         end
 
         # In multiblog situations, force people to specify the blog
-        if !key && blog_instances.size > 1
-          raise "You must either specify the blog name in calling this method or in your page frontmatter (using the 'blog' key)"
+        if !blog_name && blog_instances.size > 1
+          raise "You must either specify the blog name in calling this method or in your page frontmatter (using the 'blog' blog_name)"
         end
 
-        key ||= blog_instances.keys.first
-        blog_instances[key.to_sym]
+        blog_name ||= blog_instances.keys.first
+        blog_instances[blog_name.to_sym]
       end
 
-      def blog(key=nil)
-        blog_controller(key).data
+      # Get a {BlogData} instance for the given blog. Follows the
+      # same rules as #blog_controller.
+      #
+      # @param [Symbol, String] blog_name the name of the blog to get a controller for.
+      # @return [Middleman::Blog::BlogData]
+      def blog(blog_name=nil)
+        blog_controller(blog_name).data
       end
 
       # Determine whether the currently rendering template is a blog article.
@@ -37,34 +57,34 @@ module Middleman
       # Get a {Resource} with mixed in {BlogArticle} methods representing the current article.
       # @return [Middleman::Sitemap::Resource]
       def current_article
-        blog_instances.each do |key, blog|
-          found = blog.data.article(current_resource.path)
-          return found if found
+        article = current_resource
+        if article && article.is_a?(BlogArticle)
+          article
+        else
+          nil
         end
-
-        nil
       end
 
       # Get a path to the given tag, based on the :taglink setting.
       # @param [String] tag
       # @return [String]
-      def tag_path(tag, key=nil)
-        sitemap.find_resource_by_path(::Middleman::Blog::TagPages.link(blog_controller(key).options, tag)).try(:url)
+      def tag_path(tag, blog_name=nil)
+        build_url blog_controller(blog_name).tag_pages.link(tag)
       end
 
       # Get a path to the given year-based calendar page, based on the :year_link setting.
       # @param [Number] year
       # @return [String]
-      def blog_year_path(year, key=nil)
-        sitemap.find_resource_by_path(::Middleman::Blog::CalendarPages.link(blog_controller(key).options, year)).try(:url)
+      def blog_year_path(year, blog_name=nil)
+        build_url blog_controller(blog_name).calendar_pages.link(year)
       end
 
       # Get a path to the given month-based calendar page, based on the :month_link setting.
       # @param [Number] year
       # @param [Number] month
       # @return [String]
-      def blog_month_path(year, month, key=nil)
-        sitemap.find_resource_by_path(::Middleman::Blog::CalendarPages.link(blog_controller(key).options, year, month)).try(:url)
+      def blog_month_path(year, month, blog_name=nil)
+        build_url blog_controller(blog_name).calendar_pages.link(year, month)
       end
 
       # Get a path to the given day-based calendar page, based on the :day_link setting.
@@ -72,8 +92,8 @@ module Middleman
       # @param [Number] month
       # @param [Number] day
       # @return [String]
-      def blog_day_path(year, month, day, key=nil)
-        sitemap.find_resource_by_path(::Middleman::Blog::CalendarPages.link(blog_controller(key).options, year, month, day)).try(:url)
+      def blog_day_path(year, month, day, blog_name=nil)
+        build_url blog_controller(blog_name).calendar_pages.link(year, month, day)
       end
 
       # Pagination Helpers
@@ -82,16 +102,28 @@ module Middleman
 
       # Returns true if pagination is turned on for this template; false otherwise.
       # @return [Boolean]
-      def paginate; false; end
+      def paginate
+        false
+      end
 
       # Returns the list of articles to display on this page.
       # @return [Array<Middleman::Sitemap::Resource>]
-      def page_articles(key=nil)
-        limit = (current_resource.metadata[:page]["per_page"] || 0) - 1
+      def page_articles(blog_name=nil)
+        meta = current_resource.metadata
+        limit = meta[:page]["per_page"]
 
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
-        d = (current_resource.metadata[:locals]["articles"] || blog(key).articles)[0..limit]
+        articles = meta[:locals]["articles"] || blog(blog_name).articles
+
+        limit ? articles.first(limit) : articles
+      end
+
+      private
+
+      def build_url(path)
+        # TODO: needs doc, better name, and elimination of the options stuff every caller is doing
+        sitemap.find_resource_by_path(path).try(:url)
       end
     end
   end
