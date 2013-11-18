@@ -1,6 +1,27 @@
 master
 ===
 
+* Add support for internationalization and locale-specific articles. #156
+* Drop support for Ruby 1.8 and Middleman 3.0.
+
+3.4.1
+====
+
+* Require Middleman 3.2
+
+3.4.0
+====
+
+* Add `inspect` methods to `BlogData` and `BlogArticle` to avoid hangs on exceptions. #157
+* Generated feed.xml now works on blogs with no posts. #155
+* No longer depend on `middleman-more`.
+* Don't try to replace tokens that don't exist in the source path. #161
+* Support for including arbitrary frontmatter data in blog permalinks. #164
+* When using multiblog, fail immediately if the blog name isn't specified. #168
+
+3.3.0
+====
+
 * Experimental support for multiple blogs in a single site by activating
   `:blog` multiple times.
 * Works as a Middleman 3.1-style extension.
@@ -18,12 +39,14 @@ master
 * Fix setting time zone with `set :time_zone` in `config.rb`. #140
 * Articles can omit their :title from the filename and specify it in frontmatter
   instead. #148
+* Pages can choose which blog to use in multi-blog mode by specifying the correct
+  blog in frontmatter. #150
 
 3.2.0
 ====
 
 * The `summary` method on articles is now HTML-aware, and can be provided with
-  a different summary length or ellipsis string: `summary(1000, '&hellip;')`. 
+  a different summary length or ellipsis string: `summary(1000, '&hellip;')`.
   Nokogiri is required to use the summary.
 * The `summary_generator` option now recieves the rendered article (without
   layout) instead of the template source.
