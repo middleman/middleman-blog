@@ -21,6 +21,7 @@ gem "kramdown"
 
 # Code Quality
 gem "cane", :platforms => [:mri_19, :mri_20], :require => false
+gem 'coveralls', :require => false
 
 platforms :ruby do
   gem "redcarpet", "~> 3.0"

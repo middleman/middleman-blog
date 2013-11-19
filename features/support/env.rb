@@ -3,6 +3,9 @@ SimpleCov.start do
   add_filter "/features/"
 end
 
+require 'coveralls'
+Coveralls.wear!
+
 ENV["TEST"] = "true"
 ENV["AUTOLOAD_SPROCKETS"] = "false"
 
