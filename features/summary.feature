@@ -41,3 +41,16 @@ Feature: Article summary generation
     When I go to "/index.html"
     Then I should see "Summary from article with no summary separator and comments in the summary."
     Then I should not see "Extended part from article from article with no summary separator and comments in the summary."
+
+  Scenario: Summary is only limited by a optional summary separator and not by length
+    Given a fixture app "summary-app"
+    And a file named "config.rb" with:
+      """
+      activate :blog do |blog|
+        blog.summary_length = -1
+      end
+      """
+    Given the Server is running at "summary-app"
+    When I go to "/index.html"
+    Then I should see "Extended part from article with no separator."
+    Then I should not see "Extended part from article with separator."
