@@ -22,19 +22,16 @@ module Middleman
       # @return [String]
       def render(opts={}, locs={}, &block)
         if opts[:layout].nil?
-          if metadata[:options] && !metadata[:options][:layout].nil?
-            opts[:layout] = metadata[:options][:layout]
-          end
+          opts[:layout] = metadata[:options][:layout]
           opts[:layout] = blog_options.layout if opts[:layout].nil?
+          # Convert to a string unless it's a boolean
           opts[:layout] = opts[:layout].to_s if opts[:layout].is_a? Symbol
         end
 
         content = super(opts, locs, &block)
 
         unless opts[:keep_separator]
-          if content.match(blog_options.summary_separator)
-            content.sub!(blog_options.summary_separator, "")
-          end
+          content.sub!(blog_options.summary_separator, "")
         end
 
         content
@@ -86,8 +83,6 @@ module Middleman
 
         if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
           rendered.split(blog_options.summary_separator).first
-        elsif blog_options.summary_separator && length < 0
-          rendered
         elsif blog_options.summary_generator
           blog_options.summary_generator.call(self, rendered, length, ellipsis)
         else
@@ -95,12 +90,17 @@ module Middleman
         end
       end
 
+      # The default summary generator first tries to find the summary separator and
+      # take the text before it. If that doesn't work, it will truncate text without splitting
+      # the middle of an HTML tag, using a Nokogiri-based TruncateHTML utility.
+      #
+      # @param [String] rendered The rendered blog article
+      # @param [Integer] length The length in characters to truncate to. -1 or nil will return the whole article.
       def default_summary_generator(rendered, length, ellipsis)
-        require 'middleman-blog/truncate_html'
-
-        if rendered =~ blog_options.summary_separator
+        if blog_options.summary_separator && rendered =~ blog_options.summary_separator
           rendered.split(blog_options.summary_separator).first
-        elsif length
+        elsif length && length >= 0
+          require 'middleman-blog/truncate_html'
           TruncateHTML.truncate_html(rendered, length, ellipsis)
         else
           rendered
@@ -115,51 +115,32 @@ module Middleman
         if article_tags.is_a? String
           article_tags.split(',').map(&:strip)
         else
-          article_tags || []
+          Array(article_tags)
         end
-      end
-
-      # Retrieve a section of the source path
-      # @param [String] The part of the path, e.g. "lang", "year", "month", "day", "title"
-      # @return [String]
-      def path_part(part)
-        @_path_parts ||= blog_data.path_matcher.match(path).captures
-        @_path_parts[blog_data.matcher_indexes[part]]
       end
 
       # The language of the article. The language can be present in the
-      # frontmatter or in the source path. If both labels present, they
-      # must match. If none labels present, I18n's default_locale will
-      # be returned. If it is set to nil, or i18n extension is not
-      # activated at all, :none will be returned.
+      # frontmatter or in the source path. If both are present, they
+      # must match. If neither specifies a lang, I18n's default_locale will
+      # be used. If lang is set to nil, or the i18n extension is not
+      # activated at all, nil will be returned.
       #
       # @return [Symbol]
       def lang
-        return @_lang if @_lang
-
         frontmatter_lang = data["lang"]
 
         if blog_options.sources.include? ":lang"
-          filename_lang = path_part "lang"
-          raise "The lang in #{path}'s filename doesn't match the lang in its frontmatter" if frontmatter_lang and filename_lang and not frontmatter_lang == filename_lang
+          filename_lang = path_part("lang")
         end
 
-        if defined? I18n
-          locale_lang = I18n.default_locale
+        if frontmatter_lang && filename_lang && frontmatter_lang != filename_lang
+          raise "The lang in #{path}'s filename (#{filename_lang.inspect}) doesn't match the lang in its frontmatter (#{frontmatter_lang.inspect})"
         end
 
-        lang = frontmatter_lang || filename_lang || locale_lang || :none
-        lang = lang.to_sym if lang.kind_of? String
+        locale_lang = I18n.default_locale if defined? I18n
 
-        @_lang = lang
-      end
-
-      # Normalize information about article's language in it's metadata
-      def normalize_lang!
-        return false if lang == :none
-        data = { :lang => lang }
-        add_metadata(:options => data, :locals => data){ @lang = @_lang }
-        return true
+        lang = frontmatter_lang || filename_lang || locale_lang
+        lang && lang.to_sym
       end
 
       # Attempt to figure out the date of the post. The date should be
@@ -201,9 +182,9 @@ module Middleman
       # The "slug" of the article that shows up in its URL.
       # @return [String]
       def slug
-        @_slug ||= data["slug"]
-
-        @_slug ||= if blog_options.sources.include?(":title")
+        if data["slug"]
+          data["slug"]
+        elsif blog_options.sources.include?(":title")
           path_part("title")
         elsif title
           title.parameterize
@@ -228,6 +209,16 @@ module Middleman
 
       def inspect
         "#<Middleman::Blog::BlogArticle: #{data.inspect}>"
+      end
+
+      private
+
+      # Retrieve a section of the source path
+      # @param [String] The part of the path, e.g. "lang", "year", "month", "day", "title"
+      # @return [String]
+      def path_part(part)
+        @_path_parts ||= blog_data.path_matcher.match(path).captures
+        @_path_parts[blog_data.matcher_indexes[part]]
       end
     end
   end

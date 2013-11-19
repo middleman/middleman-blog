@@ -122,7 +122,6 @@ module Middleman
       private
 
       def build_url(path)
-        # TODO: needs doc, better name, and elimination of the options stuff every caller is doing
         sitemap.find_resource_by_path(path).try(:url)
       end
     end

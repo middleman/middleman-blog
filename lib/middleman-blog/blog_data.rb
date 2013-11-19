@@ -102,7 +102,9 @@ module Middleman
               resource.blog_controller = controller
             end
 
-            resource.normalize_lang! unless options.preserve_locale
+            if !options.preserve_locale && (lang = resource.lang)
+              resource.add_metadata(:options => { :lang => lang }, :locals => { :lang => lang })
+            end
 
             # Skip articles that are not published (in non-development environments)
             next unless @app.environment == :development || resource.published?
@@ -129,7 +131,9 @@ module Middleman
               article.blog_controller = controller
             end
 
-            article.normalize_lang! unless options.preserve_locale
+            if !options.preserve_locale && (lang = article.lang)
+              article.add_metadata(:options => { :lang => lang }, :locals => { :lang => lang })
+            end
 
             # Skip files that belong to articles that are not published (in non-development environments)
             next unless @app.environment == :development || article.published?
