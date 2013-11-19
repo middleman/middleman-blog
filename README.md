@@ -31,7 +31,7 @@ Additionally, up-to-date generated code documentation is available on [RubyDoc].
 [![Build Status](https://travis-ci.org/middleman/middleman-blog.png)][travis]
 [![Dependency Status](https://gemnasium.com/middleman/middleman-blog.png?travis)][gemnasium]
 [![Code Quality](https://codeclimate.com/github/middleman/middleman-blog.png)][codeclimate]
-
+[![Code Coverage](https://coveralls.io/repos/middleman/middleman-blog/badge.png?branch=master)][coveralls]
 ## Community
 
 The official community forum is available at: http://forum.middlemanapp.com
@@ -62,5 +62,6 @@ Copyright (c) 2010-2013 Thomas Reynolds. MIT Licensed, see [LICENSE] for details
 [travis]: http://travis-ci.org/middleman/middleman-blog
 [gemnasium]: https://gemnasium.com/middleman/middleman-blog
 [codeclimate]: https://codeclimate.com/github/middleman/middleman-blog
+[coveralls]: https://coveralls.io/r/middleman/middleman-blog
 [rubydoc]: http://rubydoc.info/github/middleman/middleman-blog
 [LICENSE]: https://github.com/middleman/middleman-blog/blob/master/LICENSE.md
