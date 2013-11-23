@@ -13,7 +13,9 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def link(tag)
-        @blog_options.taglink.sub(':tag', tag.parameterize)
+        # parameterize only tag ASCII tag
+        tag = tag.parameterize if tag.split('').all? { |c| c.bytes.count == 1 }
+        @blog_options.taglink.sub(':tag', tag)
       end
 
       # Update the main sitemap resource list
