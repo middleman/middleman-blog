@@ -14,7 +14,7 @@ module Middleman
       # @return [String]
       def link(tag)
         # parameterize only tag ASCII tag
-        tag = tag.parameterize if tag.split('').all? { |c| c.bytes.length == 1 }
+        tag = tag.parameterize if tag.split('').all? { |c| c.bytes.count == 1 }
         @blog_options.taglink.sub(':tag', tag)
       end
 
