@@ -47,11 +47,16 @@ module Middleman
     # @return [Paginator] pagination handler for this blog
     attr_reader :paginator
 
+    # @return [Hash<CustomPages>] custom pages handlers for this blog, indexed by property name
+    attr_reader :custom_pages
+
     # Helpers for use within templates and layouts.
     self.defined_helpers = [ Middleman::Blog::Helpers ]
 
     def initialize(app, options_hash={}, &block)
       super
+
+      @custom_pages = {}
 
       # NAME is the name of this particular blog, and how you reference it from #blog_controller or frontmatter.
       @name = options.name.to_sym if options.name
@@ -160,31 +165,12 @@ module Middleman
 
       options.custom_collections.each do |property, options|
         @app.ignore options[:template]
-        @app.sitemap.register_resource_list_manipulator(
-          :"blog_#{name}_#{property}",
-          Blog::CustomPages.new(property, @app, self),
-          false
-        )
 
-        generate_custom_helper(property)
+        @custom_pages[property] = Blog::CustomPages.new(property, @app, self)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_#{property}", @custom_pages[property], false)
+
+        Blog::Helpers.generate_custom_helper(property)
       end
-    end
-
-    # Generate helpers to access the path to a custom collection.
-    #
-    # For example, when using a custom property called "category" to collect articles on
-    # the method **category_path** will be generated.
-    #
-    # @param [Symbol] custom_property Custom property which is being used to collect articles on
-    def generate_custom_helper(custom_property)
-      m = Module.new
-      m.module_eval(%Q{
-        def #{custom_property}_path(value, key = nil)
-          sitemap.find_resource_by_path(Blog::CustomPages.link(blog_controller(key).options, :#{custom_property}, value)).try(:url)
-        end
-      })
-
-      app.class.send(:include, m)
     end
   end
 end

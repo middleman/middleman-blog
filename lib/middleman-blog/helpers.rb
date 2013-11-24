@@ -119,6 +119,23 @@ module Middleman
         limit ? articles.first(limit) : articles
       end
 
+      # Generate helpers to access the path to a custom collection.
+      #
+      # For example, when using a custom property called "category" to collect articles on
+      # the method **category_path** will be generated.
+      #
+      # @param [Symbol] custom_property Custom property which is being used to collect articles on
+      def self.generate_custom_helper(property)
+        define_method :"#{property}_path" do |value, blog_name=nil|
+          custom_pages = blog_controller(blog_name).custom_pages
+
+          if !custom_pages.key?(property)
+            raise "This blog does not know about the custom property #{property.inspect}"
+          end
+          build_url custom_pages[property].link(value)
+        end
+      end
+
       private
 
       def build_url(path)

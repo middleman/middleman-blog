@@ -5,6 +5,7 @@ module Middleman
     class CalendarPages
       def initialize(app, blog_controller)
         @sitemap = app.sitemap
+        @blog_controller = blog_controller
         @blog_options = blog_controller.options
         @blog_data = blog_controller.data
       end

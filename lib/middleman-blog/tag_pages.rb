@@ -5,6 +5,7 @@ module Middleman
     class TagPages
       def initialize(app, blog_controller)
         @sitemap = app.sitemap
+        @blog_controller = blog_controller
         @blog_options = blog_controller.options
         @blog_data = blog_controller.data
       end
@@ -13,7 +14,7 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def link(tag)
-        @blog_options.taglink.sub(':tag', tag.parameterize)
+        ::Middleman::Util.normalize_path @blog_options.taglink.sub(':tag', tag.parameterize)
       end
 
       # Update the main sitemap resource list
