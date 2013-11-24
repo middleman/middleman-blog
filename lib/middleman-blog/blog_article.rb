@@ -152,7 +152,7 @@ module Middleman
       def date
         return @_date if @_date
 
-        frontmatter_date = data["date"]
+        frontmatter_date = data['date']
 
         # First get the date from frontmatter
         if frontmatter_date.is_a? Time
@@ -162,11 +162,12 @@ module Middleman
         end
 
         # Next figure out the date from the filename
-        if blog_options.sources.include?(":year") &&
-            blog_options.sources.include?(":month") &&
-            blog_options.sources.include?(":day")
+        source_vars = blog_data.source_template.variables
+        if source_vars.include?('year') &&
+           source_vars.include?('month') &&
+           source_vars.include?('day')
 
-          filename_date = Time.zone.local(path_part("year").to_i, path_part("month").to_i, path_part("day").to_i)
+          filename_date = Time.zone.local(path_part('year').to_i, path_part('month').to_i, path_part('day').to_i)
           if @_date
             raise "The date in #{path}'s filename doesn't match the date in its frontmatter" unless @_date.to_date == filename_date.to_date
           else
@@ -182,10 +183,10 @@ module Middleman
       # The "slug" of the article that shows up in its URL.
       # @return [String]
       def slug
-        if data["slug"]
-          data["slug"]
-        elsif blog_options.sources.include?(":title")
-          path_part("title")
+        if data['slug']
+          data['slug']
+        elsif blog_data.source_template.variables.include?('title')
+          path_part('title')
         elsif title
           title.parameterize
         else
@@ -217,8 +218,8 @@ module Middleman
       # @param [String] The part of the path, e.g. "lang", "year", "month", "day", "title"
       # @return [String]
       def path_part(part)
-        @_path_parts ||= blog_data.path_matcher.match(path).captures
-        @_path_parts[blog_data.matcher_indexes[part]]
+        @_path_parts ||= blog_data.source_template.extract(path)
+        @_path_parts[part.to_s]
       end
     end
   end

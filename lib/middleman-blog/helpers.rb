@@ -24,8 +24,9 @@ module Middleman
         if !blog_name && current_resource
           blog_name = current_resource.metadata[:page]["blog"]
 
-          if !blog_name && current_resource.try(:blog_controller)
-            return current_resource.blog_controller
+          if !blog_name
+            blog_controller = current_resource.blog_controller if current_resource.respond_to?(:blog_controller)
+            return blog_controller if blog_controller
           end
         end
 

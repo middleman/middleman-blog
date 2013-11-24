@@ -1,4 +1,4 @@
-require 'set'
+require 'middleman-blog/uri_templates'
 
 module Middleman
   module Blog
@@ -6,21 +6,17 @@ module Middleman
     # for the articles by various dimensions. Accessed via "blog" in
     # templates.
     class BlogData
-      # A regex for matching blog article source paths
-      # @return [Regex]
-      attr_reader :path_matcher
+      include UriTemplates
 
-      # A hash of indexes into the path_matcher captures
-      # @return [Hash]
-      attr_reader :matcher_indexes
+      # A URITemplate for the source file path relative to :source_dir
+      # @return [URITemplate]
+      attr_reader :source_template
 
       # The configured options for this blog
       # @return [Thor::CoreExt::HashWithIndifferentAccess]
       attr_reader :options
 
       attr_reader :controller
-
-      DEFAULT_PERMALINK_COMPONENTS = Set.new [:lang, :year, :month, :day, :title]
 
       # @private
       def initialize(app, controller, options)
@@ -31,29 +27,10 @@ module Middleman
         # A list of resources corresponding to blog articles
         @_articles = []
 
-        # TODO: replace with uri_template
-        matcher = Regexp.escape(options.sources).
-            sub(/^\//, "").
-            gsub(":lang",  "(\\w{2}(?:-\\w{2})?)").
-            gsub(":year",  "(\\d{4})").
-            gsub(":month", "(\\d{2})").
-            gsub(":day",   "(\\d{2})").
-            sub(":title", "([^/]+)")
-
-        subdir_matcher = matcher.sub(/\\\.[^.]+$/, "(/.*)$")
-
-        @path_matcher = /^#{matcher}/
-        @subdir_matcher = /^#{subdir_matcher}/
-
-        # Build a hash of part name to capture index, e.g. {"year" => 0}
-        @matcher_indexes = {}
-        # This is a regexp like /:lang|:year|:month/, etc
-        component_regexp = Regexp.union(DEFAULT_PERMALINK_COMPONENTS.map(&:inspect))
-        options.sources.scan(component_regexp).each_with_index do |key, i|
-            @matcher_indexes[key[1..-1]] = i
-        end
-        # The path always appears at the end.
-        @matcher_indexes["path"] = @matcher_indexes.size
+        @source_template = uri_template options.sources
+        @permalink_template = uri_template options.permalink
+        @subdir_template = uri_template options.sources.sub(/\.[^.]+$/, "/{+path}")
+        @subdir_permalink_template = uri_template options.permalink.sub(/\.[^.]+$/, "/{+path}")
       end
 
       # A list of all blog articles, sorted by descending date
@@ -101,28 +78,22 @@ module Middleman
         used_resources = []
 
         resources.each do |resource|
-          if resource.path =~ path_matcher
+          if (params = @source_template.extract(resource.path))
             article = convert_to_article(resource)
             next unless publishable?(article)
 
             # compute output path:
             #   substitute date parts to path pattern
-            article.destination_path = Middleman::Util.normalize_path parse_permalink_options(article)
+            article.destination_path = template_path @permalink_template, article
 
             @_articles << article
 
-          elsif resource.path =~ @subdir_matcher
+          elsif (params = @subdir_template.extract(resource.path))
             # It's not an article, but it's thhe companion files for an article
             # (in a subdirectory named after the article)
-
-            match = $~.captures
-
             # figure out the matching article for this subdirectory file
-            article_path = options.sources
-            DEFAULT_PERMALINK_COMPONENTS.each do |token|
-              index = @matcher_indexes[token.to_s]
-              article_path = article_path.gsub(token.inspect, match[index]) if index
-            end
+
+            article_path = @source_template.expand(params).to_s
 
             article = @app.sitemap.find_resource_by_path(article_path)
             raise "Article for #{resource.path} not found" if article.nil?
@@ -133,8 +104,8 @@ module Middleman
 
             # The subdir path is the article path with the index file name
             # or file extension stripped off.
-            new_destination_path = parse_permalink_options(article).
-              sub(/(\/#{@app.index_file}$)|(\.[^.]+$)|(\/$)/, match[@matcher_indexes["path"]])
+            path = params.fetch('path')
+            new_destination_path = template_path @subdir_permalink_template, article, :path => path
 
             resource.destination_path = Middleman::Util.normalize_path(new_destination_path)
           end
@@ -158,27 +129,24 @@ module Middleman
 
       private
 
-      def parse_permalink_options(resource)
-        permalink = options.permalink.
-          gsub(':lang', resource.lang.to_s).
-          gsub(':year', resource.date.year.to_s).
-          gsub(':month', resource.date.month.to_s.rjust(2, '0')).
-          gsub(':day', resource.date.day.to_s.rjust(2, '0')).
-          sub(':title', resource.slug)
-
-        custom_permalink_components.each do |component|
-          permalink = permalink.sub(component.inspect, resource.data[component.to_s].parameterize)
+      # Generate a hash of options for substituting into the permalink URL template.
+      # @param [Sitemap::Resource] resource The resource to generate options for.
+      # @param [Hash] extra More options to be merged in on top.
+      # @return [Hash] options
+      def permalink_options(resource, extra={})
+        # Allow any frontmatter data to be substituted into the permalink URL
+        params = resource.data.slice *@permalink_template.variables
+        params.each do |k, v|
+          params[k] = v.parameterize
         end
 
-        permalink
-      end
-
-      def custom_permalink_components
-        permalink_url_components - DEFAULT_PERMALINK_COMPONENTS
-      end
-
-      def permalink_url_components
-        Set.new options.permalink.scan(/:([A-Za-z0-9]+)/).flatten.map(&:to_sym)
+        params.merge({
+          :lang => resource.lang.to_s,
+          :year => resource.date.year.to_s,
+          :month => resource.date.month.to_s.rjust(2, '0'),
+          :day => resource.date.day.to_s.rjust(2, '0'),
+          :title => resource.slug
+        }).merge(extra)
       end
 
       def convert_to_article(resource)
@@ -192,6 +160,10 @@ module Middleman
         end
 
         resource
+      end
+
+      def template_path(template, article, extras={})
+        apply_uri_template template, permalink_options(article, extras)
       end
     end
   end

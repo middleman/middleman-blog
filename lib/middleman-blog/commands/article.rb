@@ -1,11 +1,13 @@
 ﻿require 'middleman-core/cli'
 require 'date'
+require 'middleman-blog/uri_templates'
 
 module Middleman
   module Cli
     # This class provides an "article" command for the middleman CLI.
     class Article < Thor
       include Thor::Actions
+      include Blog::UriTemplates
 
       check_unknown_options!
 
@@ -29,6 +31,9 @@ module Middleman
       method_option "lang",
         :aliases => "-l",
         :desc => "The language to create the post with (defaults to I18n.default_locale if avaliable)"
+      method_option "blog",
+        :aliases => "-b",
+        :desc => "The name of the blog to creat the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
       def article(title)
         shared_instance = ::Middleman::Application.server.inst
 
@@ -39,12 +44,12 @@ module Middleman
           @date = options[:date] ? Time.zone.parse(options[:date]) : Time.zone.now
           @lang = options[:lang] || ( I18n.default_locale if defined? I18n )
 
-          article_path = shared_instance.blog.options.sources.
-            sub(':lang', @lang.to_s).
-            sub(':year', @date.year.to_s).
-            sub(':month', @date.month.to_s.rjust(2,'0')).
-            sub(':day', @date.day.to_s.rjust(2,'0')).
-            sub(':title', @slug)
+          path_template = shared_instance.blog(options[:blog]).source_template
+          article_path = apply_uri_template path_template, :lang => @lang.to_s,
+            :year => @date.year.to_s,
+            :month => @date.month.to_s.rjust(2,'0'),
+            :day => @date.day.to_s.rjust(2,'0'),
+            :title => @slug
 
           template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
         else
@@ -54,4 +59,3 @@ module Middleman
     end
   end
 end
-

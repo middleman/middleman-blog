@@ -1,17 +1,21 @@
+require 'middleman-blog/uri_templates'
+
 module Middleman
   module Blog
 
     # This adds new summary pages for arbitrarily defined blog article properties
     class CustomPages
+      include UriTemplates
 
       attr_reader :property
 
-      def initialize(property, app, controller)
+      def initialize(property, app, controller, options)
         @property = property
         @sitemap = app.sitemap
         @blog_controller = controller
-        @blog_options = controller.options
         @blog_data = controller.data
+        @link_template = uri_template options[:link]
+        @page_template = options[:template]
       end
 
       # Return a path to the given property / value pair
@@ -20,8 +24,7 @@ module Middleman
       # @param [String|Symbol] property Frontmatter property used to collect on
       # @param [String| value Frontmatter value for the given article for the given property
       def link(value)
-        link_template = @blog_options.custom_collections[property][:link]
-        ::Middleman::Util.normalize_path link_template.sub(":#{property}", value.parameterize)
+        apply_uri_template @link_template, property => value.parameterize
       end
 
       def manipulate_resource_list(resources)
@@ -36,9 +39,9 @@ module Middleman
       def build_resource(path, value, articles)
         articles = articles.sort_by(&:date).reverse
         Sitemap::Resource.new(@sitemap, path).tap do |p|
-          p.proxy_to(@blog_options.custom_collections[property][:template])
+          p.proxy_to(@page_template)
           p.add_metadata :locals => {
-            "page_type"       => property,
+            "page_type"       => property.to_s,
             property          => value,
             "articles"        => articles,
             "blog_controller" => @blog_controller

@@ -1,11 +1,17 @@
+require 'middleman-blog/uri_templates'
+
 module Middleman
   module Blog
     # A sitemap plugin that splits indexes (including tag
     # and calendar indexes) over multiple pages
     class Paginator
+      include UriTemplates
+
       def initialize(app, blog_controller)
         @app = app
         @blog_controller = blog_controller
+        @per_page = blog_controller.options.per_page
+        @page_link = blog_controller.options.page_link
       end
 
       # Update the main sitemap resource list
@@ -20,10 +26,7 @@ module Middleman
           md = res.metadata
 
           # Skip other blogs' resources
-          res_controller = md[:locals]["blog_controller"] || res.try(:blog_controller)
-          next if res_controller && res_controller != @blog_controller
-          override_controller = md[:page]["blog"]
-          next if override_controller && override_controller != @blog_controller.name
+          next unless match_blog(res, md)
 
           next unless md[:page]["pageable"]
 
@@ -33,8 +36,8 @@ module Middleman
           articles = md[:locals]["articles"] || @blog_controller.data.articles
 
           # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
-          per_page  = md[:page]["per_page"] || @blog_controller.options.per_page
-          page_link = md[:page]["page_link"] || @blog_controller.options.page_link
+          per_page  = md[:page]["per_page"] || @per_page
+          page_link = uri_template(md[:page]["page_link"] || @page_link)
 
           num_pages = (articles.length / per_page.to_f).ceil
 
@@ -64,6 +67,17 @@ module Middleman
       end
 
       private
+
+      # Does this resource match the blog controller for this paginator?
+      # @return [Boolean]
+      def match_blog(res, md)
+        res_controller = md[:locals]["blog_controller"] || res.try(:blog_controller)
+        return false if res_controller && res_controller != @blog_controller
+        override_controller = md[:page]["blog"]
+        return false if override_controller && override_controller != @blog_controller.name
+
+        true
+      end
 
       # Generate a resource for a particular page
       # @param [Sitemap::Resource] res the original resource
@@ -129,7 +143,7 @@ module Middleman
           # First page has an unmodified URL.
           res.path
         else
-          page_url = page_link.sub(":num", page_num.to_s)
+          page_url = apply_uri_template page_link, :num => page_num
           index_re = %r{(^|/)#{Regexp.escape(@app.index_file)}$}
           if res.path =~ index_re
             res.path.sub(index_re, "\\1#{page_url}/#{@app.index_file}")

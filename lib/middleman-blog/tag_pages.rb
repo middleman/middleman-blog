@@ -1,12 +1,17 @@
+require 'middleman-blog/uri_templates'
+
 module Middleman
   module Blog
     # A sitemap resource manipulator that adds a tag page to the sitemap
     # for each tag in the associated blog
     class TagPages
+      include UriTemplates
+
       def initialize(app, blog_controller)
         @sitemap = app.sitemap
         @blog_controller = blog_controller
-        @blog_options = blog_controller.options
+        @tag_link_template = uri_template blog_controller.options.taglink
+        @tag_template = blog_controller.options.tag_template
         @blog_data = blog_controller.data
       end
 
@@ -14,7 +19,7 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def link(tag)
-        ::Middleman::Util.normalize_path @blog_options.taglink.sub(':tag', tag.parameterize)
+        apply_uri_template @tag_link_template, :tag => tag.parameterize
       end
 
       # Update the main sitemap resource list
@@ -29,7 +34,7 @@ module Middleman
 
       def tag_page_resource(tag, articles)
           Sitemap::Resource.new(@sitemap, link(tag)).tap do |p|
-            p.proxy_to(@blog_options.tag_template)
+            p.proxy_to(@tag_template)
 
             # Add metadata in local variables so it's accessible to
             # later extensions
