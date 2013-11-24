@@ -104,7 +104,7 @@ module Middleman
       Time.zone_default = zone_default
 
       # Initialize blog with options
-      @data = Blog::BlogData.new(@app, options, self)
+      @data = Blog::BlogData.new(@app, self, options)
 
       @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_articles", @data, false)
 
