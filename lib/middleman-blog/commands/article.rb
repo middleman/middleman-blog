@@ -48,7 +48,13 @@ module Middleman
           params = date_to_params(@date).merge(lang: @lang.to_s, title: @slug)
           article_path = apply_uri_template path_template, params
 
-          template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          custom_template = shared_instance.source_dir + '/custom_article.tt'
+
+          if File.file?(custom_template)
+            template custom_template , File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          else
+            template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          end
         else
           raise Thor::Error.new "You need to activate the blog extension in config.rb before you can create an article"
         end
