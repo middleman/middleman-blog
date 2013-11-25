@@ -188,7 +188,7 @@ module Middleman
         elsif blog_data.source_template.variables.include?('title')
           path_part('title')
         elsif title
-          title.parameterize
+          Blog::UriTemplates.safe_parameterize(title)
         else
           raise "Can't generate a slug for #{path} because it has no :title in its path pattern or title/slug in its frontmatter."
         end

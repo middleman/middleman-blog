@@ -6,6 +6,7 @@ master
 * Removed backwards compatibility patch that set instance variables for tag and calendar pages. Use locals instead.
 * Templated paths like :sources, :taglink, :year_link, :month_link, :day_link, :page_link, and custom_collections links can now be optionally expressed as RFC 6570 URI templates.
 * Arbitrary data from page frontmatter can be used in the :permalink template. Simply add a key to your :permalink template that matches a field from your frontmatter.
+* UTF-8 strings substituted into URLs are now preserved rather than being omitted. #176
 
 3.4.1
 ====

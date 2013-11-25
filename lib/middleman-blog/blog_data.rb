@@ -137,7 +137,7 @@ module Middleman
         # Allow any frontmatter data to be substituted into the permalink URL
         params = resource.data.slice *@permalink_template.variables
         params.each do |k, v|
-          params[k] = v.parameterize
+          params[k] = safe_parameterize(v)
         end
 
         params.merge({

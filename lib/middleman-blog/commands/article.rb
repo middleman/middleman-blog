@@ -40,7 +40,7 @@ module Middleman
         # This only exists when the config.rb sets it!
         if shared_instance.respond_to? :blog
           @title = title
-          @slug = title.parameterize
+          @slug = safe_parameterize(title)
           @date = options[:date] ? Time.zone.parse(options[:date]) : Time.zone.now
           @lang = options[:lang] || ( I18n.default_locale if defined? I18n )
 

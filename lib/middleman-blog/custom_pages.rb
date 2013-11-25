@@ -24,7 +24,7 @@ module Middleman
       # @param [String|Symbol] property Frontmatter property used to collect on
       # @param [String| value Frontmatter value for the given article for the given property
       def link(value)
-        apply_uri_template @link_template, property => value.parameterize
+        apply_uri_template @link_template, property => safe_parameterize(value)
       end
 
       def manipulate_resource_list(resources)

@@ -29,7 +29,17 @@ module Middleman
       # @param [Hash] data
       # @return [String] normalized path
       def apply_uri_template(template, data)
-        ::Middleman::Util.normalize_path template.expand(data).to_s
+        ::Middleman::Util.normalize_path Addressable::URI.unencode(template.expand(data)).to_s
+      end
+
+      # Parameterize a string only if it does not contain UTF-8 characters
+      def safe_parameterize(str)
+        if str.chars.all? { |c| c.bytes.count == 1 }
+          str.parameterize
+        else
+          # At least change spaces to dashes
+          str.gsub(/\s+/, '-')
+        end
       end
     end
   end
