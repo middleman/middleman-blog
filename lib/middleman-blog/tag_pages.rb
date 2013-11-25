@@ -33,18 +33,18 @@ module Middleman
       private
 
       def tag_page_resource(tag, articles)
-          Sitemap::Resource.new(@sitemap, link(tag)).tap do |p|
-            p.proxy_to(@tag_template)
+        Sitemap::Resource.new(@sitemap, link(tag)).tap do |p|
+          p.proxy_to(@tag_template)
 
-            # Add metadata in local variables so it's accessible to
-            # later extensions
-            p.add_metadata locals: {
-              'page_type' => 'tag',
-              'tagname' => tag,
-              'articles' => articles,
-              'blog_controller' => @blog_controller
-            }
-          end
+          # Add metadata in local variables so it's accessible to
+          # later extensions
+          p.add_metadata locals: {
+            'page_type' => 'tag',
+            'tagname' => tag,
+            'articles' => articles,
+            'blog_controller' => @blog_controller
+          }
+        end
       end
     end
   end
