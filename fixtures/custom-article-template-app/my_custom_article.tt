@@ -1,0 +1,7 @@
+---
+title: <%= @title %>
+date: <%= @date.strftime('%F %R %Z') %>
+tags: default
+---
+
+From a template!

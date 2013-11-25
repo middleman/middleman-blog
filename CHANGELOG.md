@@ -7,6 +7,8 @@ master
 * Templated paths like :sources, :taglink, :year_link, :month_link, :day_link, :page_link, and custom_collections links can now be optionally expressed as RFC 6570 URI templates.
 * Arbitrary data from page frontmatter can be used in the :permalink template. Simply add a key to your :permalink template that matches a field from your frontmatter.
 * UTF-8 strings substituted into URLs are now preserved rather than being omitted. #176
+* "middleman article" command now works even when there are multiple blogs. Specify the blog you want using "--blog".
+* The template used to generate new articles via "middleman article" can be overridden by setting :new_article_template.
 
 3.4.1
 ====

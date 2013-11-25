@@ -13,10 +13,8 @@ module Middleman
 
       namespace :article
 
-      # Template files are relative to this file
-      # @return [String]
       def self.source_root
-        File.dirname(__FILE__)
+        ENV['MM_ROOT']
       end
 
       # Tell Thor to exit with a nonzero exit code on failure
@@ -44,11 +42,13 @@ module Middleman
           @date = options[:date] ? Time.zone.parse(options[:date]) : Time.zone.now
           @lang = options[:lang] || ( I18n.default_locale if defined? I18n )
 
-          path_template = shared_instance.blog(options[:blog]).source_template
+          blog_inst = shared_instance.blog(options[:blog])
+
+          path_template = blog_inst.source_template
           params = date_to_params(@date).merge(lang: @lang.to_s, title: @slug)
           article_path = apply_uri_template path_template, params
 
-          template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
+          template blog_inst.options.new_article_template, File.join(shared_instance.source_dir, article_path + blog_inst.options.default_extension)
         else
           raise Thor::Error.new "You need to activate the blog extension in config.rb before you can create an article"
         end

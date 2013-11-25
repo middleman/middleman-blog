@@ -19,7 +19,6 @@ module Middleman
     option :year_link, '/{year}.html', 'Path yearly archive pages are generated at.'
     option :month_link, '/{year}/{month}.html', 'Path monthly archive pages are generated at.'
     option :day_link, '/{year}/{month}/{day}.html', 'Path daily archive pages are generated at.'
-    option :default_extension, '.markdown', 'Default template extension for articles (used by "middleman article")'
     option :calendar_template, nil, 'Template path (no template extension) for calendar pages (year/month/day archives).'
     option :year_template, nil, 'Template path (no template extension) for yearly archive pages. Defaults to the :calendar_template.'
     option :month_template, nil, 'Template path (no template extension) for monthly archive pages. Defaults to the :calendar_template.'
@@ -31,6 +30,8 @@ module Middleman
     option :publish_future_dated, false, 'Whether articles with a date in the future should be considered published'
     option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options (link, template)'
     option :preserve_locale, false, 'Use the global Middleman I18n.locale instead of the lang in the article\'s frontmatter'
+    option :new_article_template, File.expand_path('../commands/article.tt', __FILE__), 'Path (relative to project root) to an ERb template that will be used to generate new articles from the "middleman article" command.'
+    option :default_extension, '.markdown', 'Default template extension for articles (used by "middleman article")'
 
     # @return [BlogData] blog data for this blog, which has all information about the blog articles
     attr_reader :data
