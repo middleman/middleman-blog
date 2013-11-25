@@ -26,14 +26,14 @@ module Middleman
 
       desc "article TITLE", "Create a new blog article"
       method_option "date",
-        :aliases => "-d",
-        :desc => "The date to create the post with (defaults to now)"
+        aliases: "-d",
+        desc: "The date to create the post with (defaults to now)"
       method_option "lang",
-        :aliases => "-l",
-        :desc => "The language to create the post with (defaults to I18n.default_locale if avaliable)"
+        aliases: "-l",
+        desc: "The language to create the post with (defaults to I18n.default_locale if avaliable)"
       method_option "blog",
-        :aliases => "-b",
-        :desc => "The name of the blog to creat the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
+        aliases: "-b",
+        desc: "The name of the blog to creat the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
       def article(title)
         shared_instance = ::Middleman::Application.server.inst
 
@@ -45,11 +45,8 @@ module Middleman
           @lang = options[:lang] || ( I18n.default_locale if defined? I18n )
 
           path_template = shared_instance.blog(options[:blog]).source_template
-          article_path = apply_uri_template path_template, :lang => @lang.to_s,
-            :year => @date.year.to_s,
-            :month => @date.month.to_s.rjust(2,'0'),
-            :day => @date.day.to_s.rjust(2,'0'),
-            :title => @slug
+          params = date_to_params(@date).merge(lang: @lang.to_s, title: @slug)
+          article_path = apply_uri_template path_template, params
 
           template "article.tt", File.join(shared_instance.source_dir, article_path + shared_instance.blog.options.default_extension)
         else

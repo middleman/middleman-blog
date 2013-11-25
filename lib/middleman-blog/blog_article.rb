@@ -52,8 +52,7 @@ module Middleman
       # 3. article date is after the current time
       # @return [Boolean]
       def published?
-        (data["published"] != false) and
-          (blog_options.publish_future_dated || date <= Time.current)
+        data["published"] != false && (blog_options.publish_future_dated || date <= Time.current)
       end
 
       # The body of this article, in HTML. This is for
@@ -62,7 +61,7 @@ module Middleman
       # template.
       # @return [String]
       def body
-        render(:layout => false)
+        render layout: false
       end
 
       # The summary for this article, in HTML. The summary is either
@@ -79,7 +78,7 @@ module Middleman
       # @param [String] ellipsis The ellipsis string to use when content is trimmed.
       # @return [String]
       def summary(length=blog_options.summary_length, ellipsis='...')
-        rendered = render(:layout => false, :keep_separator => true)
+        rendered = render layout: false, keep_separator: true
 
         if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
           rendered.split(blog_options.summary_separator).first

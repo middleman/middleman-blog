@@ -35,10 +35,7 @@ module Middleman
                      @year_link_template
                    end
 
-        apply_uri_template template,
-          :year => year.to_s,
-          :month => month.to_s.rjust(2,'0'),
-          :day => day.to_s.rjust(2,'0')
+        apply_uri_template template, date_to_params(Date.new(year, month || 1, day || 1))
       end
 
       # Update the main sitemap resource list
@@ -76,7 +73,7 @@ module Middleman
 
           # Add metadata in local variables so it's accessible to
           # later extensions
-          p.add_metadata :locals => {
+          p.add_metadata locals: {
             'page_type' => 'year',
             'year' => year,
             'articles' => year_articles,
@@ -89,7 +86,7 @@ module Middleman
         Sitemap::Resource.new(@sitemap, link(year, month)).tap do |p|
           p.proxy_to(@month_template)
 
-          p.add_metadata :locals => {
+          p.add_metadata locals: {
             'page_type' => 'month',
             'year' => year,
             'month' => month,
@@ -103,7 +100,7 @@ module Middleman
         Sitemap::Resource.new(@sitemap, link(year, month, day)).tap do |p|
           p.proxy_to(@day_template)
 
-          p.add_metadata :locals => {
+          p.add_metadata locals: {
             'page_type' => 'day',
             'year' => year,
             'month' => month,

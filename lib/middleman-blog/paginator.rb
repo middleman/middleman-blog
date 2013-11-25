@@ -42,7 +42,7 @@ module Middleman
           num_pages = (articles.length / per_page.to_f).ceil
 
           # Add the pagination metadata to the base page (page 1)
-          res.add_metadata :locals => page_locals(1, num_pages, per_page, nil, articles)
+          res.add_metadata locals: page_locals(1, num_pages, per_page, nil, articles)
 
           prev_page_res = res
 
@@ -52,10 +52,10 @@ module Middleman
 
             # Copy the metadata from the base page
             p.add_metadata md
-            p.add_metadata :locals => page_locals(page_num, num_pages, per_page, prev_page_res, articles)
+            p.add_metadata locals: page_locals(page_num, num_pages, per_page, prev_page_res, articles)
 
             # Add a reference in the previous page to this page
-            prev_page_res.add_metadata :locals => { 'next_page' => p }
+            prev_page_res.add_metadata locals: { 'next_page' => p }
 
             prev_page_res = p
 
@@ -143,7 +143,7 @@ module Middleman
           # First page has an unmodified URL.
           res.path
         else
-          page_url = apply_uri_template page_link, :num => page_num
+          page_url = apply_uri_template page_link, num: page_num
           index_re = %r{(^|/)#{Regexp.escape(@app.index_file)}$}
           if res.path =~ index_re
             res.path.sub(index_re, "\\1#{page_url}/#{@app.index_file}")

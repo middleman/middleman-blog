@@ -105,7 +105,7 @@ module Middleman
             # The subdir path is the article path with the index file name
             # or file extension stripped off.
             path = params.fetch('path')
-            new_destination_path = template_path @subdir_permalink_template, article, :path => path
+            new_destination_path = template_path @subdir_permalink_template, article, path: path
 
             resource.destination_path = Middleman::Util.normalize_path(new_destination_path)
           end
@@ -140,13 +140,10 @@ module Middleman
           params[k] = safe_parameterize(v)
         end
 
-        params.merge({
-          :lang => resource.lang.to_s,
-          :year => resource.date.year.to_s,
-          :month => resource.date.month.to_s.rjust(2, '0'),
-          :day => resource.date.day.to_s.rjust(2, '0'),
-          :title => resource.slug
-        }).merge(extra)
+        params.
+          merge(date_to_params(resource.date)).
+          merge(lang: resource.lang.to_s, title: resource.slug).
+          merge(extra)
       end
 
       def convert_to_article(resource)
@@ -156,7 +153,7 @@ module Middleman
         resource.blog_controller = controller
 
         if !options.preserve_locale && (lang = resource.lang)
-          resource.add_metadata(:options => { :lang => lang }, :locals => { :lang => lang })
+          resource.add_metadata options: { lang: lang }, locals: { lang: lang }
         end
 
         resource

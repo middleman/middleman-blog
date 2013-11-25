@@ -40,7 +40,7 @@ module Middleman
         articles = articles.sort_by(&:date).reverse
         Sitemap::Resource.new(@sitemap, path).tap do |p|
           p.proxy_to(@page_template)
-          p.add_metadata :locals => {
+          p.add_metadata locals: {
             "page_type"       => property.to_s,
             property          => value,
             "articles"        => articles,

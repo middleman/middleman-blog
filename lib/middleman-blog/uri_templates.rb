@@ -41,6 +41,18 @@ module Middleman
           str.gsub(/\s+/, '-')
         end
       end
+
+      # Convert a date into a hash of components to strings
+      # suitable for using in a URL template.
+      # @param [DateTime] date
+      # @return [Hash] parameters
+      def date_to_params(date)
+        return {
+          year: date.year.to_s,
+          month: date.month.to_s.rjust(2,'0'),
+          day: date.day.to_s.rjust(2,'0')
+        }
+      end
     end
   end
 end

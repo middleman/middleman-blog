@@ -7,14 +7,14 @@ module Middleman
     # and a set of example templates for index, layout, tags, and calendar.
     class Template < Middleman::Templates::Base
       class_option "css_dir",
-        :default => "stylesheets",
-        :desc    => 'The path to the css files'
+        default: "stylesheets",
+        desc: 'The path to the css files'
       class_option "js_dir",
-        :default => "javascripts",
-        :desc    => 'The path to the javascript files'
+        default: "javascripts",
+        desc: 'The path to the javascript files'
       class_option "images_dir",
-        :default => "images",
-        :desc    => 'The path to the image files'
+        default: "images",
+        desc: 'The path to the image files'
 
       def self.source_root
         File.join(File.dirname(__FILE__), 'template')

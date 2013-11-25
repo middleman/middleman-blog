@@ -19,7 +19,7 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def link(tag)
-        apply_uri_template @tag_link_template, :tag => safe_parameterize(tag)
+        apply_uri_template @tag_link_template, tag: safe_parameterize(tag)
       end
 
       # Update the main sitemap resource list
@@ -38,7 +38,7 @@ module Middleman
 
             # Add metadata in local variables so it's accessible to
             # later extensions
-            p.add_metadata :locals => {
+            p.add_metadata locals: {
               'page_type' => 'tag',
               'tagname' => tag,
               'articles' => articles,
