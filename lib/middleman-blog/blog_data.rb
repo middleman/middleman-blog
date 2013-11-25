@@ -82,6 +82,10 @@ module Middleman
             article = convert_to_article(resource)
             next unless publishable?(article)
 
+            # Add extra parameters from the URL to the page metadata
+            extra_data = params.except *%w(year month day title lang)
+            article.add_metadata page: extra_data unless extra_data.empty?
+
             # compute output path:
             #   substitute date parts to path pattern
             article.destination_path = template_path @permalink_template, article
@@ -135,7 +139,7 @@ module Middleman
       # @return [Hash] options
       def permalink_options(resource, extra={})
         # Allow any frontmatter data to be substituted into the permalink URL
-        params = resource.data.slice *@permalink_template.variables
+        params = resource.metadata[:page].slice *@permalink_template.variables
         params.each do |k, v|
           params[k] = safe_parameterize(v)
         end

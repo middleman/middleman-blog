@@ -6,9 +6,11 @@ master
 * Removed backwards compatibility patch that set instance variables for tag and calendar pages. Use locals instead.
 * Templated paths like :sources, :taglink, :year_link, :month_link, :day_link, :page_link, and custom_collections links can now be optionally expressed as RFC 6570 URI templates.
 * Arbitrary data from page frontmatter can be used in the :permalink template. Simply add a key to your :permalink template that matches a field from your frontmatter.
+* Data extracted from the :sources URL template can be used in the :permalink template. This information can also be used from templates via current_article.metadata[:page][<key>].
 * UTF-8 strings substituted into URLs are now preserved rather than being omitted. #176
 * "middleman article" command now works even when there are multiple blogs. Specify the blog you want using "--blog".
 * The template used to generate new articles via "middleman article" can be overridden by setting :new_article_template.
+* Removed `:blog_name`, `:blog_author`, `:blog_avatar` options and the `page_title` helper.
 
 3.4.1
 ====
