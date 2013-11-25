@@ -19,7 +19,8 @@ module Middleman
       # @param [String] tag
       # @return [String]
       def link(tag)
-        apply_uri_template @tag_link_template, :tag => tag.parameterize
+        tag = tag.parameterize if tag.split('').all? { |c| c.bytes.count == 1 }
+        apply_uri_template @tag_link_template, :tag => tag
       end
 
       # Update the main sitemap resource list
