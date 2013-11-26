@@ -68,3 +68,14 @@ Feature: Custom collection pages
     When I go to "/blog/categories/ruby-on-rails.html"
     Then I should see "/2011-01-01-new-article.html"
     Then I should not see "/2011-01-02-another-article.html"
+
+  Scenario: Collection property can use source path data
+    Given the Server is running at "custom-collections-sources-app"
+    When I go to "/categories/news.html"
+    Then I should see "/2011-01-01-new-article.html"
+    Then I should not see "/2011-01-02-another-article.html"
+    When I go to "/categories/articles.html"
+    Then I should not see "/2011-01-01-new-article.html"
+    Then I should see "/2011-01-02-another-article.html"
+    When I go to "/index.html"
+    Then I should see "Category Path: '/categories/articles.html'"
