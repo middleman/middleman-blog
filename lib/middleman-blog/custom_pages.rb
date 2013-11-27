@@ -18,11 +18,9 @@ module Middleman
         @page_template = options[:template]
       end
 
-      # Return a path to the given property / value pair
+      # Return a path to the page for this property value.
       #
-      # @param [Hash] blog_options
-      # @param [String|Symbol] property Frontmatter property used to collect on
-      # @param [String| value Frontmatter value for the given article for the given property
+      # @param [String] value
       def link(value)
         apply_uri_template @link_template, property => safe_parameterize(value)
       end

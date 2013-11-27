@@ -124,8 +124,9 @@ module Middleman
         "#<Middleman::Blog::BlogData: #{articles.inspect}>"
       end
 
-      # Skip articles that are not published (in non-development environments)
-      # @param [BlogArticle] a blog article
+      # Whether or not a given article should be included in the sitemap.
+      # Skip articles that are not published unless the environment is +:development+.
+      # @param [BlogArticle] article A blog article
       # @return [Boolean] whether it should be published
       def publishable?(article)
         @app.environment == :development || article.published?

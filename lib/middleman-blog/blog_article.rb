@@ -4,21 +4,29 @@ require 'active_support/core_ext/time/calculations'
 
 module Middleman
   module Blog
-    # A module that adds blog-article methods to Resources.
+    # A module that adds blog-article-specific methods to Resources.
+    # A {BlogArticle} can be retrieved via {Blog::Helpers#current_article} or
+    # methods on {BlogData} (like {BlogData#articles}).
+    # @see http://rdoc.info/github/middleman/middleman/Middleman/Sitemap/Resource Middleman::Sitemap::Resource
     module BlogArticle
       def self.extended(base)
         base.class.send(:attr_accessor, :blog_controller)
       end
 
+      # A reference to the {BlogData} for this article's blog.
+      # @return [BlogData]
       def blog_data
         blog_controller.data
       end
 
+      # The options for this article's blog.
+      # @return [ConfigurationManager]
       def blog_options
         blog_controller.options
       end
 
-      # Render this resource
+      # Render this resource to a string with the appropriate layout.
+      # Called automatically by Middleman.
       # @return [String]
       def render(opts={}, locs={}, &block)
         if opts[:layout].nil?
@@ -37,25 +45,25 @@ module Middleman
         content
       end
 
-      # The title of the article, set from frontmatter
+      # The title of the article, set from frontmatter.
       # @return [String]
       def title
         data["title"]
       end
 
-      # Whether or not this article has been published
+      # Whether or not this article has been published.
       #
       # An article is considered published in the following scenarios:
       #
-      # 1. frontmatter does not set published to false and either
-      # 2. published_future_dated is true or
-      # 3. article date is after the current time
+      # 1. Frontmatter does not set +published+ to false and either
+      # 2. The blog option +published_future_dated+ is true or
+      # 3. The article's date is after the current time
       # @return [Boolean]
       def published?
         data["published"] != false && (blog_options.publish_future_dated || date <= Time.current)
       end
 
-      # The body of this article, in HTML. This is for
+      # The body of this article, in HTML (no layout). This is for
       # things like RSS feeds or lists of articles - individual
       # articles will automatically be rendered from their
       # template.
@@ -65,14 +73,15 @@ module Middleman
       end
 
       # The summary for this article, in HTML. The summary is either
-      # everything before the summary separator (set via :summary_separator
-      # and defaulting to "READMORE") or the first :summary_length
-      # characters of the post.
+      # everything before the summary separator (set via the blog option
+      # +summary_separator+ and defaulting to "READMORE") or the first
+      # +summary_length+ characters of the post.
       #
-      # :summary_generator can be set to a Proc in order to provide
-      # custom summary generation. The Proc is provided a parameter
-      # which is the rendered content of the article (without layout), the
+      # The blog option +summary_generator+ can be set to a +Proc+ in order to provide
+      # custom summary generation. The +Proc+ is provided
+      # the rendered content of the article (without layout), the
       # desired length to trim the summary to, and the ellipsis string to use.
+      # Otherwise the {#default_summary_generator} will be used.
       #
       # @param [Number] length How many characters to trim the summary to.
       # @param [String] ellipsis The ellipsis string to use when content is trimmed.
@@ -89,12 +98,13 @@ module Middleman
         end
       end
 
-      # The default summary generator first tries to find the summary separator and
+      # The default summary generator first tries to find the +summary_separator+ and
       # take the text before it. If that doesn't work, it will truncate text without splitting
-      # the middle of an HTML tag, using a Nokogiri-based TruncateHTML utility.
+      # the middle of an HTML tag, using a Nokogiri-based {TruncateHTML} utility.
       #
       # @param [String] rendered The rendered blog article
-      # @param [Integer] length The length in characters to truncate to. -1 or nil will return the whole article.
+      # @param [Integer] length The length in characters to truncate to.
+      #   -1 or +nil+ will return the whole article.
       def default_summary_generator(rendered, length, ellipsis)
         if blog_options.summary_separator && rendered =~ blog_options.summary_separator
           rendered.split(blog_options.summary_separator).first
@@ -107,7 +117,7 @@ module Middleman
       end
 
       # A list of tags for this article, set from frontmatter.
-      # @return [Array<String>] (never nil)
+      # @return [Array<String>] (never +nil+)
       def tags
         article_tags = data["tags"]
 
@@ -121,10 +131,10 @@ module Middleman
       # The language of the article. The language can be present in the
       # frontmatter or in the source path. If both are present, they
       # must match. If neither specifies a lang, I18n's default_locale will
-      # be used. If lang is set to nil, or the i18n extension is not
-      # activated at all, nil will be returned.
+      # be used. If +lang+ is set to nil, or the +:i18n+ extension is not
+      # activated at all, +nil+ will be returned.
       #
-      # @return [Symbol]
+      # @return [Symbol] Language code (for example, +:en+ or +:de+)
       def lang
         frontmatter_lang = data["lang"]
 
@@ -179,7 +189,10 @@ module Middleman
         @_date
       end
 
-      # The "slug" of the article that shows up in its URL.
+      # The "slug" of the article that shows up in its URL. The article slug
+      # is a parameterized version of the {#title} (lowercase, spaces replaced
+      # with dashes, etc) and can be used in the blog +permalink+ as +:title+.
+      #
       # @return [String]
       def slug
         if data['slug']
@@ -194,27 +207,29 @@ module Middleman
       end
 
       # The previous (chronologically earlier) article before this one
-      # or nil if this is the first article.
-      # @return [Middleman::Sitemap::Resource]
+      # or +nil+ if this is the first article.
+      # @return [BlogArticle]
       def previous_article
         blog_data.articles.find {|a| a.date < self.date }
       end
 
       # The next (chronologically later) article after this one
-      # or nil if this is the most recent article.
+      # or +nil+ if this is the most recent article.
       # @return [Middleman::Sitemap::Resource]
       def next_article
         blog_data.articles.reverse.find {|a| a.date > self.date }
       end
 
+      # This is here to prevent out-of-memory on exceptions.
+      # @private
       def inspect
         "#<Middleman::Blog::BlogArticle: #{data.inspect}>"
       end
 
       private
 
-      # Retrieve a section of the source path
-      # @param [String] The part of the path, e.g. "lang", "year", "month", "day", "title"
+      # Retrieve a section of the source path template.
+      # @param [String] part The part of the path, e.g. "lang", "year", "month", "day", "title"
       # @return [String]
       def path_part(part)
         @_path_parts ||= blog_data.source_template.extract(path)

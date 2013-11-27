@@ -11,7 +11,7 @@ module Middleman
       # This supports the legacy middleman-blog/Sinatra style :colon
       # URI templates as well as RFC6470 templates.
       #
-      # @param [String] URI template source
+      # @param [String] tmpl_src URI template source
       # @return [Addressable::Template] a URI template
       def uri_template(tmpl_src)
         # Support the RFC6470 templates directly if people use them
