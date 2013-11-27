@@ -71,7 +71,7 @@ module Middleman
       # Does this resource match the blog controller for this paginator?
       # @return [Boolean]
       def match_blog(res, md)
-        res_controller = md[:locals]["blog_controller"] || res.try(:blog_controller)
+        res_controller = md[:locals]["blog_controller"] || (res.respond_to?(:blog_controller) && res.blog_controller)
         return false if res_controller && res_controller != @blog_controller
         override_controller = md[:page]["blog"]
         return false if override_controller && override_controller != @blog_controller.name
