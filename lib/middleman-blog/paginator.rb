@@ -25,10 +25,10 @@ module Middleman
           # Avoid recomputing metadata over and over
           md = res.metadata
 
+          next unless md[:page]["pageable"]
+
           # Skip other blogs' resources
           next unless match_blog(res, md)
-
-          next unless md[:page]["pageable"]
 
           # "articles" local variable is populated by Calendar and Tag page generators
           # If it's not set then use the complete list of articles
@@ -74,7 +74,7 @@ module Middleman
         res_controller = md[:locals]["blog_controller"] || (res.respond_to?(:blog_controller) && res.blog_controller)
         return false if res_controller && res_controller != @blog_controller
         override_controller = md[:page]["blog"]
-        return false if override_controller && override_controller != @blog_controller.name
+        return false if override_controller && override_controller.to_s != @blog_controller.name.to_s
 
         true
       end

@@ -1,12 +1,12 @@
 @three_one
 
 Feature: Host Multiple Blogs with Middleman 3.1+
-  
+
   Scenario: Preview
     Given a fixture app "multiblog-app"
     And a file named "config.rb" with:
       """
-      activate :blog, :name => "blog_number_1", :prefix => "blog1", :sources => ":year-:month-:day-:title.html"
+      activate :blog, :name => "blog_number_1", :prefix => "blog1", :sources => ":year-:month-:day-:title.html", :paginate => true
 
       activate :blog do |blog|
         blog.name    = "blog_number_2"
@@ -24,6 +24,8 @@ Feature: Host Multiple Blogs with Middleman 3.1+
     Then I should see "blog_number_1 title: Other Article"
     Then I should see "blog_number_2 length: 1"
     Then I should see "blog_number_2 title: Newer Article"
+    When I go to "/blog1/index.html"
+    Then I should see "Paginate: true"
 
   Scenario: Build
     Given a fixture app "multiblog-app"
