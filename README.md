@@ -21,7 +21,7 @@ activate :blog
 
 ## Learn More
 
-See [the blog extension guide](http://middlemanapp.com/blogging/) for detailed information on configuring and using the blog extension.
+See [the blog extension guide](http://middlemanapp.com/basics/blogging/) for detailed information on configuring and using the blog extension.
 
 Additionally, up-to-date generated code documentation is available on [RubyDoc].
 
