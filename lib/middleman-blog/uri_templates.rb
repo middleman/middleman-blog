@@ -52,7 +52,7 @@ module Middleman
         parameterized_string = ActiveSupport::Inflector.transliterate(str).downcase
         parameterized_string.gsub!(/[^a-z0-9\-_\?]+/, sep)
 
-        parameterized_string.chars.each_with_index do |char, i|
+        parameterized_string.chars.to_a.each_with_index do |char, i|
           if char == '?' && str[i].bytes.count != 1
             parameterized_string[i] = str[i]
           end
