@@ -43,10 +43,9 @@ module Middleman
       def extract_params(template, path)
         params = template.extract(path)
         return nil unless params
-        return nil if params.key?(:year) && /\A\d{4}\z/ !~ params[:date]
-        return nil if params.key?(:month) && /\A\d{2}\z/ !~ params[:month]
-        return nil if params.key?(:day) && /\A\d{2}\z/ !~ params[:day]
-
+        return nil if params.key?('year') && /\A\d{4}\z/ !~ params['year']
+        return nil if params.key?('month') && /\A\d{2}\z/ !~ params['month']
+        return nil if params.key?('day') && /\A\d{2}\z/ !~ params['day']
         params
       end
 
