@@ -35,6 +35,21 @@ module Middleman
         ::Middleman::Util.normalize_path Addressable::URI.unencode(template.expand(data)).to_s
       end
 
+      # Use a template to extract parameters from a path, and validate some special (date)
+      # keys. Returns nil if the special keys don't match.
+      #
+      # @param [Addressable::Template] template
+      # @param [String] path
+      def extract_params(template, path)
+        params = template.extract(path)
+        return nil unless params
+        return nil if params.key?(:year) && /\A\d{4}\z/ !~ params[:date]
+        return nil if params.key?(:month) && /\A\d{2}\z/ !~ params[:month]
+        return nil if params.key?(:day) && /\A\d{2}\z/ !~ params[:day]
+
+        params
+      end
+
       # Parameterize a string preserving any multibyte characters
       def safe_parameterize(str)
         sep = '-'

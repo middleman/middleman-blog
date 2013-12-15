@@ -78,7 +78,7 @@ module Middleman
         used_resources = []
 
         resources.each do |resource|
-          if (params = @source_template.extract(resource.path))
+          if (params = extract_params(@source_template, resource.path))
             article = convert_to_article(resource)
             next unless publishable?(article)
 
@@ -92,26 +92,25 @@ module Middleman
 
             @_articles << article
 
-          elsif (params = @subdir_template.extract(resource.path))
+          elsif (params = extract_params(@subdir_template, resource.path))
             # It's not an article, but it's thhe companion files for an article
             # (in a subdirectory named after the article)
             # figure out the matching article for this subdirectory file
 
             article_path = @source_template.expand(params).to_s
 
-            article = @app.sitemap.find_resource_by_path(article_path)
-            raise "Article for #{resource.path} not found" if article.nil?
+            if article = @app.sitemap.find_resource_by_path(article_path)
+              # The article may not yet have been processed, so convert it here.
+              article = convert_to_article(article)
+              next unless publishable?(article)
 
-            # The article may not yet have been processed, so convert it here.
-            article = convert_to_article(article)
-            next unless publishable?(article)
+              # The subdir path is the article path with the index file name
+              # or file extension stripped off.
+              path = params.fetch('path')
+              new_destination_path = template_path @subdir_permalink_template, article, path: path
 
-            # The subdir path is the article path with the index file name
-            # or file extension stripped off.
-            path = params.fetch('path')
-            new_destination_path = template_path @subdir_permalink_template, article, path: path
-
-            resource.destination_path = Middleman::Util.normalize_path(new_destination_path)
+              resource.destination_path = Middleman::Util.normalize_path(new_destination_path)
+            end
           end
 
           used_resources << resource
