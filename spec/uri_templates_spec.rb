@@ -45,5 +45,16 @@ describe 'Middleman::Blog::UriTemplates' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
       params = extract_params(template, '2a13/1a2/1s3/foo-bar/foo/bar.html')
     end
+
+    it 'matches even when the path contains spaces' do
+      template = uri_template('{year}/{month}/{day}/{title}/{+path}')
+      params = extract_params(template, '2013/12/13/foo - bar/foo/bar.html')
+
+      params['year'].should == '2013'
+      params['month'].should == '12'
+      params['day'].should == '13'
+      params['title'].should == 'foo - bar'
+      params['path'].should == 'foo/bar.html'
+    end
   end
 end

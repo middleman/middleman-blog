@@ -41,12 +41,7 @@ module Middleman
       # @param [Addressable::Template] template
       # @param [String] path
       def extract_params(template, path)
-        params = template.extract(path)
-        return nil unless params
-        return nil if params.key?('year') && /\A\d{4}\z/ !~ params['year']
-        return nil if params.key?('month') && /\A\d{2}\z/ !~ params['month']
-        return nil if params.key?('day') && /\A\d{2}\z/ !~ params['day']
-        params
+        params = template.extract(path, BlogTemplateProcessor)
       end
 
       # Parameterize a string preserving any multibyte characters
@@ -82,6 +77,21 @@ module Middleman
           month: date.month.to_s.rjust(2,'0'),
           day: date.day.to_s.rjust(2,'0')
         }
+      end
+    end
+
+    # A special template processor that validates date fields
+    # and has an extra-permissive default regex.
+    #
+    # See https://github.com/sporkmonger/addressable/blob/master/lib/addressable/template.rb#L279
+    class BlogTemplateProcessor
+      def self.match(name)
+        case name
+        when 'year' then '\d{4}'
+        when 'month' then '\d{2}'
+        when 'day' then '\d{2}'
+        else '.*?'
+        end
       end
     end
   end
