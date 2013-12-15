@@ -1,4 +1,7 @@
 require 'addressable/template'
+require 'middleman-core/util'
+require 'active_support/inflector'
+require 'active_support/inflector/transliterate'
 
 module Middleman
   module Blog
@@ -32,14 +35,27 @@ module Middleman
         ::Middleman::Util.normalize_path Addressable::URI.unencode(template.expand(data)).to_s
       end
 
-      # Parameterize a string only if it does not contain UTF-8 characters
+      # Parameterize a string preserving any multibyte characters
       def safe_parameterize(str)
-        if str.chars.all? { |c| c.bytes.count == 1 }
-          str.parameterize
-        else
-          # At least change spaces to dashes
-          str.gsub(/\s+/, '-')
+        sep = '-'
+
+        # Reimplementation of http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize that preserves un-transliterate-able multibyte chars.
+        parameterized_string = ActiveSupport::Inflector.transliterate(str).downcase
+        parameterized_string.gsub!(/[^a-z0-9\-_\?]+/, sep)
+
+        parameterized_string.chars.each_with_index do |char, i|
+          if char == '?' && str[i].bytes.count != 1
+            parameterized_string[i] = str[i]
+          end
         end
+
+        re_sep = Regexp.escape(sep)
+        # No more than one of the separator in a row.
+        parameterized_string.gsub!(/#{re_sep}{2,}/, sep)
+        # Remove leading/trailing separator.
+        parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
+
+        parameterized_string
       end
 
       # Convert a date into a hash of components to strings
