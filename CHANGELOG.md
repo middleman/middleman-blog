@@ -1,7 +1,10 @@
-master
+3.5.1
 ===
 
-
+* Remove a broken bracket in the blog template. #181
+* Fix transliteration of strings into URL slugs to still transliterate when it can but not smash multibyte chars. #183
+* Only match source URI templates if the date components match what a date would look like, and avoid throwing when companion files do not have an article. #184
+* Re-support spaces in blog article source paths. #185
 
 3.5.0
 ===
