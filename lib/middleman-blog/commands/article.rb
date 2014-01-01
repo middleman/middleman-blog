@@ -31,7 +31,7 @@ module Middleman
         desc: "The language to create the post with (defaults to I18n.default_locale if avaliable)"
       method_option "blog",
         aliases: "-b",
-        desc: "The name of the blog to creat the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
+        desc: "The name of the blog to create the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
       def article(title)
         shared_instance = ::Middleman::Application.server.inst
 
