@@ -136,11 +136,8 @@ module Middleman
       #
       # @return [Symbol] Language code (for example, +:en+ or +:de+)
       def lang
-        frontmatter_lang = data["lang"]
-
-        if blog_options.sources.include? ":lang"
-          filename_lang = path_part("lang")
-        end
+        frontmatter_lang = data['lang']
+        filename_lang = path_part('lang')
 
         if frontmatter_lang && filename_lang && frontmatter_lang != filename_lang
           raise "The lang in #{path}'s filename (#{filename_lang.inspect}) doesn't match the lang in its frontmatter (#{frontmatter_lang.inspect})"

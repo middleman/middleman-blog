@@ -23,6 +23,14 @@ Feature: Internationalized articles
     Then I should see "Некоторый текст на русском языке. Всё отлично."
     Then I should not see "Some text in English. All is OK."
 
+  Scenario: Article has lang in source path
+    Given a fixture app "lang-path-app"
+    Given the Server is running at "lang-path-app"
+    When I go to "/en/a-humble-test.html"
+    Then I should see "English!"
+    When I go to "/ru/a-humble-test.html"
+    Then I should see "Russian!"
+
   Scenario: Custom locales in articles
     Given a fixture app "language-app"
     And a file named "config.rb" with:
