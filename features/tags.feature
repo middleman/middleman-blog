@@ -9,6 +9,9 @@ Feature: Tag pages
     Then I should see "/2011-01-01-new-article.html"
     Then I should not see "/2011-01-02-another-article.html"
     Then I should see "Tag: bar"
+    When I go to "/tags/120.html"
+    Then I should see "/2011-01-02-another-article.html"
+    Then I should see "Tag: 120"
     When I go to "/index.html"
     Then I should see "Tag Path: '/tags/foo.html'"
 

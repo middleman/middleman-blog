@@ -124,7 +124,7 @@ module Middleman
         if article_tags.is_a? String
           article_tags.split(',').map(&:strip)
         else
-          Array(article_tags)
+          Array(article_tags).map(&:to_s)
         end
       end
 
