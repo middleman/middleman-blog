@@ -23,14 +23,14 @@
       <h2>Tags</h2>
       <ol>
         <% blog.tags.each do |tag, articles| %>
-          <li><%= link_to tag, tag_path(tag) %> (<%= articles.size %>)</a></li>
+          <li><%= link_to "#{tag} (#{articles.size})", tag_path(tag) %></li>
         <% end %>
       </ol>
 
       <h2>By Year</h2>
       <ol>
         <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
-          <li><%= link_to year, blog_year_path(year) %> (<%= articles.size %>)</a></li>
+          <li><%= link_to "#{year} (#{articles.size})", blog_year_path(year) %></li>
         <% end %>
       </ol>
     </aside>
