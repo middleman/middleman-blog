@@ -22,6 +22,10 @@ describe 'Middleman::Blog::UriTemplates' do
     it "can handle mixed strings" do
       safe_parameterize('What ☆☆☆!').should == 'what-☆☆☆'
     end
+
+    it "can handle numbers" do
+      safe_parameterize(1).should == '1'
+    end
   end
 
   describe 'extract_params' do
