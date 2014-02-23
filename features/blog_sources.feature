@@ -25,3 +25,8 @@ Feature: Flexible article sources
     Given the Server is running at "blog-sources-app"
     When I go to "/2013/08/08/slug-from-frontmatter.html"
     Then I should see "Article with slug specified in frontmatter"
+
+  Scenario: There can be subdirectories in the blog sources dir
+    Given the Server is running at "blog-sources-subdirs-app"
+    When I go to "/blog.html"
+    Then I should see "Yet another post"

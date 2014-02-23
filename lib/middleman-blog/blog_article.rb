@@ -229,7 +229,7 @@ module Middleman
       # @param [String] part The part of the path, e.g. "lang", "year", "month", "day", "title"
       # @return [String]
       def path_part(part)
-        @_path_parts ||= blog_data.source_template.extract(path)
+        @_path_parts ||= Blog::UriTemplates.extract_params(blog_data.source_template, path)
         @_path_parts[part.to_s]
       end
     end
