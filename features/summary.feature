@@ -7,6 +7,9 @@ Feature: Article summary generation
     Then I should see "Summary from article with no separator."
     Then I should not see "Extended part from article with no separator."
 
+    When I go to "/index.html"
+    Then I should see "<p>Summary from article with separator.</p>"
+
   Scenario: Article has custom summary separator
     Given a fixture app "summary-app"
     And a file named "config.rb" with:
@@ -21,7 +24,10 @@ Feature: Article summary generation
     Then I should not see "Extended part from article with custom separator."
     Then I should see "Extended part from article with separator."
 
-  Scenario: Using a custom summary generator
+    When I go to "/index.html"
+    Then I should see "<p>Summary from article with custom separator.</p>"
+
+  Scenario: Using a custom   generator
     Given a fixture app "summary-app"
     And a file named "config.rb" with:
       """
