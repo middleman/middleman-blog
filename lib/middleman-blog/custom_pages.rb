@@ -26,7 +26,9 @@ module Middleman
       end
 
       def manipulate_resource_list(resources)
-        articles_by_property = @blog_data.articles.group_by { |a| a.metadata[:page][property.to_s] }
+        articles_by_property = @blog_data.articles.
+          select {|a| a.metadata[:page][property.to_s] }.
+          group_by {|a| a.metadata[:page][property.to_s] }
         resources + articles_by_property.map do |property_value, articles|
           build_resource(link(property_value), property_value, articles)
         end

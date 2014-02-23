@@ -10,6 +10,8 @@ Feature: Custom collection pages
     Then I should see "/2011-01-02-another-article.html"
     When I go to "/index.html"
     Then I should see "Category Path: '/categories/ruby-on-rails.html'"
+    When I go to "/categories/.html"
+    Then I should see "Not Found"
 
   Scenario: Collection pages are accessbile from preview server with directory_indexes
     Given a fixture app "custom-collections-app"
