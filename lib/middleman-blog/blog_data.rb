@@ -78,6 +78,12 @@ module Middleman
         used_resources = []
 
         resources.each do |resource|
+          if resource.ignored?
+            # Don't bother blog-processing ignored stuff
+            used_resources << resource
+            next
+          end
+
           if (params = extract_params(@source_template, resource.path))
             article = convert_to_article(resource)
             next unless publishable?(article)
