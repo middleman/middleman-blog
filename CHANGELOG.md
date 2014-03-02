@@ -1,4 +1,4 @@
-master
+3.5.2
 ===
 
 * Ignored pages won't be processed by the blog extension.
