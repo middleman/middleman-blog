@@ -1,5 +1,5 @@
 module Middleman
   module Blog
-    VERSION = "3.5.1"
+    VERSION = "3.5.2"
   end
 end

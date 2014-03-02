@@ -1,3 +1,13 @@
+master
+===
+
+* Ignored pages won't be processed by the blog extension.
+* Avoid creating an empty-string collection when a post does not have a custom collection property set. #192
+* Fix blog sources matching blog entries that are in a subdirectory that's not explicitly stated as part of the blog.sources template. #196
+* Fixed tag and year links in blog template. #195
+* An article's language can be set via the {lang} parameter in its sources URL template. #187
+* Tags that are just a number work now. #188
+
 3.5.1
 ===
 
