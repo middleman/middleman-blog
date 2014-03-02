@@ -12,7 +12,7 @@ module Middleman
 
       # Given a URI template string, make an Addressable::Template
       # This supports the legacy middleman-blog/Sinatra style :colon
-      # URI templates as well as RFC6470 templates.
+      # URI templates as well as RFC6570 templates.
       #
       # @param [String] tmpl_src URI template source
       # @return [Addressable::Template] a URI template
