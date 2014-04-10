@@ -164,7 +164,7 @@ module Middleman
         if frontmatter_date.is_a? Time
           @_date = frontmatter_date.in_time_zone
         else
-          @_date = Time.zone.parse(frontmatter_date.to_s)
+          @_date = Date.parse(frontmatter_date.to_s).in_time_zone
         end
 
         # Next figure out the date from the filename
