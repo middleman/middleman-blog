@@ -1,3 +1,8 @@
+3.5.3
+===
+
+Update blog_article active_support requires. Fixes #205
+
 3.5.2
 ===
 
