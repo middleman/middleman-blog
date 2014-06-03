@@ -28,7 +28,7 @@ module Middleman
         desc: "The date to create the post with (defaults to now)"
       method_option "lang",
         aliases: "-l",
-        desc: "The language to create the post with (defaults to I18n.default_locale if avaliable)"
+        desc: "The language to create the post with (defaults to I18n.default_locale if available)"
       method_option "blog",
         aliases: "-b",
         desc: "The name of the blog to create the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
