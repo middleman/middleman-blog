@@ -36,6 +36,11 @@ module Middleman
           raise "You must either specify the blog name in calling this method or in your page frontmatter (using the 'blog' blog_name)"
         end
 
+        # Warn if a non-existent blog name provided
+        if blog_name && !blog_instances.keys.include?(blog_name)
+          raise "Non-existent blog name provided: #{blog_name}."
+        end
+
         blog_name ||= blog_instances.keys.first
         blog_instances[blog_name.to_sym]
       end
