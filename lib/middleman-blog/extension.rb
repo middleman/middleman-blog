@@ -32,7 +32,6 @@ module Middleman
     option :preserve_locale, false, 'Use the global Middleman I18n.locale instead of the lang in the article\'s frontmatter'
     option :new_article_template, File.expand_path('../commands/article.tt', __FILE__), 'Path (relative to project root) to an ERb template that will be used to generate new articles from the "middleman article" command.'
     option :default_extension, '.markdown', 'Default template extension for articles (used by "middleman article")'
-    option :decapitalize_tags, false, 'Decapitalize tag strings'
 
     # @return [BlogData] blog data for this blog, which has all information about the blog articles
     attr_reader :data

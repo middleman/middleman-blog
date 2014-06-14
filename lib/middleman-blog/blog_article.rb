@@ -121,12 +121,12 @@ module Middleman
       # @return [Array<String>] (never +nil+)
       def tags
         article_tags = data["tags"]
+
         if article_tags.is_a? String
-          tag = article_tags.split(',').map(&:strip)
+          article_tags.split(',').map(&:strip)
         else
-          tag = Array(article_tags).map(&:to_s)
+          Array(article_tags).map(&:to_s)
         end
-        blog_options.decapitalize_tags ? tag.map(&:downcase) : tag
       end
 
       # The language of the article. The language can be present in the
