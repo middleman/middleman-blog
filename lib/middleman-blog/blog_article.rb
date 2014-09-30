@@ -101,7 +101,7 @@ module Middleman
 
       # The default summary generator first tries to find the +summary_separator+ and
       # take the text before it. If that doesn't work, it will truncate text without splitting
-      # the middle of an HTML tag, using a Nokogiri-based {TruncateHTML} utility.
+      # the middle of an HTML tag, using a Oga-based {TruncateHTML} utility.
       #
       # @param [String] rendered The rendered blog article
       # @param [Integer] length The length in characters to truncate to.
