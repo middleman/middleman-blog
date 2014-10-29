@@ -128,15 +128,15 @@ module Middleman
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_calendar", @calendar_pages, false)
       end
 
+      if options.custom_collections
+        require 'middleman-blog/custom_pages'
+        register_custom_pages
+      end
+
       if options.paginate
         require 'middleman-blog/paginator'
         @paginator = Blog::Paginator.new(@app, self)
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_paginate", @paginator, false)
-      end
-
-      if options.custom_collections
-        require 'middleman-blog/custom_pages'
-        register_custom_pages
       end
     end
 
