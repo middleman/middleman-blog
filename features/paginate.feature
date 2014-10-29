@@ -50,6 +50,31 @@ Feature: Pagination
     Then I should not see "/2011-01-04-test-article.html"
     Then I should not see "/2011-01-03-test-article.html"
 
+    When I go to "/categories/ruby-on-rails.html"
+    Then I should see "Paginate: true"
+    Then I should see "Article Count: 2"
+    Then I should see "Num Pages: 3"
+    Then I should see "Page Start: 1"
+    Then I should see "Page End: 2"
+    Then I should see "Next Page: '/categories/ruby-on-rails/page/2.html'"
+    Then I should see "Prev Page: ''"
+    Then I should see "/2011-01-05-test-article.html"
+    Then I should see "/2011-01-04-test-article.html"
+    Then I should not see "/2011-01-03-test-article.html"
+    Then I should not see "/2011-01-02-test-article.html"
+
+    When I go to "/categories/ruby-on-rails/page/2.html"
+    Then I should see "Article Count: 2"
+    Then I should see "Num Pages: 3"
+    Then I should see "Page Start: 3"
+    Then I should see "Page End: 4"
+    Then I should see "Next Page: '/categories/ruby-on-rails/page/3.html'"
+    Then I should see "Prev Page: '/categories/ruby-on-rails.html'"
+    Then I should not see "/2011-01-05-test-article.html"
+    Then I should not see "/2011-01-04-test-article.html"
+    Then I should see "/2011-01-03-test-article.html"
+    Then I should see "/2011-01-02-test-article.html"
+
   Scenario: Index pages are accessible from preview server, with pagination off
     Given a fixture app "paginate-app"
     And app "paginate-app" is using config "paginate-off"
@@ -96,6 +121,21 @@ Feature: Pagination
     Then I should not see "/2011-01-04-test-article.html"
     Then I should not see "/2011-01-03-test-article.html"
 
+    When I go to "/categories/ruby-on-rails.html"
+    Then I should see "Paginate: false"
+    Then I should see "Article Count: 2"
+    Then I should see "/2011-01-05-test-article.html"
+    Then I should see "/2011-01-04-test-article.html"
+    Then I should not see "/2011-01-03-test-article.html"
+    Then I should not see "/2011-01-02-test-article.html"
+
+    When I go to "/categories/travel.html"
+    Then I should see "Paginate: false"
+    Then I should see "Article Count: 2"
+    Then I should see "/2011-02-02-test-article.html"
+    Then I should see "/2011-02-01-test-article.html"
+    Then I should not see "/2011-01-05-test-article.html"
+
   Scenario: Index pages are accessible from preview server, with directory_indexes on
     Given a fixture app "paginate-app"
     And app "paginate-app" is using config "directory-indexes"
@@ -114,19 +154,27 @@ Feature: Pagination
     When I go to "/tags/bar/"
     Then I should see "Next Page: '/tags/bar/page/2/'"
 
+    When I go to "/categories/ruby-on-rails/"
+    Then I should see "Next Page: '/categories/ruby-on-rails/page/2/'"
+
   Scenario: Index pages also get built
     Given a successfully built app at "paginate-app"
     When I cd to "build"
     Then the following files should exist:
-    | tags/foo.html        |
-    | tags/bar.html        |
-    | tags/bar/page/2.html |
-    | tags/bar/page/3.html |
-    | 2011.html            |
-    | 2011/page/2.html     |
+    | tags/foo.html                        |
+    | tags/bar.html                        |
+    | tags/bar/page/2.html                 |
+    | tags/bar/page/3.html                 |
+    | categories/ruby-on-rails.html        |
+    | categories/ruby-on-rails/page/2.html |
+    | categories/ruby-on-rails/page/3.html |
+    | categories/travel.html               |
+    | 2011.html                            |
+    | 2011/page/2.html                     |
     Then the following files should not exist:
     | tags.html     |
     | calendar.html |
+    | category.html |
 
     And the file "2011/page/2.html" should contain "Year: '2011'"
     And the file "2011/page/2.html" should contain "Month: ''"
@@ -148,6 +196,13 @@ Feature: Pagination
     And the file "tags/bar/page/3.html" should contain "Next Page: ''"
     And the file "tags/bar/page/3.html" should contain "/2011-01-03-test-article.html"
 
+    And the file "categories/ruby-on-rails/page/2.html" should contain "Category: ruby-on-rails"
+    And the file "categories/ruby-on-rails/page/2.html" should contain "Article Count: 2"
+    And the file "categories/ruby-on-rails/page/2.html" should contain "Prev Page: '/categories/ruby-on-rails.html'"
+    And the file "categories/ruby-on-rails/page/2.html" should contain "Next Page: '/categories/ruby-on-rails/page/3.html'"
+    And the file "categories/ruby-on-rails/page/2.html" should contain "/2011-01-03-test-article.html"
+    And the file "categories/ruby-on-rails/page/2.html" should contain "/2011-01-02-test-article.html"
+
   Scenario: Adding a tag to a post in preview adds a new index page
     Given the Server is running at "paginate-app"
     When I go to "/tags/foo.html"
@@ -163,6 +218,7 @@ Feature: Pagination
       title: "Newest Article"
       date: 2011-02-03
       tags: foo
+      category: ruby-on-rails
       ---
 
       Newer Article Content
@@ -174,3 +230,11 @@ Feature: Pagination
 
     When I go to "/tags/foo/page/2.html"
     Then I should see "/2011-01-01-test-article.html"
+
+    When I go to "/categories/ruby-on-rails.html"
+    Then I should see "Next Page: '/categories/ruby-on-rails/page/2.html'"
+    Then I should see "/2011-02-03-new-article.html"
+    Then I should not see "/2011-01-04-test-article.html"
+
+    When I go to "/categories/ruby-on-rails/page/2.html"
+    Then I should see "/2011-01-04-test-article.html"
