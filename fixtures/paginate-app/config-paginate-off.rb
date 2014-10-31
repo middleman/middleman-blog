@@ -5,4 +5,11 @@ activate :blog do |blog|
   blog.tag_template      = 'tag.html'
   #blog.paginate          = true
   blog.per_page          = 5
+
+  blog.custom_collections = {
+    :category => {
+      :link     => '/categories/:category.html',
+      :template => '/category.html'
+    }
+  }
 end
