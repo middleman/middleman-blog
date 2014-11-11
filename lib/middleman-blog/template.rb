@@ -4,7 +4,7 @@ module Middleman
   module Blog
 
     # A template that generates a blog-specific config.rb
-    # and a set of example templates for index, layout, tags, and calendar.
+    # and a set of example templates for index, layout, category, tags, and calendar.
     class Template < Middleman::Templates::Base
       class_option "css_dir",
         default: "stylesheets",

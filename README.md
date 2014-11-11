@@ -1,6 +1,6 @@
 # Middleman-Blog
 
-`middleman-blog` is an extension for the [Middleman] static site generator that adds blog-specific functionality. This includes handling blog articles, helpers for listing articles, and tagging support.
+`middleman-blog` is an extension for the [Middleman] static site generator that adds blog-specific functionality. This includes handling blog articles, helpers for listing articles, category, and tagging support.
 
 ## Installation
 
