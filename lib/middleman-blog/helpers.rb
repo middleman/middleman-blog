@@ -33,7 +33,7 @@ module Middleman
 
         # In multiblog situations, force people to specify the blog
         if !blog_name && blog_instances.size > 1
-          raise "You must either specify the blog name in calling this method or in your page frontmatter (using the 'blog' blog_name)"
+          raise "You have more than one blog so you must either use the flag --blog (ex. --blog 'myBlog') when calling this method, or add blog: [blog_name] to your page's frontmatter"
         end
 
         # Warn if a non-existent blog name provided
