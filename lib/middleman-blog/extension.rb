@@ -96,7 +96,6 @@ module Middleman
       @app.ignore(options.day_template) if options.day_template
       @app.ignore options.tag_template if options.tag_template
 
-      $stderr.puts "ADDING INSTANCE"
       ::Middleman::Blog.instances[@name] = self
 
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
