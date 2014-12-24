@@ -86,7 +86,7 @@ module Middleman
     end
 
     def after_configuration
-      @name ||= :"blog#{@app.blog_instances.keys.length}"
+      @name ||= :"blog#{::Middleman::Blog.instances.keys.length}"
 
       # TODO: break up into private methods?
 
@@ -96,7 +96,8 @@ module Middleman
       @app.ignore(options.day_template) if options.day_template
       @app.ignore options.tag_template if options.tag_template
 
-      @app.blog_instances[@name] = self
+      $stderr.puts "ADDING INSTANCE"
+      ::Middleman::Blog.instances[@name] = self
 
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
       # allowing people to set their desired time zone via Time.zone or

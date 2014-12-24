@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_dependency("middleman-core", ["~> 3.2"])
+  s.add_dependency("middleman-core", [">= 3.3"])
   s.add_dependency("tzinfo", [">= 0.3.0"])
   s.add_dependency("addressable", ["~> 2.3.5"])
 end

@@ -1,7 +1,13 @@
 require "middleman-core"
 
 require "middleman-blog/version"
-require "middleman-blog/template"
+
+begin
+  require "middleman-blog/template"
+rescue LoadError
+  # v4
+end
+
 require "middleman-blog/commands/article"
 
 ::Middleman::Extensions.register(:blog) do

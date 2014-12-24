@@ -144,9 +144,9 @@ module Middleman
           res.path
         else
           page_url = apply_uri_template page_link, num: page_num
-          index_re = %r{(^|/)#{Regexp.escape(@app.index_file)}$}
+          index_re = %r{(^|/)#{Regexp.escape(@app.config[:index_file])}$}
           if res.path =~ index_re
-            res.path.sub(index_re, "\\1#{page_url}/#{@app.index_file}")
+            res.path.sub(index_re, "\\1#{page_url}/#{@app.config[:index_file]}")
           else
             res.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2/#{page_url}.\\3")
           end
