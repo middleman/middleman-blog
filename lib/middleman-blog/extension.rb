@@ -12,6 +12,7 @@ module Middleman
     option :permalink, '/{year}/{month}/{day}/{title}.html', 'Path articles are generated at. Tokens can be omitted or duplicated, and you can use tokens defined in article frontmatter.'
     option :sources, '{year}-{month}-{day}-{title}.html', 'Pattern for matching source blog articles (no template extensions)'
     option :taglink, 'tags/{tag}.html', 'Path tag pages are generated at.'
+    option :categorylink, 'categories/{category}.html', 'Path category pages are generated at.'
     option :layout, 'layout', 'Article-specific layout'
     option :summary_separator, /(READMORE)/, 'Regex or string that delimits the article summary from the rest of the article.'
     option :summary_length, 250, 'Truncate summary to be <= this number of characters. Set to -1 to disable summary truncation.'
@@ -24,6 +25,8 @@ module Middleman
     option :month_template, nil, 'Template path (no template extension) for monthly archive pages. Defaults to the :calendar_template.'
     option :day_template, nil, 'Template path (no template extension) for daily archive pages. Defaults to the :calendar_template.'
     option :tag_template, nil, 'Template path (no template extension) for tag archive pages.'
+    option :category_template, nil, 'Template path (no template extension) for category archive pages.'
+
     option :paginate, false, 'Whether to paginate lists of articles'
     option :per_page, 10, 'Number of articles per page when paginating'
     option :page_link, 'page/{num}', 'Path to append for additional pages when paginating'
@@ -41,6 +44,9 @@ module Middleman
 
     # @return [TagPages] tag page handler for this blog
     attr_reader :tag_pages
+
+    # @return [TagPages] tag page handler for this blog
+    attr_reader :category_pages
 
     # @return [CalendarPages] calendar page handler for this blog
     attr_reader :calendar_pages
@@ -75,6 +81,7 @@ module Middleman
         options.permalink = File.join(options.prefix, options.permalink)
         options.sources = File.join(options.prefix, options.sources)
         options.taglink = File.join(options.prefix, options.taglink)
+        options.categorylink = File.join(options.prefix, options.categorylink)
         options.year_link = File.join(options.prefix, options.year_link)
         options.month_link = File.join(options.prefix, options.month_link)
         options.day_link = File.join(options.prefix, options.day_link)
@@ -95,6 +102,7 @@ module Middleman
       @app.ignore(options.month_template) if options.month_template
       @app.ignore(options.day_template) if options.day_template
       @app.ignore options.tag_template if options.tag_template
+      @app.ignore(options.category_template) if options.category_template
 
       ::Middleman::Blog.instances[@name] = self
 
@@ -120,6 +128,14 @@ module Middleman
         require 'middleman-blog/tag_pages'
         @tag_pages = Blog::TagPages.new(@app, self)
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_tags", @tag_pages, false)
+      end
+
+      if options.category_template
+        @app.ignore options.category_template
+
+        require 'middleman-blog/category_pages'
+        @category_pages = Blog::CategoryPages.new(@app, self)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_categories", @category_pages, false)
       end
 
       if options.year_template || options.month_template || options.day_template

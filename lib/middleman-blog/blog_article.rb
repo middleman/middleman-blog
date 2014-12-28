@@ -128,6 +128,17 @@ module Middleman
           Array(article_tags).map(&:to_s)
         end
       end
+      # A list of categories for this article, set from frontmatter.
+      # @return [Array<String>] (never +nil+)
+      def categories
+        article_categories = data["categories"]
+
+        if article_categories.is_a? String
+          article_categories.split(',').map(&:strip)
+        else
+          Array(article_categories).map(&:to_s)
+        end
+      end
 
       # The language of the article. The language can be present in the
       # frontmatter or in the source path. If both are present, they

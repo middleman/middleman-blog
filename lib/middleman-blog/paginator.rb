@@ -2,7 +2,7 @@ require 'middleman-blog/uri_templates'
 
 module Middleman
   module Blog
-    # A sitemap plugin that splits indexes (including tag
+    # A sitemap plugin that splits indexes (including category, tag
     # and calendar indexes) over multiple pages
     class Paginator
       include UriTemplates
@@ -30,7 +30,7 @@ module Middleman
           # Skip other blogs' resources
           next unless match_blog(res, md)
 
-          # "articles" local variable is populated by Calendar and Tag page generators
+          # "articles" local variable is populated by Category, Calendar and Tag page generators
           # If it's not set then use the complete list of articles
           # TODO: Some way to allow the frontmatter to specify the article filter?
           articles = md[:locals]["articles"] || @blog_controller.data.articles
@@ -127,7 +127,7 @@ module Middleman
           'page_articles' => articles[page_start..page_end],
 
           # Include the articles so that non-proxied pages can use "articles" instead
-          # of "blog.articles" for consistency with the calendar and tag templates.
+          # of "blog.articles" for consistency with the category, calendar and tag templates.
           'articles' => articles,
           'blog_controller' => @blog_controller
         }
