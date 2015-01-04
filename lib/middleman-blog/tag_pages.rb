@@ -13,6 +13,7 @@ module Middleman
         @tag_link_template = uri_template blog_controller.options.taglink
         @tag_template = blog_controller.options.tag_template
         @blog_data = blog_controller.data
+        @generate_tag_pages = blog_controller.options.generate_tag_pages
       end
 
       # Get a path to the given tag, based on the :taglink setting.
@@ -25,6 +26,8 @@ module Middleman
       # Update the main sitemap resource list
       # @return [void]
       def manipulate_resource_list(resources)
+        return resources unless @generate_tag_pages
+
         resources + @blog_data.tags.map do |tag, articles|
           tag_page_resource(tag, articles)
         end

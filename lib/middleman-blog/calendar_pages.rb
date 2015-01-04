@@ -19,6 +19,9 @@ module Middleman
         @day_template = blog_options.day_template
         @month_template = blog_options.month_template
         @year_template = blog_options.year_template
+        @generate_year_pages = blog_options.generate_year_pages
+        @generate_month_pages = blog_options.generate_month_pages
+        @generate_day_pages = blog_options.generate_day_pages
       end
 
       # Get a path to the given calendar page, based on the :year_link, :month_link or :day_link setting.
@@ -45,17 +48,17 @@ module Middleman
 
         # Set up date pages if the appropriate templates have been specified
         @blog_data.articles.group_by {|a| a.date.year }.each do |year, year_articles|
-          if @year_template
+          if @generate_year_pages && @year_template
             new_resources << year_page_resource(year, year_articles)
           end
 
           year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
-            if @month_template
+            if @generate_month_pages && @month_template
               new_resources << month_page_resource(year, month, month_articles)
             end
 
             month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
-              if @day_template
+              if @generate_day_pages && @day_template
                 new_resources << day_page_resource(year, month, day, day_articles)
               end
             end
