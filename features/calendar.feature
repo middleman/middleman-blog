@@ -87,3 +87,26 @@ Feature: Calendar pages
     And the file "index.html" should contain "Month Path: '/2011/01.html'"
     And the file "index.html" should contain "Day Path: '/2011/01/01.html'"
 
+  Scenario: Calendar pages for months and days are not added when disabled in the config
+    Given a fixture app "calendar-app"
+    And app "calendar-app" is using config "only-year"
+    And I run `middleman build`
+    And was successfully built
+
+    When I cd to "build"
+    Then the following files should exist:
+    | 2011.html       |
+    And the following files should not exist:
+    | 2011/01.html    |
+    | 2011/01/01.html |
+    | 2011/01/02.html |
+
+    And the file "2011.html" should contain "/2011-01-01-new-article.html"
+    And the file "2011.html" should contain "/2011-01-02-another-article.html"
+    And the file "2011.html" should contain "Year: '2011'"
+    And the file "2011.html" should contain "Month: ''"
+    And the file "2011.html" should contain "Day: ''"
+
+    And the file "index.html" should contain "Year Path: '/2011.html'"
+    And the file "index.html" should contain "Month Path: ''"
+    And the file "index.html" should contain "Day Path: ''"

@@ -81,3 +81,17 @@ Feature: Tag pages
       """
     When I go to "/tags/☆☆☆.html"
     Then I should see "/2011-01-01-new-article.html"
+
+  Scenario: Tag pages are not added when disabled in configuration
+    Given a fixture app "tags-app"
+    And app "tags-app" is using config "no-tags"
+    And I run `middleman build`
+    And was successfully built
+
+    When I cd to "build"
+    Then the following files should not exist:
+    | tags.html |
+    | tags/foo.html |
+    | tags/bar.html |
+
+    And the file "index.html" should contain "Tag Path: ''"
