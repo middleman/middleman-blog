@@ -71,9 +71,7 @@ module Middleman
       private
 
       def year_page_resource(year, year_articles)
-        Sitemap::Resource.new(@sitemap, link(year)).tap do |p|
-          p.proxy_to(@year_template)
-
+        Sitemap::ProxyResource.new(@sitemap, link(year), @year_template).tap do |p|
           # Add metadata in local variables so it's accessible to
           # later extensions
           p.add_metadata locals: {
@@ -86,9 +84,7 @@ module Middleman
       end
 
       def month_page_resource(year, month, month_articles)
-        Sitemap::Resource.new(@sitemap, link(year, month)).tap do |p|
-          p.proxy_to(@month_template)
-
+        Sitemap::ProxyResource.new(@sitemap, link(year, month), @month_template).tap do |p|
           p.add_metadata locals: {
             'page_type' => 'month',
             'year' => year,
@@ -100,9 +96,7 @@ module Middleman
       end
 
       def day_page_resource(year, month, day, day_articles)
-        Sitemap::Resource.new(@sitemap, link(year, month, day)).tap do |p|
-          p.proxy_to(@day_template)
-
+        Sitemap::ProxyResource.new(@sitemap, link(year, month, day), @day_template).tap do |p|
           p.add_metadata locals: {
             'page_type' => 'day',
             'year' => year,
