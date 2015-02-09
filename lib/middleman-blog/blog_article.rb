@@ -30,7 +30,7 @@ module Middleman
       # Called automatically by Middleman.
       # @return [String]
       def render(opts={}, locs={}, &block)
-        if !opts.has_key?(:layout)
+        unless opts.has_key?(:layout)
           opts[:layout] = metadata[:options][:layout]
           opts[:layout] = blog_options.layout if opts[:layout].nil?
           # Convert to a string unless it's a boolean
