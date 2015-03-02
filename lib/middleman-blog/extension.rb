@@ -5,6 +5,7 @@ require 'middleman-blog/helpers'
 
 module Middleman
   class BlogExtension < Extension
+    delegate :logger, to: :app
     self.supports_multiple_instances = true
 
     option :name, nil, 'Unique ID for telling multiple blogs apart'
@@ -142,6 +143,8 @@ module Middleman
         @paginator = Blog::Paginator.new(@app, self)
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_paginate", @paginator, false)
       end
+
+      logger.info "== Blog Sources: #{options.sources} (:prefix + :sources)"
     end
 
     private
