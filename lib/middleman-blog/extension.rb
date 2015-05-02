@@ -5,8 +5,11 @@ require 'middleman-blog/helpers'
 
 module Middleman
   class BlogExtension < Extension
-    delegate :logger, to: :app
+    extend Forwardable
+
     self.supports_multiple_instances = true
+
+    def_delegator :app, :logger
 
     option :name, nil, 'Unique ID for telling multiple blogs apart'
     option :prefix, nil, 'Prefix to mount the blog at (modifies permalink, sources, taglink, year_link, month_link, day_link to start with the prefix)'
@@ -117,20 +120,20 @@ module Middleman
       # Initialize blog with options
       @data = Blog::BlogData.new(@app, self, options)
 
-      @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_articles", @data, false)
+      @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_articles", @data)
 
       if options.tag_template
         @app.ignore options.tag_template
 
         require 'middleman-blog/tag_pages'
         @tag_pages = Blog::TagPages.new(@app, self)
-        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_tags", @tag_pages, false)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_tags", @tag_pages)
       end
 
       if options.year_template || options.month_template || options.day_template
         require 'middleman-blog/calendar_pages'
         @calendar_pages = Blog::CalendarPages.new(@app, self)
-        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_calendar", @calendar_pages, false)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_calendar", @calendar_pages)
       end
 
       if options.custom_collections
@@ -141,7 +144,7 @@ module Middleman
       if options.paginate
         require 'middleman-blog/paginator'
         @paginator = Blog::Paginator.new(@app, self)
-        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_paginate", @paginator, false)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_paginate", @paginator)
       end
 
       logger.info "== Blog Sources: #{options.sources} (:prefix + :sources)"
@@ -173,7 +176,7 @@ module Middleman
         @app.ignore options[:template]
 
         @custom_pages[property] = Blog::CustomPages.new(property, @app, self, options)
-        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_#{property}", @custom_pages[property], false)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_#{property}", @custom_pages[property])
 
         Blog::Helpers.generate_custom_helper(property)
       end
