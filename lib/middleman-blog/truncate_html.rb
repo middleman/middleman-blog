@@ -1,62 +1,69 @@
 begin
-  require "nokogiri"
+  require 'oga'
 rescue LoadError
-  raise "Nokogiri is required for blog post summaries. Add 'nokogiri' to your Gemfile."
+  raise "Oga is required for blog post summaries. Add 'oga' to your Gemfile."
 end
 
-# Taken and modified from http://madebydna.com/all/code/2010/06/04/ruby-helper-to-cleanly-truncate-html.html
-# MIT license
 module TruncateHTML
-  def self.truncate_html(text, max_length, ellipsis = "...")
+  def self.truncate_html(text, max_length, ellipsis = '...')
     ellipsis_length = ellipsis.length
     text = text.encode('UTF-8') if text.respond_to?(:encode)
-    doc = Nokogiri::HTML::DocumentFragment.parse text
-    content_length = doc.inner_text.length
+    doc = Oga.parse_html(text)
+    content_length = doc.children.text.length
     actual_length = max_length - ellipsis_length
-    if content_length > actual_length 
-      doc.truncate(actual_length, ellipsis).inner_html
+    if content_length > actual_length
+      doc.truncate(actual_length, ellipsis).to_xml
     else
       text
     end
   end
 end
 
-module NokogiriTruncator
-  module NodeWithChildren
+module OgaTruncator
+  module DocumentTruncator
     def truncate(max_length, ellipsis)
-      return self if inner_text.length <= max_length
-      truncated_node = self.dup
-      truncated_node.children.remove
-
-      self.children.each do |node|
-        remaining_length = max_length - truncated_node.inner_text.length
+      truncated_doc = Oga::XML::Document.new
+      children.each do |child|
+        remaining_length = max_length - truncated_doc.children.text.length
         break if remaining_length <= 0
-        truncated_node.add_child node.truncate(remaining_length, ellipsis)
+        truncated_doc.children << child.truncate(remaining_length, ellipsis)
       end
-      truncated_node
+      truncated_doc
     end
   end
 
-  module TextNode
+  module ElementTruncator
+    def truncate(max_length, ellipsis)
+      return self if text.length <= max_length
+      truncated_element = dup
+      truncated_element.children = Oga::XML::NodeSet.new
+      children.each do |child|
+        remaining_length = max_length - truncated_element.text.length
+        break if remaining_length <= 0
+        truncated_element.children << child.truncate(remaining_length, ellipsis)
+      end
+      truncated_element
+    end
+  end
+
+  module TextTruncator
     def truncate(max_length, ellipsis)
       # Don't break in the middle of a word
-      trimmed_content = content.match(/(.{1,#{max_length}}[\w]*)/m).to_s
-      trimmed_content << ellipsis if trimmed_content.length < content.length
-
-      Nokogiri::XML::Text.new(trimmed_content, parent)
+      trimmed_content = text.match(/(.{1,#{max_length}}[\w]*)/m).to_s
+      trimmed_content << ellipsis if trimmed_content.length < text.length
+      Oga::XML::Text.new(text: trimmed_content)
     end
   end
 
-  module CommentNode
-    def truncate(*args)
+  module CommentTruncator
+    def truncate(*_args)
       # Don't truncate comments, since they aren't visible
       self
     end
   end
-
 end
 
-Nokogiri::HTML::DocumentFragment.send(:include, NokogiriTruncator::NodeWithChildren)
-Nokogiri::XML::Element.send(:include, NokogiriTruncator::NodeWithChildren)
-Nokogiri::XML::Text.send(:include, NokogiriTruncator::TextNode)
-Nokogiri::XML::Comment.send(:include, NokogiriTruncator::CommentNode)
+Oga::XML::Document.send(:include, OgaTruncator::DocumentTruncator)
+Oga::XML::Element.send(:include, OgaTruncator::ElementTruncator)
+Oga::XML::Text.send(:include, OgaTruncator::TextTruncator)
+Oga::XML::Comment.send(:include, OgaTruncator::CommentTruncator)
