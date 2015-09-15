@@ -1,5 +1,3 @@
-@three_one
-
 Feature: Host Multiple Blogs with Middleman 3.1+
 
   Scenario: Preview

@@ -55,6 +55,7 @@ module Middleman
       # @return [Hash<String, Array<Middleman::Sitemap::Resource>>]
       def tags
         tags = {}
+
         @_articles.each do |article|
           article.tags.each do |tag|
             tags[tag] ||= []
@@ -145,7 +146,8 @@ module Middleman
       # @return [Hash] options
       def permalink_options(resource, extra={})
         # Allow any frontmatter data to be substituted into the permalink URL
-        params = resource.metadata[:page].slice *@permalink_template.variables
+        params = resource.metadata[:page].slice *@permalink_template.variables.map(&:to_sym)
+
         params.each do |k, v|
           params[k] = safe_parameterize(v)
         end

@@ -94,7 +94,15 @@ module Middleman
     end
 
     def after_configuration
-      @name ||= :"blog#{::Middleman::Blog.instances.keys.length}"
+      @name ||= begin
+        found_name = nil
+
+        app.extensions[:blog].values.each_with_index do |ext, i|
+          found_name = "blog#{i+1}" if ext == self
+        end
+
+        found_name
+      end
 
       # TODO: break up into private methods?
 
@@ -103,8 +111,6 @@ module Middleman
       @app.ignore(options.month_template) if options.month_template
       @app.ignore(options.day_template) if options.day_template
       @app.ignore options.tag_template if options.tag_template
-
-      ::Middleman::Blog.instances[@name] = self
 
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
       # allowing people to set their desired time zone via Time.zone or

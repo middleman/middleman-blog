@@ -1,26 +1,19 @@
 module Middleman
   module Blog
-    def self.instances
-      @blog_instances ||= {}
-    end
-
-    def self.instances=(v)
-      @blog_instances = v
-    end
-
     # Blog-related helpers that are available to the Middleman application in +config.rb+ and in templates.
     module Helpers
-      def self.included(base)
-        ::Middleman::Blog.instances = {}
-      end
-
       # All the blog instances known to this Middleman app, keyed by name. A new blog is added
       # every time the blog extension is activated. Name them by setting the +:name+
       # option when activating - otherwise they get an automatic name like 'blog0', 'blog1', etc.
       #
       # @return [Hash<Symbol,BlogExtension>] a hash of all blog instances by name
       def blog_instances
-        ::Middleman::Blog.instances
+        return nil unless app.extensions[:blog]
+
+        app.extensions[:blog].keys.each_with_object({}) do |k, sum|
+          ext = app.extensions[:blog][k]
+          sum[ext.name.to_sym] = ext
+        end
       end
 
       # Retrieve a {BlogExtension} instance.
@@ -35,7 +28,7 @@ module Middleman
       # @return [BlogExtension]
       def blog_controller(blog_name=nil)
         if !blog_name && current_resource
-          blog_name = current_resource.metadata[:page]["blog"]
+          blog_name = current_resource.metadata[:page][:blog]
 
           if !blog_name
             blog_controller = current_resource.blog_controller if current_resource.respond_to?(:blog_controller)
@@ -49,7 +42,7 @@ module Middleman
         end
 
         # Warn if a non-existent blog name provided
-        if blog_name && !blog_instances.keys.include?(blog_name)
+        if blog_name && !blog_instances.keys.include?(blog_name.to_sym)
           raise "Non-existent blog name provided: #{blog_name}."
         end
 
@@ -132,7 +125,7 @@ module Middleman
       # @return [Array<Middleman::Sitemap::Resource>]
       def page_articles(blog_name=nil)
         meta = current_resource.metadata
-        limit = meta[:page]["per_page"]
+        limit = meta[:page][:per_page]
 
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles

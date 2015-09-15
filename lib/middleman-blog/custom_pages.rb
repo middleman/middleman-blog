@@ -27,8 +27,8 @@ module Middleman
 
       def manipulate_resource_list(resources)
         articles_by_property = @blog_data.articles.
-          select {|a| a.metadata[:page][property.to_s] }.
-          group_by {|a| a.metadata[:page][property.to_s] }
+          select {|a| a.metadata[:page][property.to_sym] }.
+          group_by {|a| a.metadata[:page][property.to_sym] }
         resources + articles_by_property.map do |property_value, articles|
           build_resource(link(property_value), property_value, articles)
         end
@@ -38,8 +38,7 @@ module Middleman
 
       def build_resource(path, value, articles)
         articles = articles.sort_by(&:date).reverse
-        Sitemap::Resource.new(@sitemap, path).tap do |p|
-          p.proxy_to(@page_template)
+        Sitemap::ProxyResource.new(@sitemap, path, @page_template).tap do |p|
           p.add_metadata locals: {
             "page_type"       => property.to_s,
             property          => value,

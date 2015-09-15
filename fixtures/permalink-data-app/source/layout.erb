@@ -5,7 +5,7 @@
   <body>
     <% if is_blog_article? %>
       URL: <%= current_article.url %>
-      Category: <%= current_article.metadata[:page]['category'] %>
+      Category: <%= current_article.metadata[:page][:category] %>
       <%= yield %>
     <% else %>
       <%= yield %>

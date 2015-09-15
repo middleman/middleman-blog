@@ -7,24 +7,24 @@ describe 'Middleman::Blog::UriTemplates' do
 
   describe 'safe_parameterize' do
     it 'can parameterize normal strings' do
-      safe_parameterize('Some FUN stuff!').should == 'some-fun-stuff'
+      expect(safe_parameterize('Some FUN stuff!')) == 'some-fun-stuff'
     end
 
     it "doesn't mangle unicode strings" do
-      safe_parameterize('☆☆☆').should == '☆☆☆'
-      safe_parameterize('明日がある').should == '明日がある'
+      expect(safe_parameterize('☆☆☆')) == '☆☆☆'
+      expect(safe_parameterize('明日がある')) == '明日がある'
     end
 
     it "still transliterates when it's safe" do
-      safe_parameterize('Schlagwörter').should == 'schlagworter'
+      expect(safe_parameterize('Schlagwörter')) == 'schlagworter'
     end
 
     it "can handle mixed strings" do
-      safe_parameterize('What ☆☆☆!').should == 'what-☆☆☆'
+      expect(safe_parameterize('What ☆☆☆!')) == 'what-☆☆☆'
     end
 
     it "can handle numbers" do
-      safe_parameterize(1).should == '1'
+      expect(safe_parameterize(1)) == '1'
     end
   end
 
@@ -33,16 +33,16 @@ describe 'Middleman::Blog::UriTemplates' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
       params = extract_params(template, '2013/12/13/foo-bar/foo/bar.html')
 
-      params['year'].should == '2013'
-      params['month'].should == '12'
-      params['day'].should == '13'
-      params['title'].should == 'foo-bar'
-      params['path'].should == 'foo/bar.html'
+      expect(params['year']) == '2013'
+      expect(params['month']) == '12'
+      expect(params['day']) == '13'
+      expect(params['title']) == 'foo-bar'
+      expect(params['path']) == 'foo/bar.html'
     end
 
     it 'returns nil if there is no match' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
-      extract_params(template, 'foo/bar.html').should == nil
+      expect(extract_params(template, 'foo/bar.html')) == nil
     end
 
     it 'returns nil if there is no match in the date bits' do
@@ -54,11 +54,11 @@ describe 'Middleman::Blog::UriTemplates' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
       params = extract_params(template, '2013/12/13/foo - bar/foo/bar.html')
 
-      params['year'].should == '2013'
-      params['month'].should == '12'
-      params['day'].should == '13'
-      params['title'].should == 'foo - bar'
-      params['path'].should == 'foo/bar.html'
+      expect(params['year']) == '2013'
+      expect(params['month']) == '12'
+      expect(params['day']) == '13'
+      expect(params['title']) == 'foo - bar'
+      expect(params['path']) == 'foo/bar.html'
     end
   end
 end

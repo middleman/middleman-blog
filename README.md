@@ -8,7 +8,7 @@ If you're just getting started, install the `middleman` gem and generate a new p
 
 ```
 gem install middleman
-middleman init MY_PROJECT
+middleman init MY_PROJECT --template=blog
 ```
 
 If you already have a Middleman project: Add `gem "middleman-blog"` to your `Gemfile` and run `bundle install`

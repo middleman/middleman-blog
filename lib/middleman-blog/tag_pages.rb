@@ -13,6 +13,7 @@ module Middleman
         @tag_link_template = uri_template blog_controller.options.taglink
         @tag_template = blog_controller.options.tag_template
         @blog_data = blog_controller.data
+
         @generate_tag_pages = blog_controller.options.generate_tag_pages
       end
 
@@ -36,9 +37,7 @@ module Middleman
       private
 
       def tag_page_resource(tag, articles)
-        Sitemap::Resource.new(@sitemap, link(tag)).tap do |p|
-          p.proxy_to(@tag_template)
-
+        Sitemap::ProxyResource.new(@sitemap, link(tag), @tag_template).tap do |p|
           # Add metadata in local variables so it's accessible to
           # later extensions
           p.add_metadata locals: {

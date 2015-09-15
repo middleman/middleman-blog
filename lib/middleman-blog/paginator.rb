@@ -25,7 +25,7 @@ module Middleman
           # Avoid recomputing metadata over and over
           md = res.metadata
 
-          next unless md[:page]["pageable"]
+          next unless md[:page][:pageable]
 
           # Skip other blogs' resources
           next unless match_blog(res, md)
@@ -36,8 +36,8 @@ module Middleman
           articles = md[:locals]["articles"] || @blog_controller.data.articles
 
           # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
-          per_page  = md[:page]["per_page"] || @per_page
-          page_link = uri_template(md[:page]["page_link"] || @page_link)
+          per_page  = md[:page][:per_page] || @per_page
+          page_link = uri_template(md[:page][:page_link] || @page_link)
 
           num_pages = (articles.length / per_page.to_f).ceil
 
@@ -73,7 +73,7 @@ module Middleman
       def match_blog(res, md)
         res_controller = md[:locals]["blog_controller"] || (res.respond_to?(:blog_controller) && res.blog_controller)
         return false if res_controller && res_controller != @blog_controller
-        override_controller = md[:page]["blog"]
+        override_controller = md[:page][:blog]
         return false if override_controller && override_controller.to_s != @blog_controller.name.to_s
 
         true
@@ -85,9 +85,11 @@ module Middleman
       # @param [String] page_link The pagination link path component template
       def page_resource(res, page_num, page_link)
         path = page_sub(res, page_num, page_link)
-        Sitemap::Resource.new(@app.sitemap, path, res.source_file).tap do |p|
-          # Copy the proxy state from the base page.
-          p.proxy_to(res.proxied_to) if res.proxy?
+
+        if res.is_a? Sitemap::ProxyResource
+          Sitemap::ProxyResource.new(@app.sitemap, path, res.target)
+        else
+          Sitemap::Resource.new(@app.sitemap, path, res.source_file)
         end
       end
 

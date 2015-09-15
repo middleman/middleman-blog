@@ -1,5 +1,3 @@
-@three_one
-
 Feature: Calendar pages
   Scenario: Calendar pages are accessible from preview server
     Given the Server is running at "calendar-multiblog-app"

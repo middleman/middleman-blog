@@ -1,7 +1,12 @@
+4.0.0.rc.1
+===
+
+* Removed `article` sub command.
+
 3.5.3
 ===
 
-Update blog_article active_support requires. Fixes #205
+* Update blog_article active_support requires. Fixes #205
 
 3.5.2
 ===

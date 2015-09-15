@@ -1,31 +1,30 @@
 source 'https://rubygems.org'
 
-gem "middleman-cli", path: "~/Sites/middleman"
-gem "middleman-core", path: "~/Sites/middleman"
-
-# gem "middleman-cli", :github => "middleman/middleman", :branch => 'master'
-# gem "middleman-core", :github => "middleman/middleman", :branch => 'master'
+gem "middleman-cli", github: "middleman/middleman", branch: 'master'
+gem "middleman-core", github: "middleman/middleman", branch: 'master'
 
 # Specify your gem's dependencies in middleman-blog.gemspec
 gemspec
 
-gem "rake",     "~> 10.1.0", :require => false
-gem "yard",     "~> 0.8.0", :require => false
+# Build and doc tools
+gem 'rake', '~> 10.3', require: false
+gem 'yard', '~> 0.8', require: false
 
 # Test tools
-gem "cucumber", "~> 1.3.1"
-gem "fivemat"
-gem "aruba",    "~> 0.5.1"
-gem "rspec",    "~> 2.12"
-gem "simplecov"
+gem 'pry', '~> 0.10', group: :development, require: false
+gem 'aruba', '~> 0.7.4', require: false
+gem 'rspec', '~> 3.0', require: false
+gem 'cucumber', '~> 2.0', require: false
 
 gem "timecop",  "~> 0.6.3"
 gem "nokogiri"
 gem "kramdown"
 
 # Code Quality
-gem "cane", :platforms => [:mri_19, :mri_20], :require => false
-gem 'coveralls', :require => false
+gem 'rubocop', '~> 0.24', require: false
+gem 'simplecov', '~> 0.9', require: false
+gem 'coveralls', '~> 0.8', require: false
+gem 'codeclimate-test-reporter', '~> 0.3', require: false, group: :test
 
 platforms :ruby do
   gem "redcarpet", "~> 3.0"

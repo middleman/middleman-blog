@@ -1,5 +1,3 @@
-@three_one
-
 Feature: Pagination with Multiblog
   Scenario: Index pages are accessible from preview server
     Given the Server is running at "paginate-multiblog-app"

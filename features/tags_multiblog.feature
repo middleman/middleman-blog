@@ -1,5 +1,3 @@
-@three_one
-
 Feature: Tag pages with multiple blogs
   Scenario: Tag pages are accessible from preview server
     Given the Server is running at "tags-multiblog-app"

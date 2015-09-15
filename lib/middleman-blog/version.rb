@@ -1,5 +1,5 @@
 module Middleman
   module Blog
-    VERSION = "3.6.0.beta.2"
+    VERSION = "4.0.0.rc.1"
   end
 end
