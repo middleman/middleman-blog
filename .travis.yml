@@ -2,7 +2,7 @@ rvm:
   - ruby-head
   - jruby-head
   - jruby-19mode
-  - 2.2
+  - 2.2.2
   - 2.1
   - 2.0
 os:
@@ -17,7 +17,6 @@ matrix:
 
 gemfile:
   - Gemfile
-  - Gemfile-v3
 
 script: "bundle exec rake test"
 
