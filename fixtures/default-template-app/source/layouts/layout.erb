@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title><%= page_title %></title>
   <%= javascript_include_tag :modernizr %>
   <%= stylesheet_link_tag :app %>
@@ -44,7 +46,7 @@
         <div class="large-12 columns">
           <time class="updated"><%= current_article.date.strftime('%b %e %Y') %></time>
           <h1 class="entry-title">
-            <%= current_article.title %> 
+            <%= current_article.title %>
           </h1>
 
           <div class="entry-content">
