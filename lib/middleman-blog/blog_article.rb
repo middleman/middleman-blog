@@ -136,19 +136,21 @@ module Middleman
       # activated at all, +nil+ will be returned.
       #
       # @return [Symbol] Language code (for example, +:en+ or +:de+)
-      def lang
-        frontmatter_lang = data['lang']
-        filename_lang = path_part('lang')
+      def locale
+        frontmatter_locale = data['locale'] || data['lang']
+        filename_locale = path_part('locale') || path_part('lang')
 
-        if frontmatter_lang && filename_lang && frontmatter_lang != filename_lang
-          raise "The lang in #{path}'s filename (#{filename_lang.inspect}) doesn't match the lang in its frontmatter (#{frontmatter_lang.inspect})"
+        if frontmatter_locale && filename_locale && frontmatter_locale != filename_locale
+          raise "The locale in #{path}'s filename (#{filename_locale.inspect}) doesn't match the lang in its frontmatter (#{frontmatter_locale.inspect})"
         end
 
-        locale_lang = I18n.default_locale if defined? I18n
+        default_locale = I18n.default_locale if defined? ::I18n
 
-        lang = frontmatter_lang || filename_lang || locale_lang
-        lang && lang.to_sym
+        found_locale = frontmatter_locale || filename_locale || default_locale
+        found_locale && found_locale.to_sym
       end
+
+      alias_method :lang, :locale
 
       # Attempt to figure out the date of the post. The date should be
       # present in the source path, but users may also provide a date

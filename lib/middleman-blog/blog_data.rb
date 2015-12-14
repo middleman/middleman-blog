@@ -42,12 +42,11 @@ module Middleman
       # A list of all blog articles with the given language,
       # sorted by descending date
       #
-      # @param [Symbol] lang Language to match (optional, defaults to I18n.locale).
+      # @param [Symbol] locale Language to match (optional, defaults to I18n.locale).
       # @return [Array<Middleman::Sitemap::Resource>]
-      def local_articles(lang=nil)
-        lang ||= I18n.locale
-        lang = lang.to_sym if lang.kind_of? String
-        articles.select {|article| article.lang == lang }
+      def local_articles(locale=::I18n.locale)
+        locale = locale.to_sym if locale.kind_of? String
+        articles.select {|article| article.locale == locale }
       end
 
       # Returns a map from tag name to an array
@@ -90,12 +89,12 @@ module Middleman
             next unless publishable?(article)
 
             # Add extra parameters from the URL to the page metadata
-            extra_data = params.except *%w(year month day title lang)
+            extra_data = params.except *%w(year month day title lang locale)
             article.add_metadata page: extra_data unless extra_data.empty?
 
             # compute output path:
             #   substitute date parts to path pattern
-            article.destination_path = template_path @permalink_template, article
+            article.destination_path = template_path @permalink_template, article, extra_data
 
             @_articles << article
 
@@ -111,10 +110,13 @@ module Middleman
               article = convert_to_article(article)
               next unless publishable?(article)
 
+              # Add extra parameters from the URL to the page metadata
+              extra_data = params.except *%w(year month day title lang locale)
+              article.add_metadata page: extra_data unless extra_data.empty?
+
               # The subdir path is the article path with the index file name
               # or file extension stripped off.
-              path = params.fetch('path')
-              new_destination_path = template_path @subdir_permalink_template, article, path: path
+              new_destination_path = template_path @subdir_permalink_template, article, extra_data
 
               resource.destination_path = Middleman::Util.normalize_path(new_destination_path)
             end
@@ -154,7 +156,7 @@ module Middleman
 
         params.
           merge(date_to_params(resource.date)).
-          merge(lang: resource.lang.to_s, title: resource.slug).
+          merge(lang: resource.lang.to_s, locale: resource.locale.to_s, title: resource.slug).
           merge(extra)
       end
 
@@ -164,8 +166,8 @@ module Middleman
         resource.extend BlogArticle
         resource.blog_controller = controller
 
-        if !options.preserve_locale && (lang = resource.lang)
-          resource.add_metadata options: { lang: lang }, locals: { lang: lang }
+        if !options.preserve_locale && (locale = resource.locale || resource.lang)
+          resource.add_metadata options: { lang: locale, lang: locale }, locals: { lang: locale, locale: locale }
         end
 
         resource

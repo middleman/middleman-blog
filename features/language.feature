@@ -42,7 +42,7 @@ Feature: Internationalized articles
     When I go to "/index.html"
     Then I should see "Some text in English. All is OK."
     When I go to "/ru/index.html"
-    Then I should see "Некоторый текст на русском языке. Всё OK."
+    Then I should see "Некоторый текст на русском языке. Всё отлично."
 
   Scenario: Layout's locale match article's locale on article page
     Given a fixture app "language-app"
