@@ -167,7 +167,7 @@ module Middleman
         resource.blog_controller = controller
 
         if !options.preserve_locale && (locale = resource.locale || resource.lang)
-          resource.add_metadata options: { lang: locale, lang: locale }, locals: { lang: locale, locale: locale }
+          resource.add_metadata options: { lang: locale, locale: locale }, locals: { lang: locale, locale: locale }
         end
 
         resource
