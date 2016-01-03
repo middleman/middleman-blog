@@ -107,11 +107,12 @@ module Middleman
       # @param [Integer] length The length in characters to truncate to.
       #   -1 or +nil+ will return the whole article.
       def default_summary_generator(rendered, length, ellipsis)
-        if blog_options.summary_separator && rendered =~ blog_options.summary_separator
-          rendered.split(blog_options.summary_separator).first
+        if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
+          require 'middleman-blog/truncate_html'
+          TruncateHTML.truncate_at_separator(rendered, blog_options.summary_separator)
         elsif length && length >= 0
           require 'middleman-blog/truncate_html'
-          TruncateHTML.truncate_html(rendered, length, ellipsis)
+          TruncateHTML.truncate_at_length(rendered, length, ellipsis)
         else
           rendered
         end

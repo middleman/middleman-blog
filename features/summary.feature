@@ -2,9 +2,9 @@ Feature: Article summary generation
   Scenario: Article has no summary separator
     Given the Server is running at "summary-app"
     When I go to "/index.html"
-    Then I should see "Summary from article with separator."
+    Then I should see "<p>Summary from article with separator.</p>"
     Then I should not see "Extended part from article with separator."
-    Then I should see "Summary from article with no separator."
+    Then I should see "<p>Summary from article with no separator.</p>"
     Then I should not see "Extended part from article with no separator."
 
   Scenario: Article has custom summary separator
@@ -17,7 +17,11 @@ Feature: Article summary generation
       """
     Given the Server is running at "summary-app"
     When I go to "/index.html"
-    Then I should see "Summary from article with custom separator."
+    Then I should see:
+      """
+      <p>Summary from article with custom separator.
+      </p>
+      """
     Then I should not see "Extended part from article with custom separator."
     Then I should see "Extended part from article with separator."
 
