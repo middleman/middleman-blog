@@ -32,7 +32,7 @@ Feature: Article summary generation
     Given the Server is running at "summary-app"
     When I go to "/index.html"
     Then I should see "This is my summary, and I like it"
-    Then I should see "Summary from article"
+    Then I should not see "Summary from article"
     Then I should not see "Summary from article with no separator"
     Then I should not see "Extended part from article"
 

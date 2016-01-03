@@ -73,16 +73,16 @@ module Middleman
         render layout: false
       end
 
-      # The summary for this article, in HTML. The summary is either
-      # everything before the summary separator (set via the blog option
-      # +summary_separator+ and defaulting to "READMORE") or the first
-      # +summary_length+ characters of the post.
+      # The summary for this article, in HTML.
       #
       # The blog option +summary_generator+ can be set to a +Proc+ in order to provide
       # custom summary generation. The +Proc+ is provided
       # the rendered content of the article (without layout), the
       # desired length to trim the summary to, and the ellipsis string to use.
-      # Otherwise the {#default_summary_generator} will be used.
+      # Otherwise the {#default_summary_generator} will be used, which returns either
+      # everything before the summary separator (set via the blog option
+      # +summary_separator+ and defaulting to "READMORE") if it is found,
+      # or the first +summary_length+ characters of the post.
       #
       # @param [Number] length How many characters to trim the summary to.
       # @param [String] ellipsis The ellipsis string to use when content is trimmed.
@@ -90,9 +90,7 @@ module Middleman
       def summary(length=blog_options.summary_length, ellipsis='...')
         rendered = render layout: false, keep_separator: true
 
-        if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
-          rendered.split(blog_options.summary_separator).first
-        elsif blog_options.summary_generator
+        if blog_options.summary_generator
           blog_options.summary_generator.call(self, rendered, length, ellipsis)
         else
           default_summary_generator(rendered, length, ellipsis)
