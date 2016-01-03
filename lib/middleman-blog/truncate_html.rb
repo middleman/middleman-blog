@@ -7,7 +7,18 @@ end
 # Taken and modified from http://madebydna.com/all/code/2010/06/04/ruby-helper-to-cleanly-truncate-html.html
 # MIT license
 module TruncateHTML
-  def self.truncate_html(text, max_length, ellipsis = "...")
+  def self.truncate_at_separator(text, separator)
+    text = text.encode('UTF-8') if text.respond_to?(:encode)
+    doc = Nokogiri::HTML::DocumentFragment.parse text
+    length = doc.inner_text =~ Regexp.new(separator)
+    if length
+      doc.truncate(length - 1, '').inner_html
+    else
+      text
+    end
+  end
+
+  def self.truncate_at_length(text, max_length, ellipsis = "...")
     ellipsis_length = ellipsis.length
     text = text.encode('UTF-8') if text.respond_to?(:encode)
     doc = Nokogiri::HTML::DocumentFragment.parse text
