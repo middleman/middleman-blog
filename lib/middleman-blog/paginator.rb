@@ -33,7 +33,10 @@ module Middleman
           # "articles" local variable is populated by Calendar and Tag page generators
           # If it's not set then use the complete list of articles
           # TODO: Some way to allow the frontmatter to specify the article filter?
-          articles = md[:locals]["articles"] || @blog_controller.data.articles
+          all_articles = (md[:locals]["articles"] || @blog_controller.data.articles)
+          articles = all_articles.select do |article|
+            article.lang == I18n.locale
+          end
 
           # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
           per_page  = md[:page][:per_page] || @per_page
