@@ -8,6 +8,8 @@ module Middleman
     class BlogData
       include UriTemplates
 
+      DEFAULT_FILTER = proc {|a| a}
+
       # A URITemplate for the source file path relative to :source_dir
       # @return [URITemplate]
       attr_reader :source_template
@@ -36,7 +38,7 @@ module Middleman
       # A list of all blog articles, sorted by descending date
       # @return [Array<Middleman::Sitemap::Resource>]
       def articles
-        @_articles.sort_by(&:date).reverse
+        @_articles.select(&(options.filter || DEFAULT_FILTER)).sort_by(&:date).reverse
       end
 
       # A list of all blog articles with the given language,
