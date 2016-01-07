@@ -34,6 +34,7 @@ module Middleman
     option :generate_tag_pages, true, 'Whether to generate tag pages.'
     option :paginate, false, 'Whether to paginate lists of articles'
     option :per_page, 10, 'Number of articles per page when paginating'
+    option :filter, nil, 'A proc that can be used to select articles that should be published based on user-defined criteria'
     option :page_link, 'page/{num}', 'Path to append for additional pages when paginating'
     option :publish_future_dated, false, 'Whether articles with a date in the future should be considered published'
     option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options (link, template)'
