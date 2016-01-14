@@ -41,7 +41,7 @@ module Middleman
       # @param [Addressable::Template] template
       # @param [String] path
       def extract_params(template, path)
-        params = template.extract(path, BlogTemplateProcessor)
+        template.extract(path, BlogTemplateProcessor)
       end
 
       # Parameterize a string preserving any multibyte characters

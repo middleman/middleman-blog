@@ -29,6 +29,11 @@ module Middleman
         # A list of resources corresponding to blog articles
         @_articles = []
 
+        @_parsed_url_cache = {
+          source: {},
+          subdir: {}
+        }
+
         @source_template = uri_template options.sources
         @permalink_template = uri_template options.permalink
         @subdir_template = uri_template options.sources.sub(/\.[^.]+$/, "/{+path}")
@@ -72,6 +77,14 @@ module Middleman
         tags
       end
 
+      def extract_source_params(path)
+        @_parsed_url_cache[:source][path] ||= extract_params(@source_template, path)
+      end
+
+      def extract_subdir_params(path)
+        @_parsed_url_cache[:subdir][path] ||= extract_params(@subdir_template, path)
+      end
+
       # Updates' blog articles destination paths to be the
       # permalink.
       # @return [void]
@@ -86,7 +99,7 @@ module Middleman
             next
           end
 
-          if (params = extract_params(@source_template, resource.path))
+          if (params = extract_source_params(resource.path))
             article = convert_to_article(resource)
             next unless publishable?(article)
 
@@ -100,7 +113,7 @@ module Middleman
 
             @_articles << article
 
-          elsif (params = extract_params(@subdir_template, resource.path))
+          elsif (params = extract_subdir_params(resource.path))
             # It's not an article, but it's thhe companion files for an article
             # (in a subdirectory named after the article)
             # figure out the matching article for this subdirectory file
