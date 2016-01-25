@@ -87,7 +87,7 @@ module Middleman
       # @param [Number] length How many characters to trim the summary to.
       # @param [String] ellipsis The ellipsis string to use when content is trimmed.
       # @return [String]
-      def summary(length=blog_options.summary_length, ellipsis='...')
+      def summary(length=nil, ellipsis='...')
         rendered = render layout: false, keep_separator: true
 
         if blog_options.summary_generator
@@ -105,12 +105,15 @@ module Middleman
       # @param [Integer] length The length in characters to truncate to.
       #   -1 or +nil+ will return the whole article.
       def default_summary_generator(rendered, length, ellipsis)
-        if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
-          require 'middleman-blog/truncate_html'
-          TruncateHTML.truncate_at_separator(rendered, blog_options.summary_separator)
-        elsif length && length >= 0
+        if length && length >= 0
           require 'middleman-blog/truncate_html'
           TruncateHTML.truncate_at_length(rendered, length, ellipsis)
+        elsif blog_options.summary_separator && rendered.match(blog_options.summary_separator)
+          require 'middleman-blog/truncate_html'
+          TruncateHTML.truncate_at_separator(rendered, blog_options.summary_separator)
+        elsif blog_options.summary_length && blog_options.summary_length > 0
+          require 'middleman-blog/truncate_html'
+          TruncateHTML.truncate_at_length(rendered, blog_options.summary_length, ellipsis)
         else
           rendered
         end

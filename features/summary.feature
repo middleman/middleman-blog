@@ -58,3 +58,25 @@ Feature: Article summary generation
     When I go to "/index.html"
     Then I should see "Extended part from article with no separator."
     Then I should not see "Extended part from article with separator."
+
+  Scenario: Summary limited by length only
+    Given a fixture app "summary-app"
+    And a file named "config.rb" with:
+      """
+      activate :blog
+      """
+    And a file named "source/index.html.erb" with:
+      """
+      <% @i = 0 %>
+      <% blog.articles.each do |article| %>
+        <article>
+          <%= article.summary(7, (@i += 1).to_s) %>
+        </article>
+      <% end %>
+      """
+    Given the Server is running at "summary-app"
+    When I go to "/index.html"
+    Then I should see "Summary1"
+    Then I should see "Summary2"
+    Then I should see "Summary3"
+    Then I should see "Summary4"
