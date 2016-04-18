@@ -12,3 +12,4 @@ doc
 build/
 .sass-cache
 coverage
+.byebug_history

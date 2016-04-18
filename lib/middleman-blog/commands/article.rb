@@ -31,8 +31,6 @@ module Middleman
         aliases: "-b",
         desc: "The name of the blog to create the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
       def article
-        config = ::Middleman::Cli.config
-
         @title = title
         @slug = safe_parameterize(title)
         @date = options[:date] ? ::Time.zone.parse(options[:date]) : Time.zone.now
