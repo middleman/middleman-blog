@@ -9,13 +9,8 @@ end
 module TruncateHTML
   def self.truncate_at_separator(text, separator)
     text = text.encode('UTF-8') if text.respond_to?(:encode)
-    doc = Nokogiri::HTML::DocumentFragment.parse text
-    length = doc.inner_text =~ Regexp.new(separator)
-    if length
-      doc.truncate(length - 1, '').inner_html
-    else
-      text
-    end
+    doc = Nokogiri::HTML::DocumentFragment.parse text.split(separator).first
+    doc.inner_html
   end
 
   def self.truncate_at_length(text, max_length, ellipsis = "...")
@@ -24,7 +19,7 @@ module TruncateHTML
     doc = Nokogiri::HTML::DocumentFragment.parse text
     content_length = doc.inner_text.length
     actual_length = max_length - ellipsis_length
-    if content_length > actual_length 
+    if content_length > actual_length
       doc.truncate(actual_length, ellipsis).inner_html
     else
       text

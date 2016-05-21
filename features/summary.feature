@@ -2,7 +2,11 @@ Feature: Article summary generation
   Scenario: Article has no summary separator
     Given the Server is running at "summary-app"
     When I go to "/index.html"
-    Then I should see "<p>Summary from article with separator.</p>"
+    Then I should see:
+      """
+      <p>Summary from article with separator.
+      </p>
+      """
     Then I should not see "Extended part from article with separator."
     Then I should see "<p>Summary from article with no separator.</p>"
     Then I should not see "Extended part from article with no separator."
@@ -23,6 +27,24 @@ Feature: Article summary generation
       </p>
       """
     Then I should not see "Extended part from article with custom separator."
+    Then I should see "Extended part from article with separator."
+
+  Scenario: Article has custom summary separator that's an HTML comment
+    Given a fixture app "summary-app"
+    And a file named "config.rb" with:
+      """
+      activate :blog do |blog|
+        blog.summary_separator = /<!--more-->/
+      end
+      """
+    Given the Server is running at "summary-app"
+    When I go to "/index.html"
+    Then I should see:
+      """
+      <p>Summary from article with HTML comment separator.
+      </p>
+      """
+    Then I should not see "Extended part from article with HTML comment separator."
     Then I should see "Extended part from article with separator."
 
   Scenario: Using a custom summary generator
@@ -79,4 +101,6 @@ Feature: Article summary generation
     Then I should see "Summary1"
     Then I should see "Summary2"
     Then I should see "Summary3"
-    Then I should see "Summary4"
+    # it has a custom separator, which overrides explicit length, so we show up to the separator
+    Then I should see "Summary from article with separator."
+    Then I should see "Summary5"
