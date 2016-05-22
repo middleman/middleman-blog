@@ -32,7 +32,7 @@ module Middleman
       def render(opts={}, locs={}, &block)
         unless opts.has_key?(:layout)
           opts[:layout] = metadata[:options][:layout]
-          opts[:layout] = blog_options.layout if opts[:layout].nil?
+          opts[:layout] = blog_options.layout if opts[:layout].nil? || opts[:layout] == :_auto_layout
           # Convert to a string unless it's a boolean
           opts[:layout] = opts[:layout].to_s if opts[:layout].is_a? Symbol
         end

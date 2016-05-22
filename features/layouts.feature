@@ -11,6 +11,9 @@ Feature: Layouts
     When I go to "/2011/01/01/third-article.html"
     Then I should see "Third Alternative Layout"
     And I should see "Third Article"
+    When I go to "/2011/01/01/fourth-article.html"
+    Then I should see "Default Layout"
+    And I should see "Fourth Article"
   Scenario: The default blog layout is used if none is set in front matter.
     When I go to "/2011/01/02/article-in-normal-layout.html"
     Then I should see "Default Layout"
