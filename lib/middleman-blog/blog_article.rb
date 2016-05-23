@@ -104,13 +104,14 @@ module Middleman
       # @param [String] rendered The rendered blog article
       # @param [Integer] length The length in characters to truncate to.
       #   -1 or +nil+ will return the whole article.
+      # @param [String] ellipsis The ellipsis string to use when content is trimmed.
       def default_summary_generator(rendered, length, ellipsis)
-        if length && length >= 0
-          require 'middleman-blog/truncate_html'
-          TruncateHTML.truncate_at_length(rendered, length, ellipsis)
-        elsif blog_options.summary_separator && rendered.match(blog_options.summary_separator)
+        if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
           require 'middleman-blog/truncate_html'
           TruncateHTML.truncate_at_separator(rendered, blog_options.summary_separator)
+        elsif length && length >= 0
+          require 'middleman-blog/truncate_html'
+          TruncateHTML.truncate_at_length(rendered, length, ellipsis)
         elsif blog_options.summary_length && blog_options.summary_length > 0
           require 'middleman-blog/truncate_html'
           TruncateHTML.truncate_at_length(rendered, blog_options.summary_length, ellipsis)

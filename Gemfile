@@ -16,6 +16,7 @@ gem 'aruba', '~> 0.7.4', require: false
 gem 'capybara', '~> 2.5.0', require: false
 gem 'rspec', '~> 3.0', require: false
 gem 'cucumber', '~> 2.0', require: false
+gem 'capybara', require: false # middleman-core forces all plugins to declare this
 
 gem "timecop",  "~> 0.6.3"
 gem "nokogiri"
