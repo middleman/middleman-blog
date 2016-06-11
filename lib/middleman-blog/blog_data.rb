@@ -37,7 +37,7 @@ module Middleman
         @source_template = uri_template options.sources
         @permalink_template = uri_template options.permalink
         @subdir_template = uri_template options.sources.sub(/\.[^.]+$/, "/{+path}")
-        @subdir_permalink_template = uri_template options.permalink.sub(/\.[^.]+$/, "/{+path}")
+        @subdir_permalink_template = uri_template options.permalink.sub(/(\.[^.]+)?$/, "/{+path}")
       end
 
       # A list of all blog articles, sorted by descending date
