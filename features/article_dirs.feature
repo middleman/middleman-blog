@@ -8,7 +8,7 @@ Feature: Article-specific subdirectories
 
   Scenario: Blog articles with directory_indexes can have their own subdirectories for related files
     Given a fixture app "article-dirs-app"
-    And app "calendar-app" is using config "directory-indexes"
+    And app "article-dirs-app" is using config "directory-indexes"
     And the Server is running
     When I go to "/2011/01/01/new-article"
     Then I should see "Newer Article Content"
