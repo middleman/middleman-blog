@@ -34,6 +34,7 @@ module Middleman
           # If it's not set then use the complete list of articles
           # TODO: Some way to allow the frontmatter to specify the article filter?
           articles = md[:locals]["articles"] || @blog_controller.data.articles
+          articles.select!{|article| article.lang == md[:options][:locale]} if md.fetch(:options, false) and md[:options].fetch(:locale, false)
 
           # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
           per_page  = md[:page][:per_page] || @per_page
