@@ -13,3 +13,4 @@ build/
 .sass-cache
 coverage
 .byebug_history
+bin/
