@@ -63,13 +63,14 @@ module Middleman
         path_template = blog_inst.data.source_template
         params = date_to_params(@date).merge(lang: @lang.to_s, locale: @locale.to_s, title: @slug)
         article_path = apply_uri_template path_template, params
+        absolute_article_path = File.join(app.source_dir, article_path + blog_inst.options.default_extension)
 
-        template blog_inst.options.new_article_template, File.join(app.source_dir, article_path + blog_inst.options.default_extension)
+        template blog_inst.options.new_article_template, absolute_article_path
 
         if options[:edit]
           editor = ENV.fetch('MM_EDITOR', ENV.fetch('EDITOR', nil))
           if editor
-            system("#{editor} #{File.join(blog_inst.source_dir, article_path + blog_inst.options.default_extension)}")
+            system("#{editor} #{absolute_article_path}")
           else
             throw "Could not find a suitable editor. Try setting the environment variable MM_EDITOR."
           end
