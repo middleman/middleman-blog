@@ -40,7 +40,6 @@ module Middleman
         @slug = safe_parameterize(title)
         @date = options[:date] ? ::Time.zone.parse(options[:date]) : Time.zone.now
         @lang = options[:lang] || options[:locale] || (::I18n.default_locale if defined? ::I18n )
-        editor = ENV['MM_EDITOR'] || ENV['EDITOR']
 
         app = ::Middleman::Application.new do
           config[:mode] = :config
