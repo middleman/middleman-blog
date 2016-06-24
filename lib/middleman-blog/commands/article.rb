@@ -30,11 +30,17 @@ module Middleman
       class_option "blog",
         aliases: "-b",
         desc: "The name of the blog to create the post inside (for multi-blog apps, defaults to the only blog in single-blog apps)"
+      class_option "edit",
+        aliases: "-e",
+        desc: "Edit the newly created blog post",
+        default: false,
+        type: :boolean
       def article
         @title = title
         @slug = safe_parameterize(title)
         @date = options[:date] ? ::Time.zone.parse(options[:date]) : Time.zone.now
         @lang = options[:lang] || options[:locale] || (::I18n.default_locale if defined? ::I18n )
+        editor = ENV['MM_EDITOR'] || ENV['EDITOR']
 
         app = ::Middleman::Application.new do
           config[:mode] = :config
@@ -60,6 +66,15 @@ module Middleman
         article_path = apply_uri_template path_template, params
 
         template blog_inst.options.new_article_template, File.join(app.source_dir, article_path + blog_inst.options.default_extension)
+
+        if options[:edit]
+          editor = ENV.fetch('MM_EDITOR', ENV.fetch('EDITOR', nil))
+          if editor
+            system("#{editor} #{File.join(blog_inst.source_dir, article_path + blog_inst.options.default_extension)}")
+          else
+            throw "Could not find a suitable editor. Try setting the environment variable MM_EDITOR."
+          end
+        end
       end
 
       protected
