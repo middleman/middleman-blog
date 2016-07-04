@@ -49,7 +49,7 @@ module Middleman
         end
 
         blog_inst = if options[:blog]
-          app.extensions[:blog][options[:blog]]
+          app.extensions[:blog].find { |key, instance| instance.options[:name] == options[:blog] }[1]
         else
           app.extensions[:blog].values.first
         end
