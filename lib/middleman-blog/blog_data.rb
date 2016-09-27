@@ -83,16 +83,11 @@ module Middleman
       def tags
         tags = {}
 
-        @_articles.each do |article|
+        articles.each do |article|
           article.tags.each do |tag|
             tags[tag] ||= []
             tags[tag] << article
           end
-        end
-
-        # Sort each tag's list of articles
-        tags.each do |tag, articles|
-          tags[tag] = articles.sort_by(&:date).reverse
         end
 
         tags
