@@ -46,7 +46,7 @@ module Middleman
         @slug = safe_parameterize(title)
         @date = options[:date] ? ::Time.zone.parse(options[:date]) : Time.zone.now
         @lang = options[:lang] || options[:locale] || (::I18n.default_locale if defined? ::I18n )
-        @tags = options[:tags] && options[:tags].split(/\s*,\s*/) || []
+        @tags = options[:tags] && options[:tags].split(/\s*,\s*/) || self.title.split(/[\s_-]/).reject { |w| w.empty? }
         @content = options[:content] || ""
         app = ::Middleman::Application.new do
           config[:mode] = :config
