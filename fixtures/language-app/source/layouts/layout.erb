@@ -4,5 +4,9 @@
     <h1><%= t :hello %></h1>
     <p><%= t :language %>: <%= lang %></p>
     <%= yield %>
+    <% if is_blog_article? %>
+      Previous: <%= current_article.previous_local_article.try(:url) %>
+      Next: <%= current_article.next_local_article.try(:url) %>
+    <% end %>
   </body>
 </html>

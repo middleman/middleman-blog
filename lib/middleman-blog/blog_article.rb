@@ -223,6 +223,20 @@ module Middleman
         blog_data.articles.reverse.find {|a| a.date > self.date }
       end
 
+      # The previous (chronologically earlier) article before this one in
+      # the current locale, or +nil+ if this is the first article.
+      # @return [BlogArticle]
+      def previous_local_article
+        blog_data.local_articles.find {|a| a.date < self.date }
+      end
+
+      # The next (chronologically later) article after this one in the
+      # current locale or +nil+ if this is the most recent article.
+      # @return [Middleman::Sitemap::Resource]
+      def next_local_article
+        blog_data.local_articles.reverse.find {|a| a.date > self.date }
+      end
+
       # This is here to prevent out-of-memory on exceptions.
       # @private
       def inspect
