@@ -35,11 +35,16 @@ module Middleman
         desc: "Edit the newly created blog post",
         default: false,
         type: :boolean
+      class_option "path",
+        aliases: "-p",
+        desc: "Filepath to generate an article from"
+
       def article
         @title = title
         @slug = safe_parameterize(title)
         @date = options[:date] ? ::Time.zone.parse(options[:date]) : Time.zone.now
         @lang = options[:lang] || options[:locale] || (::I18n.default_locale if defined? ::I18n )
+        File.open(options[:path]) {|f| @content = f.read} if options[:path]
 
         app = ::Middleman::Application.new do
           config[:mode] = :config
