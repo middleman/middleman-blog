@@ -22,6 +22,12 @@ module Middleman
       class_option "date",
         aliases: "-d",
         desc: "The date to create the post with (defaults to now)"
+      class_option "tags",
+        aliases: "-t",
+        desc: "A list of comma-separated tags for the post"
+      class_option "content",
+        aliases: "-c",
+        desc: "Content of the post"
       class_option "lang",
         desc: "Deprecated, use locale"
       class_option "locale",
@@ -40,7 +46,8 @@ module Middleman
         @slug = safe_parameterize(title)
         @date = options[:date] ? ::Time.zone.parse(options[:date]) : Time.zone.now
         @lang = options[:lang] || options[:locale] || (::I18n.default_locale if defined? ::I18n )
-
+        @tags = options[:tags] && options[:tags].split(/\s*,\s*/) || self.title.split(/[\s_-]/).reject { |w| w.empty? }
+        @content = options[:content] || ""
         app = ::Middleman::Application.new do
           config[:mode] = :config
           config[:disable_sitemap] = true
