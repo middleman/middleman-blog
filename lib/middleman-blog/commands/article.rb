@@ -35,6 +35,11 @@ module Middleman
         desc: "Edit the newly created blog post",
         default: false,
         type: :boolean
+      class_option "subdirectory",
+        aliases: "-s",
+        desc: "Generate an article subdirectory (for directory indexes, defaults to false)",
+        default: false,
+        type: :boolean
       def article
         @title = title
         @slug = safe_parameterize(title)
@@ -66,6 +71,10 @@ module Middleman
         absolute_article_path = File.join(app.source_dir, article_path + blog_inst.options.default_extension)
 
         template blog_inst.options.new_article_template, absolute_article_path
+
+        if options[:subdirectory]
+          empty_directory extract_directory_path(File.join(app.source_dir, article_path))
+        end
 
         if options[:edit]
           editor = ENV.fetch('MM_EDITOR', ENV.fetch('EDITOR', nil))
