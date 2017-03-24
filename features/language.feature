@@ -76,3 +76,11 @@ Feature: Internationalized articles
     Then I should see "Hello, world!"
     Then I should not see "Язык: ru"
     Then I should not see "Привет, мир!"
+
+  Scenario: Next and previous local article
+    Given a fixture app "language-app"
+    When I go to "/2013/09/07/english-article-with-lang-in-frontmatter.html"
+    Then I should see "Next: /2013/09/09/next-english-article.html"
+    Then I should not see "Next: /2013/09/08/next-russian-article.html"
+    Then I should see "Previous: /2013/09/05/previous-english-article.html"
+    Then I should not see "Previous: /2013/09/06/previous-russian-article.html"
