@@ -1,3 +1,25 @@
+4.0.2
+===
+
+* Added myself to GemSpec so I can push Gem live
+* Edited Travis.yml to be inline with middleman core and the Ruby versions it tests against
+* Created an GitHub Issue Template
+* Created an Editor config
+* Ruby 2.3.1 - middleman-core (master/4.2.1) - middleman-cli (master/4.2.1) - middleman-blog (local) - All tests pass
+* Updated the Gemfile to use https to remove security warning - upped gem versions to match core
+* Updated the license and readme
+
+4.0.1
+===
+
+* Pull in article command from v3.5.3 tag
+* Summary fix
+* Add address parse cache
+* Add filter option
+* Make sure to not generate invalid html when creating article summary
+* If a summary_generator is defined, always use it to generate summaries
+* Fix issue #269: duplicated key
+
 4.0.0.rc.1
 ===
 
