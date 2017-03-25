@@ -12,12 +12,6 @@ module Middleman
 
             include UriTemplates
 
-            ##
-            # Initialise Tag pages
-            #
-            # @param  app             [Object] Middleman app
-            # @param  blog_controller [Object] Blog controller
-            ##
             def initialize( app, blog_controller )
 
                 @sitemap            = app.sitemap
@@ -29,22 +23,15 @@ module Middleman
 
             end
 
-            ##
             # Get a path to the given tag, based on the :taglink setting.
-            #
-            # @param  tag [String] Tag name
-            # @return     [String] Safe Tag URL
-            ##
+            # @param [String] tag
+            # @return [String]
             def link( tag )
                 apply_uri_template @tag_link_template, tag: safe_parameterize( tag )
             end
 
-            ##
             # Update the main sitemap resource list
-            #
-            # @param  resources [Object] Tag name
-            # @return           [void]
-            ##
+            # @return [void]
             def manipulate_resource_list( resources )
 
                 return resources unless @generate_tag_pages
@@ -59,10 +46,6 @@ module Middleman
 
             ##
             # Create the tag page resources
-            #
-            # @param  tag      [String] Tag name
-            # @param  articles [Object] Articles
-            # @return          [Object] Sitemap
             #
             # @todo Can we inject the correct locale into the metadata here
             ##
