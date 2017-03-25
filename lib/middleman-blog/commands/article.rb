@@ -39,7 +39,7 @@ module Middleman
 
             class_option "locale",
                 aliases: "-l",
-                desc:    "The locale to create the post with (defaults to I18n.default_locale if avaliable)"
+                desc:    "The locale to create the post with (defaults to I18n.default_locale if available)"
 
             class_option "blog",
                 aliases: "-b",

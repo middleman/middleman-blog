@@ -247,7 +247,7 @@ module Middleman
             # The previous (chronologically earlier) article before this one or
             # +nil+ if this is the first article.
             #
-            # <b>DEPRECATED:</b> Please use <tt>article_previous</tt> instead.
+            # @deprecated Use {#article_previous} instead.
             #
             # @return [BlogArticle]
             ##
@@ -260,7 +260,7 @@ module Middleman
             # The next (chronologically later) article after this one or +nil+ if
             # this is the most recent article.
             #
-            # <b>DEPRECATED:</b> Please use <tt>article_next</tt> instead.
+            # @deprecated Use {#article_next} instead.
             #
             # @return [Middleman::Sitemap::Resource]
             ##

@@ -101,5 +101,5 @@ Copyright (c) 2010-2017 Thomas Reynolds. MIT Licensed, see [LICENSE] for details
 [gemnasium]: https://gemnasium.com/middleman/middleman-blog
 [codeclimate]: https://codeclimate.com/github/middleman/middleman-blog
 [coveralls]: https://coveralls.io/r/middleman/middleman-blog
-[rubydoc]: http://rubydoc.info/github/middleman/middleman-blog
+[rubydoc]: http://rubydoc.info/github/middleman/middleman-blog/master
 [LICENSE]: https://github.com/middleman/middleman-blog/blob/master/LICENSE.md
