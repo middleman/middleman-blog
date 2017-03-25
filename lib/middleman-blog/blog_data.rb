@@ -55,6 +55,8 @@ module Middleman
         # A list of all blog articles with the given language, sorted by
         # descending date
         #
+        # @deprecated Use {#articles_by_locale} instead.
+        #
         # @param  [Symbol] locale Language to match (optional, defaults to I18n.locale).
         # @return [Array<Middleman::Sitemap::Resource>]
         ##
