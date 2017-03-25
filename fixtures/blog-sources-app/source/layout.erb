@@ -1,13 +1,24 @@
 <!doctype html>
+
 <html>
-  <head>
-  </head>
-  <body>
-    <% if is_blog_article? %>
-      <%= yield %>
-      <%= current_article.url %>
-    <% else %>
-      <%= yield %>
-    <% end %>
-  </body>
+
+    <head>
+        <title>Blog sources app</title>
+    </head>
+
+    <body>
+
+        <% if is_blog_article? %>
+
+            <%= yield %>
+            <%= current_article.url %>
+
+        <% else %>
+
+            <%= yield %>
+
+        <% end %>
+
+    </body>
+
 </html>

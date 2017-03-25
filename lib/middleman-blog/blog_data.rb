@@ -1,12 +1,16 @@
 require 'middleman-blog/uri_templates'
 
 module Middleman
+
   module Blog
+
     # A store of all the blog articles in the site, with accessors
     # for the articles by various dimensions. Accessed via "blog" in
     # templates.
     class BlogData
+
       include UriTemplates
+      extend Gem::Deprecate
 
       DEFAULT_FILTER = proc {|a| a}
 
@@ -34,27 +38,42 @@ module Middleman
           subdir: {}
         }
 
-        @source_template = uri_template options.sources
-        @permalink_template = uri_template options.permalink
-        @subdir_template = uri_template options.sources.sub(/(\.[^.{}\/]+)?$/, "/{+path}")
-        @subdir_permalink_template = uri_template options.permalink.sub(/(\.[^.{}\/]+)?$/, "/{+path}")
+        @source_template           = uri_template options.sources
+        @permalink_template        = uri_template options.permalink
+        @subdir_template           = uri_template options.sources.sub(/(\.[^.{}\/]+)?$/, "/{+path}" )
+        @subdir_permalink_template = uri_template options.permalink.sub(/(\.[^.{}\/]+)?$/, "/{+path}" )
+
       end
 
       # A list of all blog articles, sorted by descending date
       # @return [Array<Middleman::Sitemap::Resource>]
       def articles
-        @_articles.select(&(options.filter || DEFAULT_FILTER)).sort_by(&:date).reverse
+        @_articles.select(&(options.filter || DEFAULT_FILTER)).sort_by( &:date ).reverse
       end
 
-      # A list of all blog articles with the given language,
-      # sorted by descending date
-      #
-      # @param [Symbol] locale Language to match (optional, defaults to I18n.locale).
-      # @return [Array<Middleman::Sitemap::Resource>]
-      def local_articles(locale=::I18n.locale)
-        locale = locale.to_sym if locale.kind_of? String
-        articles.select {|article| article.locale == locale }
-      end
+        ##
+        # A list of all blog articles with the given language, sorted by
+        # descending date
+        #
+        # @param  [Symbol] locale Language to match (optional, defaults to I18n.locale).
+        # @return [Array<Middleman::Sitemap::Resource>]
+        ##
+        def local_articles( locale = ::I18n.locale )
+            articles_by_locale( locale )
+        end
+        deprecate :local_articles, :articles_by_locale, 2017, 5
+
+        ##
+        # A list of all blog articles with the given language, sorted by
+        # descending date
+        #
+        # @param  [Symbol] locale Language to match (optional, defaults to I18n.locale).
+        # @return [Array<Middleman::Sitemap::Resource>]
+        ##
+        def articles_by_locale( locale = ::I18n.locale )
+            locale = locale.to_sym if locale.kind_of? String
+            articles.select { | article | article.locale == locale }
+        end
 
       # Returns a map from tag name to an array
       # of BlogArticles associated with that tag.

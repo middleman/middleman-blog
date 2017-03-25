@@ -60,12 +60,32 @@ questions in a timely manner. Even better, if you know Ruby, you can submit
 Cucumber Features which describe how your feature should work or exploit the bug
 you are submitting.
 
-## How to Run Cucumber Tests
+## Testing
+
+Our internal tests are passed through Travis, testing against the following
+Ruby versions on Linux :
+
+- ruby-head
+- 2.4.0
+- 2.3.1
+- 2.2.4
+
+### Running tests
 
 1. Checkout Repository: `git clone https://github.com/middleman/middleman-blog.git`
 2. Install Bundler: `gem install bundler`
 3. Run `bundle install` inside the project root to install the gem dependencies.
 4. Run test cases: `bundle exec rake test`
+
+NB// To run an individual test use :
+
+1. bundle exec cucumber features/blog_sources.feature
+
+If you have suggestions for testing practices please submit a request.
+
+## Creating documentation
+
+1. `bundle exec rake doc`
 
 ## Donate
 

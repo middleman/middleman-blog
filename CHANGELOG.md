@@ -1,6 +1,11 @@
 4.0.2
 ===
 
+* Deprecating previous_article and next_article in favour of article_previous article_next
+* Deprecating local_articles in favour of articles_by_locale
+* Pull request #336 Add article_locale_next and article_locale_previous
+* Pull request #312 Generating a blog article can optional create article subdirectory added manually
+* Updated Gemfile for testing tools to remove the deprecation warnings from Aruba
 * Added myself to GemSpec so I can push Gem live
 * Edited Travis.yml to be inline with middleman core and the Ruby versions it tests against
 * Created an GitHub Issue Template

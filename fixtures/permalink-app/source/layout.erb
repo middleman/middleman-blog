@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html>
+
+    <head>
+        <title>Blog sources app</title>
+    </head>
+
+    <body>
+
+        <% if is_blog_article? %>
+
+            <%= yield %>
+
+            URL      : <%= current_article.url %>
+            Category : <%= current_article.data[ :category ] %>
+
+        <% else %>
+
+            <%= yield %>
+
+        <% end %>
+
+    </body>
+
+</html>

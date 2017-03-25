@@ -1,8 +1,19 @@
 <html>
-  <head></head>
-  <body>
-    <h1><%= t :hello %></h1>
-    <p><%= t :language %>: <%= lang %></p>
-    <%= yield %>
-  </body>
+
+    <head></head>
+
+    <body>
+
+        <h1><%= t :hello %></h1>
+        <p><%= t :language %>: <%= lang %></p>
+
+        <%= yield %>
+
+        <% if is_blog_article? %>
+            Previous: <%= current_article.article_locale_previous.try( :url ) %>
+            Next: <%= current_article.article_locale_next.try( :url ) %>
+        <% end %>
+
+    </body>
+
 </html>

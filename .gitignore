@@ -6,6 +6,7 @@ pkg/*
 .DS_Store
 .rbenv-version
 .ruby-version
+.ruby-gemset
 tmp
 doc
 .yardoc
@@ -14,3 +15,4 @@ build/
 coverage
 .byebug_history
 bin/
+.config

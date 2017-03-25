@@ -33,11 +33,11 @@ describe 'Middleman::Blog::UriTemplates' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
       params = extract_params(template, '2013/12/13/foo-bar/foo/bar.html')
 
-      expect(params['year']) == '2013'
+      expect(params['year'])  == '2013'
       expect(params['month']) == '12'
-      expect(params['day']) == '13'
+      expect(params['day'])   == '13'
       expect(params['title']) == 'foo-bar'
-      expect(params['path']) == 'foo/bar.html'
+      expect(params['path'])  == 'foo/bar.html'
     end
 
     it 'returns nil if there is no match' do
@@ -54,11 +54,26 @@ describe 'Middleman::Blog::UriTemplates' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
       params = extract_params(template, '2013/12/13/foo - bar/foo/bar.html')
 
-      expect(params['year']) == '2013'
+      expect(params['year'])  == '2013'
       expect(params['month']) == '12'
-      expect(params['day']) == '13'
+      expect(params['day'])   == '13'
       expect(params['title']) == 'foo - bar'
-      expect(params['path']) == 'foo/bar.html'
+      expect(params['path'])  == 'foo/bar.html'
     end
   end
+
+  describe 'extract_directory_path' do
+
+    it 'can extract a directory path' do
+
+      template     = uri_template( '{year}/{month}/{day}/{title}/{+path}' )
+      params       = extract_params( template, '2013/12/13/foo-bar/foo/bar.html' )
+      article_path = apply_uri_template template, params
+
+      expect( extract_directory_path( article_path ) ) == '2013-12-13-foo-bar-foo-bar'
+
+    end
+
+  end
+
 end

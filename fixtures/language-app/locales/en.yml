@@ -1,4 +1,5 @@
-en:
-  hello: "Hello, world!"
-  language: "Language"
-  ok: "OK"
+en :
+
+  hello    : "Hello, world!"
+  language : "Language"
+  ok       : "OK"

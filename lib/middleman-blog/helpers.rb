@@ -130,7 +130,7 @@ module Middleman
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
         articles = meta[:locals]["articles"] || blog(blog_name).articles
-        
+
         limit ? articles.first(limit) : articles
       end
 

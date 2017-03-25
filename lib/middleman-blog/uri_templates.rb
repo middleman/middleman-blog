@@ -44,8 +44,8 @@ module Middleman
         template.extract(path, BlogTemplateProcessor)
       end
 
-      # Parameterize a string preserving any multibyte characters
-      def safe_parameterize(str)
+      # Parametrize a string preserving any multi-byte characters
+      def safe_parameterize( str )
         sep = '-'
 
         # Reimplementation of http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize that preserves un-transliterate-able multibyte chars.
@@ -78,6 +78,15 @@ module Middleman
           day: date.day.to_s.rjust(2,'0')
         }
       end
+
+      def extract_directory_path( article_path )
+        uri = Addressable::URI.parse article_path
+
+        # Remove file extension from the article path
+        directory_path = uri.path.gsub( uri.extname, '' )
+
+      end
+
     end
 
     # A special template processor that validates date fields

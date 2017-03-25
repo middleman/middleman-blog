@@ -1,0 +1,24 @@
+<!doctype html>
+
+<html>
+
+    <head>
+        <title>Blog sources no day app</title>
+    </head>
+
+    <body>
+
+        <% if is_blog_article? %>
+
+            <%= yield %>
+            <%= current_article.url %>
+
+        <% else %>
+
+            <%= yield %>
+
+        <% end %>
+
+    </body>
+
+</html>

@@ -1,6 +1,0 @@
----
-title: "Testing Article"
-date: 2013-08-07
----
-
-Testing Article Content
