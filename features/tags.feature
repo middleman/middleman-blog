@@ -95,3 +95,12 @@ Feature: Tag pages
     | tags/bar.html |
 
     And the file "index.html" should contain "Tag Path: ''"
+
+  Scenario: Tags respect filters
+    Given a fixture app "tags-app"
+    And app "tags-app" is using config "filters"
+    And the Server is running
+
+    When I go to "/tags/foo.html"
+    Then I should see "/2011-01-01-new-article.html"
+    Then I should not see "/2011-01-02-another-article.html"
