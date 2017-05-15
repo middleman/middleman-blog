@@ -34,7 +34,5 @@ gem 'codeclimate-test-reporter', '~> 0.3',  require: false, group: :test # Lates
 
 # Set the ruby platform - not windows
 platforms :ruby do
-
-    gem "redcarpet", "~> 3.1" # Latest 3.4.0
-
+  gem "redcarpet", "~> 3.1" # Latest 3.4.0
 end
