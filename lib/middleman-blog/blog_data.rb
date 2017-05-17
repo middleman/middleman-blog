@@ -57,6 +57,7 @@ module Middleman
         tags = {}
         @_articles.each do |article|
           article.tags.each do |tag|
+            tag = safe_parameterize(tag)
             tags[tag] ||= []
             tags[tag] << article
           end
