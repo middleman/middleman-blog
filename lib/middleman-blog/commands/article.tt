@@ -1,7 +1,9 @@
 ---
 
-title : <%= @title %>
-date  : <%= @date.strftime('%F %R %Z') %>
-tags  :
+title: <%= @title %>
+date: <%= @date.strftime('%F %R %Z') %>
+tags: <%= @tags.join(",") %>
 
 ---
+
+<%= @content %>
