@@ -14,8 +14,6 @@ module Middleman
       include UriTemplates
       extend Gem::Deprecate
 
-      DEFAULT_FILTER = proc { | a | a }
-
       # A URITemplate for the source file path relative to :source_dir
       # @return [URITemplate]
       attr_reader :source_template
@@ -54,7 +52,7 @@ module Middleman
       # @return [Array<Middleman::Sitemap::Resource>]
       ##
       def articles
-        @_articles.select( &( options.filter || DEFAULT_FILTER ) ).sort_by( &:date ).reverse
+        @_articles.select( &( options.filter || proc { | a | a } ) ).sort_by( &:date ).reverse
       end
 
       ##
@@ -104,11 +102,6 @@ module Middleman
             tags[tag] << article
           end
 
-        end
-
-        # Sort each tag's list of articles
-        tags.each do |tag, articles|
-          tags[tag] = articles.sort_by(&:date).reverse
         end
 
         # Return tags

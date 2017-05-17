@@ -8,12 +8,10 @@ module Middleman
       include UriTemplates
 
       def initialize( app, blog_controller )
-
         @app             = app
         @blog_controller = blog_controller
         @per_page        = blog_controller.options.per_page
         @page_link       = blog_controller.options.page_link
-
       end
 
       # Update the main sitemap resource list

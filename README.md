@@ -79,7 +79,7 @@ Ruby versions on Linux :
 
 NB// To run an individual test use :
 
-1. bundle exec cucumber features/blog_sources.feature
+1. `bundle exec cucumber features/blog_sources.feature`
 
 If you have suggestions for testing practices please submit a request.
 
