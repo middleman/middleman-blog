@@ -1,6 +1,14 @@
-4.0.2
-===
+# Changelog
 
+$ gem push squid-utils-0.1.0.gem
+
+## 4.0.3
+
+* 
+
+## 4.0.2
+
+* Pushed Gem 2017-05-22
 * Updated safe_parameterize - needs heavy testing from community
 * Deprecating previous_article and next_article in favour of article_previous article_next
 * Deprecating local_articles in favour of articles_by_locale
@@ -15,8 +23,7 @@
 * Updated the Gemfile to use https to remove security warning - upped gem versions to match core
 * Updated the license and readme
 
-4.0.1
-===
+## 4.0.1
 
 * Pull in article command from v3.5.3 tag
 * Summary fix
@@ -26,18 +33,15 @@
 * If a summary_generator is defined, always use it to generate summaries
 * Fix issue #269: duplicated key
 
-4.0.0.rc.1
-===
+## 4.0.0.rc.1
 
 * Removed `article` sub command.
 
-3.5.3
-===
+## 3.5.3
 
 * Update blog_article active_support requires. Fixes #205
 
-3.5.2
-===
+## 3.5.2
 
 * Ignored pages won't be processed by the blog extension.
 * Avoid creating an empty-string collection when a post does not have a custom collection property set. #192
@@ -46,16 +50,14 @@
 * An article's language can be set via the {lang} parameter in its sources URL template. #187
 * Tags that are just a number work now. #188
 
-3.5.1
-===
+## 3.5.1
 
 * Remove a broken bracket in the blog template. #181
 * Fix transliteration of strings into URL slugs to still transliterate when it can but not smash multibyte chars. #183
 * Only match source URI templates if the date components match what a date would look like, and avoid throwing when companion files do not have an article. #184
 * Re-support spaces in blog article source paths. #185
 
-3.5.0
-===
+## 3.5.0
 
 * Add support for internationalization and locale-specific articles. #156
 * Drop support for Ruby 1.8 and Middleman 3.0.
@@ -68,13 +70,11 @@
 * The template used to generate new articles via "middleman article" can be overridden by setting :new_article_template.
 * Removed `:blog_name`, `:blog_author`, `:blog_avatar` options and the `page_title` helper.
 
-3.4.1
-====
+## 3.4.1
 
 * Require Middleman 3.2
 
-3.4.0
-====
+## 3.4.0
 
 * Add `inspect` methods to `BlogData` and `BlogArticle` to avoid hangs on exceptions. #157
 * Generated feed.xml now works on blogs with no posts. #155
@@ -83,8 +83,7 @@
 * Support for including arbitrary frontmatter data in blog permalinks. #164
 * When using multiblog, fail immediately if the blog name isn't specified. #168
 
-3.3.0
-====
+## 3.3.0
 
 * Experimental support for multiple blogs in a single site by activating
   `:blog` multiple times.
@@ -106,8 +105,7 @@
 * Pages can choose which blog to use in multi-blog mode by specifying the correct
   blog in frontmatter. #150
 
-3.2.0
-====
+## 3.2.0
 
 * The `summary` method on articles is now HTML-aware, and can be provided with
   a different summary length or ellipsis string: `summary(1000, '&hellip;')`.
@@ -119,13 +117,13 @@
 * The `summary_separator` option no longer needs to have a capturing group, or
   even be a regexp.
 
-3.1.1
-====
+## 3.1.1
+
 * Correctly handle time zone, allow setting time zone with `set :time_zone`. #76
 * Fix using `page_articles` in when `paginate` is false. #78
 
-3.1.0
-====
+## 3.1.0
+
 * Don't publish future-dated articles. #74
 * Create summary from source instead of output. #70
 * Deprecate instance variables in templates in favor of locals. #66
@@ -136,8 +134,8 @@
 * Use `link_to` in blog templates. #62
 * Pagination for index, tag, and calendar pages. #57
 
-3.0.0
-====
+## 3.0.0
+
 * Middleman-3.0 compatible release. Complete overhaul.
 * Tag and calendar pages.
 * Sitemap integration.
