@@ -85,7 +85,7 @@ Feature: Tag pages
     When I go to "/tags/newtag.html"
     Then I should see "/2011-01-01-new-article.html"
 
-  Scenario: Adding a non-ASCII tag to a post in preview adds a tag page
+  Scenario: Adding a completely non-ASCII tag to a post in preview adds a blank tag page
 
     Given the Server is running at "tags-app"
 
@@ -102,7 +102,7 @@ Feature: Tag pages
         Newer Article Content
         """
 
-    When I go to "/tags/☆☆☆.html"
+    When I go to "/tags/.html"
     Then I should see "/2011-01-01-new-article.html"
 
   Scenario: Tag pages are not added when disabled in configuration

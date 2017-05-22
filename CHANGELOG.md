@@ -1,6 +1,7 @@
 4.0.2
 ===
 
+* Updated safe_parameterize - needs heavy testing from community
 * Deprecating previous_article and next_article in favour of article_previous article_next
 * Deprecating local_articles in favour of articles_by_locale
 * Pull request #336 Add article_locale_next and article_locale_previous

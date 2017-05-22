@@ -68,8 +68,10 @@ module Middleman
 
         Sitemap::ProxyResource.new( @sitemap, link( tag ), @tag_template ).tap do | p |
 
-          # Add metadata in local variables so it's accessible to
-          # later extensions
+          # Detect "formatted" tag in first article - trying to guess the correct format to show
+          # tagname = articles.first.tags.detect { |article_tag| safe_parameterize(article_tag) == tag }
+
+          # Add metadata in local variables so it's accessible to later extensions
           p.add_metadata locals: {
             'page_type'       => 'tag',
             'tagname'         => tag,

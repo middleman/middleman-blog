@@ -98,6 +98,7 @@ module Middleman
 
           # Reference the tags assigned to an article
           article.tags.each do |tag|
+            # tag = safe_parameterize(tag)
             tags[tag] ||= []
             tags[tag] << article
           end

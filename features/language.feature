@@ -75,7 +75,6 @@ Feature: Internationalized articles
             Then I should not see "Language: en"
             Then I should not see "Hello, world!"
 
-
     Scenario: Custom locales on article pages
 
         Given a fixture app "language-app"

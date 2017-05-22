@@ -2,23 +2,23 @@
 
 <html>
 
-    <head>
-        <title>Blog sources no title app</title>
-    </head>
+  <head>
+    <title>Blog sources no title app</title>
+  </head>
 
-    <body>
+  <body>
 
-        <% if is_blog_article? %>
+    <% if is_blog_article? %>
 
-            <%= yield %>
-            <%= current_article.url %>
+      <%= yield %>
+      <%= current_article.url %>
 
-        <% else %>
+    <% else %>
 
-            <%= yield %>
+      <%= yield %>
 
-        <% end %>
+    <% end %>
 
-    </body>
+  </body>
 
 </html>
