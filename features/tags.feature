@@ -129,3 +129,15 @@ Feature: Tag pages
     When I go to "/tags/foo.html"
     Then I should see "/2011-01-01-new-article.html"
     Then I should not see "/2011-01-02-another-article.html"
+
+  Scenario: Tag pages are accessible from preview server with unicode character.
+
+    Given the Server is running at "tags-app"
+
+    When I go to "/tags/テスト.html"
+    Then I should see "/2011-01-04-i18n-tags.html"
+    Then I should see "Tag: テスト"
+
+    When I go to "/tags/きゅうり.html"
+    Then I should see "/2011-01-04-i18n-tags.html"
+    Then I should see "Tag: きゅうり"
