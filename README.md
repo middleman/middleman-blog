@@ -1,5 +1,7 @@
 # Middleman-Blog extension
 
+[![Join the chat at https://gitter.im/middleman/middleman-blog](https://badges.gitter.im/middleman/middleman-blog.svg)](https://gitter.im/middleman/middleman-blog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 middleman-blog is an extension for the [Middleman] static site generator that
 adds blog-specific functionality. This includes :
 
