@@ -76,7 +76,7 @@ module Middleman
       # @return [String]
       ##
       def title
-        data['title']
+        data['title'].to_s
       end
 
       ##
