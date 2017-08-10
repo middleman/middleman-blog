@@ -295,6 +295,37 @@ module Middleman
         article_next()
       end
       deprecate :next_article, :article_next, 2017, 5
+      
+      def binary_search(array, value, from=0, to=nil)
+        publish_date = value.date
+        to = array.count - 1 if to == nil
+      
+        # from can't be bigger than to
+        raise ArgumentError if from > to
+      
+        # out of range
+        raise ArgumentError if from < 0
+        raise ArgumentError if to >= array.count
+        while true do
+          mid = (from + to) / 2
+          comparison = publish_date <=> array[mid].date
+          # not found
+          return -1 if from == to && comparison != 0
+      
+          case comparison
+          when 0 
+            if array[mid] == value
+              return mid
+            else
+              return array[from..to].find_index(value) + from
+            end
+          when 1 
+            to = mid - 1
+          when -1 
+            from = mid + 1
+          end
+        end    
+      end
 
       ##
       # The previous (chronologically earlier) article before this one or
@@ -303,7 +334,11 @@ module Middleman
       # @return [BlogArticle]
       ##
       def article_previous
-        blog_data.articles.find { |a| a.date < self.date }
+        articles = blog_data.articles
+        idx = binary_search(articles, self)
+        nextIdx = idx+1
+        return nil if nextIdx >= articles.count
+        return articles[nextIdx]
       end
 
       ##
@@ -313,7 +348,10 @@ module Middleman
       # @return [Middleman::Sitemap::Resource]
       ##
       def article_next
-        blog_data.articles.reverse.find { |a| a.date > self.date }
+        articles = blog_data.articles
+        idx = binary_search(articles, self)
+        return nil if idx <= 0
+        return articles[idx-1]
       end
 
       ##
