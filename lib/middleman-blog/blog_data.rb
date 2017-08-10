@@ -34,6 +34,7 @@ module Middleman
 
         # A list of resources corresponding to blog articles
         @_articles = []
+        @_sorted_articles = []
 
         @_parsed_url_cache = {
           source: {},
@@ -52,7 +53,11 @@ module Middleman
       # @return [Array<Middleman::Sitemap::Resource>]
       ##
       def articles
-        @_articles.select( &( options.filter || proc { | a | a } ) ).sort_by( &:date ).reverse
+        if @_sorted_articles.empty?
+          @_sorted_articles = @_articles.select( &( options.filter || proc { | a | a } ) ).sort_by( &:date ).reverse
+          @_sorted_articles.freeze
+        end
+        @_sorted_articles
       end
 
       ##
@@ -130,6 +135,7 @@ module Middleman
       ##
       def manipulate_resource_list(resources)
         @_articles = []
+        @_sorted_articles = []
         used_resources = []
 
         resources.each do |resource|
