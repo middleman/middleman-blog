@@ -52,15 +52,37 @@ module Middleman
         template.extract(path, BlogTemplateProcessor)
       end
 
-      ##
       # Parametrize a string preserving any multi-byte characters
       # Reimplementation of this, preserves un-transliterate-able multibyte chars.
       #
       # @see http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize
-      ##
-      def safe_parameterize(str)
-        parameterized_string = ::ActiveSupport::Inflector.transliterate(str.to_s)
-        parameterized_string.parameterize
+      def safe_parameterize(str, sep = '-')
+
+        # Remove ending ?
+        str = str.to_s.gsub(/\?$/, '')
+
+        # Reimplementation of http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize that preserves un-transliterate-able multibyte chars.
+        parameterized_string = ::ActiveSupport::Inflector.transliterate(str.to_s).downcase
+        parameterized_string.gsub!(/[^a-z0-9\-_\?]+/, sep)
+
+        # Check for multibytes and sub back in
+        parameterized_string.chars.to_a.each_with_index do |char, i|
+          next unless char == '?' && str[i].bytes.count != 1
+          parameterized_string[i] = str[i]
+        end
+
+        re_sep = ::Regexp.escape(sep)
+
+        # No more than one of the separator in a row.
+        parameterized_string.gsub!(/#{re_sep}{2,}/, sep)
+
+        # Remove leading/trailing separator.
+        parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
+        parameterized_string.gsub!('_', '-')
+        parameterized_string.gsub!('?', '')
+
+        # Replace all ?
+        parameterized_string
       end
 
       ##
