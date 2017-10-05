@@ -1,4 +1,3 @@
-@wip
 Feature: Localizable blog
 
     Scenario: Article list is scoped to a single language
@@ -34,6 +33,7 @@ Feature: Localizable blog
             And I should not see "January"
 
 
+    @wip
     Scenario: Non-default locale article paths are prefixed when mount_at_root is used
         Given the Server is running at "localizable-app"
 
@@ -49,6 +49,7 @@ Feature: Localizable blog
             And I should not see "January"
 
 
+    @wip
     Scenario: All article paths are prefixed with locale when mount_at_root is not used
           Given a fixture app "localizable-app"
               And a file named "config.rb" with:

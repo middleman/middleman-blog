@@ -33,6 +33,9 @@ module Middleman
           if !blog_name
             blog_controller = current_resource.blog_controller if current_resource.respond_to?(:blog_controller)
             return blog_controller if blog_controller
+
+            blog_controller = current_resource.metadata[:locals]['blog_controller']
+            return blog_controller if blog_controller
           end
         end
 
@@ -130,6 +133,7 @@ module Middleman
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
         articles = meta[:locals]["articles"] || blog(blog_name).articles
+        articles.select!{|article| article.lang == meta[:options][:locale]} if blog_controller(blog_name).options.localizable
 
         limit ? articles.first(limit) : articles
       end
