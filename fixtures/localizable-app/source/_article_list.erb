@@ -1,0 +1,17 @@
+<% if paginate && num_pages > 1 %>
+  <p><%= t(:page) %> <%= page_number %> / <%= num_pages %></p>
+<% end %>
+
+<% if paginate  && prev_page %>
+  <p><%= link_to t(:previous), prev_page %></p>
+<% end %>
+
+<ul>
+  <% page_articles.each do |article| %>
+    <li><%= link_to article.title, article %></li>
+  <% end %>
+</ul>
+
+<% if paginate && next_page %>
+  <p><%= link_to t(:next), next_page %></p>
+<% end %>
