@@ -242,7 +242,13 @@ module Middleman
       #
       ##
       def template_path(template, article, extras={})
-        apply_uri_template template, permalink_options(article, extras)
+        path = apply_uri_template template, permalink_options(article, extras)
+
+        if controller.options.localizable && i18n = @app.extensions[:i18n]
+          path = i18n.path_root(article.locale)[1..-1] + path
+        end
+
+        path
       end
 
     end
