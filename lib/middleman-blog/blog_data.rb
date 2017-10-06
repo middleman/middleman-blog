@@ -110,6 +110,25 @@ module Middleman
       end
 
       ##
+      # Returns a map from locale to a map from tag name to an array of
+      # BlogArticles associated with that tag.
+      #
+      # @return [Hash<Symbol, Hash<String, <Array<Middleman::Sitemap::Resource>>>>]
+      ##
+      def tags_by_locale
+        locales = Hash.new { |ls, l| ls[l] = Hash.new { |ts, t| ts[t] = [] } }
+
+        articles.each do |article|
+          article.tags.each do |tag|
+            locales[article.locale][tag] << article
+          end
+        end
+
+        # Return locales
+        locales
+      end
+
+      ##
       #
       ##
       def extract_source_params(path)

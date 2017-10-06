@@ -33,8 +33,14 @@ module Middleman
       # @param  tag [String] Tag name
       # @return     [String] Safe Tag URL
       ##
-      def link( tag )
-        apply_uri_template @tag_link_template, tag: safe_parameterize( tag )
+      def link( tag, locale = nil )
+        link = apply_uri_template @tag_link_template, tag: safe_parameterize( tag )
+
+        if locale && i18n = @blog_controller.app.extensions[:i18n]
+          link = i18n.path_root(locale)[1..-1] + link
+        end
+
+        link
       end
 
       ##
@@ -46,6 +52,16 @@ module Middleman
       def manipulate_resource_list( resources )
 
         return resources unless @generate_tag_pages
+
+        if @blog_controller.options.localizable
+          @blog_data.tags_by_locale.each do | locale, articles_by_tags |
+            resources += articles_by_tags.map do | tag, articles |
+              tag_page_resource( tag, articles, locale )
+            end
+          end
+
+          return resources
+        end
 
         resources + @blog_data.tags.map do | tag, articles |
           tag_page_resource( tag, articles )
@@ -64,9 +80,9 @@ module Middleman
       #
       # @todo Can we inject the correct locale into the metadata here
       ##
-      def tag_page_resource( tag, articles )
+      def tag_page_resource( tag, articles, locale = nil )
 
-        Sitemap::ProxyResource.new( @sitemap, link( tag ), @tag_template ).tap do | p |
+        Sitemap::ProxyResource.new( @sitemap, link( tag, locale ), @tag_template ).tap do | p |
 
           # Detect "formatted" tag in first article - trying to guess the correct format to show
           # tagname = articles.first.tags.detect { |article_tag| safe_parameterize(article_tag) == tag }
@@ -79,6 +95,7 @@ module Middleman
             'blog_controller' => @blog_controller
           }
 
+          p.add_metadata(options: { locale: locale }) if locale
         end
 
       end

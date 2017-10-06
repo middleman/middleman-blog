@@ -70,3 +70,82 @@ Feature: Localizable blog
             When I go to "/ru/january.html"
             Then I should see "Январь"
             And I should not see "January"
+
+
+    Scenario: Paginated tags are separated by locale
+          Given a fixture app "localizable-app"
+              And a file named "config.rb" with:
+                  """
+                  activate :i18n
+                  activate :blog, localizable: true,
+                                  paginate: true,
+                                  permalink: '{title}.html',
+                                  tag_template: 'templates/tag.html'
+
+                  ignore 'templates/*'
+                  """
+
+          Given the Server is running at "localizable-app"
+
+            When I go to "/tags/month.html"
+            Then I should see "Tag 'month'"
+            Then I should see "January"
+            And I should not see "Январь"
+
+            When I go to "/tags/month/page/2.html"
+            Then I should see "Tag 'month'"
+            Then I should see "July"
+            And I should not see "Июль"
+
+            When I go to "/ru/tags/winter.html"
+            Then I should see "Тег 'winter'"
+            Then I should see "Январь"
+            And I should not see "January"
+
+            When I go to "/ru/tags/month/page/2.html"
+            Then I should see "Тег 'month'"
+            Then I should see "Июль"
+            And I should not see "July"
+
+
+    Scenario: Tags are separated by locale
+          Given a fixture app "localizable-app"
+              And a file named "config.rb" with:
+                  """
+                  activate :i18n
+                  activate :blog, localizable: true, permalink: '{title}.html', tag_template: 'templates/tag.html'
+
+                  ignore 'templates/*'
+                  """
+
+          Given the Server is running at "localizable-app"
+
+            When I go to "/tags/winter.html"
+            Then I should see "Tag 'winter'"
+            Then I should see "January"
+            And I should not see "Январь"
+
+            When I go to "/ru/tags/winter.html"
+            Then I should see "Тег 'winter'"
+            Then I should see "Январь"
+            And I should not see "January"
+
+    Scenario: Calendar pages are separated by locale
+          Given a fixture app "localizable-app"
+              And a file named "config.rb" with:
+                  """
+                  activate :i18n
+                  activate :blog, localizable: true, permalink: '{title}.html', calendar_template: 'templates/calendar.html'
+
+                  ignore 'templates/*'
+                  """
+
+          Given the Server is running at "localizable-app"
+
+            When I go to "/2017/01.html"
+            Then I should see "January 2017"
+            And I should not see "Январь"
+
+            When I go to "/ru/2017/01.html"
+            Then I should see "Январь 2017"
+            And I should not see "January"
