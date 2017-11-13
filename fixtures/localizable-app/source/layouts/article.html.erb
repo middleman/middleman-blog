@@ -1,0 +1,8 @@
+<% wrap_layout :layout do %>
+  <ul>
+    <% current_article.tags.each do |tag| %>
+      <li><%= tag %> - <%= tag_path(tag) %></li>
+    <% end %>
+  </ul>
+  <%= yield %>
+<% end %>

@@ -149,3 +149,24 @@ Feature: Localizable blog
             When I go to "/ru/2017/01.html"
             Then I should see "Январь 2017"
             And I should not see "January"
+
+
+    Scenario: Tags links are separated by locale
+          Given a fixture app "localizable-app"
+              And a file named "config.rb" with:
+                  """
+                  activate :i18n
+                  activate :blog, localizable: true, permalink: '{title}.html', tag_template: 'templates/tag.html', layout: 'article'
+
+                  ignore 'templates/*'
+                  """
+
+          Given the Server is running at "localizable-app"
+
+            When I go to "/january.html"
+            Then I should see "winter - /tags/winter.html"
+            Then I should see "month - /tags/month.html"
+
+            When I go to "/ru/january.html"
+            Then I should see "winter - /ru/tags/winter.html"
+            Then I should see "month - /ru/tags/month.html"
