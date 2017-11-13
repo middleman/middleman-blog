@@ -4,5 +4,10 @@
       <li><%= tag %> - <%= tag_path(tag) %></li>
     <% end %>
   </ul>
+  <ul>
+    <li><%= current_article.date.year %> - <%= blog_year_path(current_article.date.year) %></li>
+    <li><%= current_article.date.month %> - <%= blog_month_path(current_article.date.year, current_article.date.month) %></li>
+    <li><%= current_article.date.day %> - <%= blog_day_path(current_article.date.year, current_article.date.month, current_article.date.day) %></li>
+  </ul>
   <%= yield %>
 <% end %>

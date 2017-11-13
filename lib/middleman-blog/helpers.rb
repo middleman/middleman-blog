@@ -93,8 +93,8 @@ module Middleman
       # @param [Number] year
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_year_path(year, blog_name=nil)
-        build_url blog_controller(blog_name).calendar_pages.link(year)
+      def blog_year_path(year, blog_name=nil, locale=I18n.locale)
+        build_url blog_controller(blog_name).calendar_pages.link(year, locale: locale)
       end
 
       # Get a path to the given month-based calendar page, based on the +month_link+ blog setting.
@@ -102,8 +102,8 @@ module Middleman
       # @param [Number] month
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_month_path(year, month, blog_name=nil)
-        build_url blog_controller(blog_name).calendar_pages.link(year, month)
+      def blog_month_path(year, month, blog_name=nil, locale=I18n.locale)
+        build_url blog_controller(blog_name).calendar_pages.link(year, month, locale: locale)
       end
 
       # Get a path to the given day-based calendar page, based on the +day_link+ blog setting.
@@ -112,8 +112,8 @@ module Middleman
       # @param [Number] day
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_day_path(year, month, day, blog_name=nil)
-        build_url blog_controller(blog_name).calendar_pages.link(year, month, day)
+      def blog_day_path(year, month, day, blog_name=nil, locale=I18n.locale)
+        build_url blog_controller(blog_name).calendar_pages.link(year, month, day, locale: locale)
       end
 
       # Whether or not pagination is enabled for this template. This can be used

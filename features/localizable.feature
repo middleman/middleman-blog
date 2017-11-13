@@ -146,12 +146,12 @@ Feature: Localizable blog
             And the file "build/ru/2017/01.html" should contain "Январь 2017"
 
 
-    Scenario: Tags links are separated by locale
+    Scenario: Tag and Calendar links are separated by locale
           Given a fixture app "localizable-app"
               And a file named "config.rb" with:
                   """
                   activate :i18n
-                  activate :blog, localizable: true, permalink: '{title}.html', tag_template: 'templates/tag.html', layout: 'article'
+                  activate :blog, localizable: true, permalink: '{title}.html', tag_template: 'templates/tag.html', calendar_template: 'templates/calendar.html', layout: 'article'
 
                   ignore 'templates/*'
                   """
@@ -161,7 +161,13 @@ Feature: Localizable blog
             When I go to "/january.html"
             Then I should see "winter - /tags/winter.html"
             Then I should see "month - /tags/month.html"
+            Then I should see "2017 - /2017.html"
+            Then I should see "1 - /2017/01.html"
+            Then I should see "1 - /2017/01/01.html"
 
             When I go to "/ru/january.html"
             Then I should see "winter - /ru/tags/winter.html"
             Then I should see "month - /ru/tags/month.html"
+            Then I should see "2017 - /ru/2017.html"
+            Then I should see "1 - /ru/2017/01.html"
+            Then I should see "2 - /ru/2017/01/02.html"
