@@ -140,15 +140,10 @@ Feature: Localizable blog
                   ignore 'templates/*'
                   """
 
-          Given the Server is running at "localizable-app"
+          Given a successfully built app at "localizable-app"
 
-            When I go to "/2017/01.html"
-            Then I should see "January 2017"
-            And I should not see "Январь"
-
-            When I go to "/ru/2017/01.html"
-            Then I should see "Январь 2017"
-            And I should not see "January"
+            Then the file "build/2017/01.html" should contain "January 2017"
+            And the file "build/ru/2017/01.html" should contain "Январь 2017"
 
 
     Scenario: Tags links are separated by locale
