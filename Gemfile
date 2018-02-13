@@ -13,7 +13,7 @@ gemspec
 
 # Build and doc tools
 gem 'rake', '~> 10.3', require: false # Latest 12.0.0
-gem 'yard', '~> 0.8',  require: false # Latest 0.9.8
+gem 'yard', '~> 0.9.11',  require: false
 
 # Test tools
 gem 'pry',      '~> 0.10',  require: false, group: :development # Latest 1.0.0.pre1
