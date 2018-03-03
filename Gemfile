@@ -13,7 +13,7 @@ gemspec
 
 # Build and doc tools
 gem 'rake', '~> 10.3', require: false # Latest 12.0.0
-gem 'yard', '~> 0.8',  require: false # Latest 0.9.8
+gem 'yard', '~> 0.9.11',  require: false
 
 # Test tools
 gem 'pry',      '~> 0.10',  require: false, group: :development # Latest 1.0.0.pre1
@@ -27,7 +27,7 @@ gem "nokogiri"            # Latest 1.7.1
 gem "kramdown"            # Latest 1.13.2
 
 # Code Quality
-gem 'rubocop',                   '~> 0.24', require: false # Latest 0.47.1
+gem 'rubocop',                   '~> 0.52', require: false
 gem 'simplecov',                 '~> 0.10', require: false # Latest 0.14.1
 gem 'coveralls',                 '~> 0.8',  require: false # Latest 0.8.19
 gem 'codeclimate-test-reporter', '~> 0.3',  require: false, group: :test # Latest 1.0.8
