@@ -33,6 +33,9 @@ module Middleman
           if !blog_name
             blog_controller = current_resource.blog_controller if current_resource.respond_to?(:blog_controller)
             return blog_controller if blog_controller
+
+            blog_controller = current_resource.metadata[:locals]['blog_controller']
+            return blog_controller if blog_controller
           end
         end
 
@@ -82,16 +85,16 @@ module Middleman
       # @param [String] tag
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def tag_path(tag, blog_name=nil)
-        build_url blog_controller(blog_name).tag_pages.link(tag)
+      def tag_path(tag, blog_name=nil, locale=I18n.locale)
+        build_url blog_controller(blog_name).tag_pages.link(tag, locale)
       end
 
       # Get a path to the given year-based calendar page, based on the +year_link+ blog setting.
       # @param [Number] year
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_year_path(year, blog_name=nil)
-        build_url blog_controller(blog_name).calendar_pages.link(year)
+      def blog_year_path(year, blog_name=nil, locale=I18n.locale)
+        build_url blog_controller(blog_name).calendar_pages.link(year, locale: locale)
       end
 
       # Get a path to the given month-based calendar page, based on the +month_link+ blog setting.
@@ -99,8 +102,8 @@ module Middleman
       # @param [Number] month
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_month_path(year, month, blog_name=nil)
-        build_url blog_controller(blog_name).calendar_pages.link(year, month)
+      def blog_month_path(year, month, blog_name=nil, locale=I18n.locale)
+        build_url blog_controller(blog_name).calendar_pages.link(year, month, locale: locale)
       end
 
       # Get a path to the given day-based calendar page, based on the +day_link+ blog setting.
@@ -109,8 +112,8 @@ module Middleman
       # @param [Number] day
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_day_path(year, month, day, blog_name=nil)
-        build_url blog_controller(blog_name).calendar_pages.link(year, month, day)
+      def blog_day_path(year, month, day, blog_name=nil, locale=I18n.locale)
+        build_url blog_controller(blog_name).calendar_pages.link(year, month, day, locale: locale)
       end
 
       # Whether or not pagination is enabled for this template. This can be used
@@ -130,6 +133,7 @@ module Middleman
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
         articles = meta[:locals]["articles"] || blog(blog_name).articles
+        articles.select!{|article| article.lang == meta[:options][:locale]} if blog_controller(blog_name).options.localizable
 
         limit ? articles.first(limit) : articles
       end

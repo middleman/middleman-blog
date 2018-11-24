@@ -1,0 +1,15 @@
+---
+pageable: true
+---
+<h1>
+  <% case page_type
+     when 'day' %>
+    <%= I18n.l(Date.new(year, month, day), format: :long) %>
+  <% when 'month' %>
+    <%= I18n.l(Date.new(year, month, 1), format: '%B %Y') %>
+  <% when 'year' %>
+    <%= year %>
+  <% end %>
+</h1>
+
+<%= partial :article_list %>
