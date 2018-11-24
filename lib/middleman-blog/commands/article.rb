@@ -64,7 +64,13 @@ module Middleman
         aliases: "-t",
         desc: "A list of comma-separated tags for the post"
 
+      class_option "environment",
+        desc: "The environment to generate article for",
+        default: ENV['MM_ENV'] || ENV['RACK_ENV'] || 'development',
+        type: :string
+
       def article
+        env = options[:environment].to_s.to_sym
 
         @content = options[:content] || ""
         @date    = options[ :date ] ? ::Time.zone.parse( options[ :date ] ) : Time.zone.now
@@ -75,6 +81,7 @@ module Middleman
 
         app = ::Middleman::Application.new do
           config[ :mode ]              = :config
+          config[ :environment ] = env
           config[ :disable_sitemap ]   = true
           config[ :watcher_disable ]   = true
           config[ :exit_before_ready ] = true
