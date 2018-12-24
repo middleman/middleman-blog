@@ -29,7 +29,7 @@ helpers do
   end
 
   def link_to_with_active(title, url, class_name = 'active')
-    active_class = (current_resource == sitemap.find_resource_by_path(url)) ? class_name : ''
+    active_class = (current_resource == sitemap.by_path(url)) ? class_name : ''
     link_to(title, url, :class => active_class)
   end
 end

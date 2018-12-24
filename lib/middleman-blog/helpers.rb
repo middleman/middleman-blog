@@ -155,7 +155,7 @@ module Middleman
       private
 
       def build_url(path)
-        sitemap.find_resource_by_path(path).try(:url)
+        sitemap.by_path(path).try(:url)
       end
     end
   end

@@ -158,7 +158,7 @@ module Middleman
             # figure out the matching article for this subdirectory file
             article_path = @source_template.expand(params).to_s
 
-            if article = @app.sitemap.find_resource_by_path(article_path)
+            if article = @app.sitemap.by_path(article_path)
               # The article may not yet have been processed, so convert it here.
               article = convert_to_article(article)
               next unless publishable?(article)
