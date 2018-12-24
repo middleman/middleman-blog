@@ -23,27 +23,29 @@ module Middleman
           next if res.ignored?
 
           # Avoid recomputing metadata over and over
-          md = res.metadata
+          md_options = res.options
+          md_page = res.page
+          md_locals = res.locals
 
-          next unless md[:page][:pageable]
+          next unless md_page[:pageable]
 
           # Skip other blogs' resources
-          next unless match_blog(res, md)
+          next unless match_blog(res, md_locals, md_page)
 
           # "articles" local variable is populated by Calendar and Tag page generators
           # If it's not set then use the complete list of articles
           # TODO: Some way to allow the frontmatter to specify the article filter?
-          articles = md[:locals]["articles"] || @blog_controller.data.articles
-          articles.select!{|article| article.lang == md[:options][:locale]} if md.fetch(:options, false) and md[:options].fetch(:locale, false)
+          articles = md_locals["articles"] || @blog_controller.data.articles
+          articles.select!{|article| article.lang == md_options[:locale]} if md_options && md_options.fetch(:locale, false)
 
           # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
-          per_page  = md[:page][:per_page] || @per_page
-          page_link = uri_template(md[:page][:page_link] || @page_link)
+          per_page  = md_page[:per_page] || @per_page
+          page_link = uri_template(md_page[:page_link] || @page_link)
 
           num_pages = (articles.length / per_page.to_f).ceil
 
           # Add the pagination metadata to the base page (page 1)
-          res.add_metadata locals: page_locals(1, num_pages, per_page, nil, articles)
+          res.add_metadata_locals page_locals(1, num_pages, per_page, nil, articles)
 
           prev_page_res = res
 
@@ -52,11 +54,13 @@ module Middleman
             p = page_resource(res, page_num, page_link)
 
             # Copy the metadata from the base page
-            p.add_metadata md
-            p.add_metadata locals: page_locals(page_num, num_pages, per_page, prev_page_res, articles)
+            p.add_metadata_options md_options
+            p.add_metadata_page md_page
+            p.add_metadata_locals md_locals
+            p.add_metadata_locals page_locals(page_num, num_pages, per_page, prev_page_res, articles)
 
             # Add a reference in the previous page to this page
-            prev_page_res.add_metadata locals: { 'next_page' => p }
+            prev_page_res.add_metadata_locals('next_page' => p)
 
             prev_page_res = p
 
@@ -71,10 +75,10 @@ module Middleman
 
       # Does this resource match the blog controller for this paginator?
       # @return [Boolean]
-      def match_blog(res, md)
-        res_controller = md[:locals]["blog_controller"] || (res.respond_to?(:blog_controller) && res.blog_controller)
+      def match_blog(res, md_locals, md_page)
+        res_controller = md_locals["blog_controller"] || (res.respond_to?(:blog_controller) && res.blog_controller)
         return false if res_controller && res_controller != @blog_controller
-        override_controller = md[:page][:blog]
+        override_controller = md_page[:blog]
         return false if override_controller && override_controller.to_s != @blog_controller.name.to_s
 
         true

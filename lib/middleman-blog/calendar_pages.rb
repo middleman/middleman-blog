@@ -74,37 +74,37 @@ module Middleman
         Sitemap::ProxyResource.new(@sitemap, link(year), @year_template).tap do |p|
           # Add metadata in local variables so it's accessible to
           # later extensions
-          p.add_metadata locals: {
+          p.add_metadata_locals(
             'page_type' => 'year',
             'year' => year,
             'articles' => year_articles,
             'blog_controller' => @blog_controller
-          }
+          )
         end
       end
 
       def month_page_resource(year, month, month_articles)
         Sitemap::ProxyResource.new(@sitemap, link(year, month), @month_template).tap do |p|
-          p.add_metadata locals: {
+          p.add_metadata_locals(
             'page_type' => 'month',
             'year' => year,
             'month' => month,
             'articles' => month_articles,
             'blog_controller' => @blog_controller
-          }
+          )
         end
       end
 
       def day_page_resource(year, month, day, day_articles)
         Sitemap::ProxyResource.new(@sitemap, link(year, month, day), @day_template).tap do |p|
-          p.add_metadata locals: {
+          p.add_metadata_locals(
             'page_type' => 'day',
             'year' => year,
             'month' => month,
             'day' => day,
             'articles' => day_articles,
             'blog_controller' => @blog_controller
-          }
+          )
         end
       end
     end

@@ -72,12 +72,12 @@ module Middleman
           # tagname = articles.first.tags.detect { |article_tag| safe_parameterize(article_tag) == tag }
 
           # Add metadata in local variables so it's accessible to later extensions
-          p.add_metadata locals: {
+          p.add_metadata_locals(
             'page_type'       => 'tag',
             'tagname'         => tag,
             'articles'        => articles,
             'blog_controller' => @blog_controller
-          }
+          )
 
         end
 

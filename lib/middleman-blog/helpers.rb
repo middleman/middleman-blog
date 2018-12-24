@@ -28,7 +28,7 @@ module Middleman
       # @return [BlogExtension]
       def blog_controller(blog_name=nil)
         if !blog_name && current_resource
-          blog_name = current_resource.metadata[:page][:blog]
+          blog_name = current_resource.page[:blog]
 
           if !blog_name
             blog_controller = current_resource.blog_controller if current_resource.respond_to?(:blog_controller)
@@ -124,12 +124,12 @@ module Middleman
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [Array<Middleman::Sitemap::Resource>]
       def page_articles(blog_name=nil)
-        meta = current_resource.metadata
+        locals = current_resource.locals
         limit = current_resource.data[:per_page]
 
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
-        articles = meta[:locals]["articles"] || blog(blog_name).articles
+        articles = locals["articles"] || blog(blog_name).articles
 
         limit ? articles.first(limit) : articles
       end

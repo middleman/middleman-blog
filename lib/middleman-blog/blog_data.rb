@@ -145,7 +145,7 @@ module Middleman
 
             # Add extra parameters from the URL to the page metadata
             extra_data = params.except *%w(year month day title lang locale)
-            article.add_metadata page: extra_data unless extra_data.empty?
+            article.add_metadata_page extra_data unless extra_data.empty?
 
             # compute output path: substitute date parts to path pattern
             article.destination_path = template_path @permalink_template, article, extra_data
@@ -165,7 +165,7 @@ module Middleman
 
               # Add extra parameters from the URL to the page metadata
               extra_data = params.except *%w(year month day title lang locale)
-              article.add_metadata page: extra_data unless extra_data.empty?
+              article.add_metadata_page extra_data unless extra_data.empty?
 
               # The subdir path is the article path with the index file name
               # or file extension stripped off.
@@ -210,7 +210,7 @@ module Middleman
       ##
       def permalink_options(resource, extra={})
         # Allow any frontmatter data to be substituted into the permalink URL
-        params = resource.metadata[:page].slice *@permalink_template.variables.map(&:to_sym)
+        params = resource.page.slice *@permalink_template.variables.map(&:to_sym)
 
         params.each do |k, v|
           params[k] = safe_parameterize(v)
@@ -232,7 +232,8 @@ module Middleman
         resource.blog_controller = controller
 
         if !options.preserve_locale && (locale = resource.locale || resource.lang)
-          resource.add_metadata options: { lang: locale, locale: locale }, locals: { lang: locale, locale: locale }
+          resource.add_metadata_options(lang: locale, locale: locale)
+          resource.add_metadata_locals(lang: locale, locale: locale)
         end
 
         resource

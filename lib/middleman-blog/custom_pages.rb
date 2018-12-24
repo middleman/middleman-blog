@@ -39,12 +39,12 @@ module Middleman
       def build_resource(path, value, articles)
         articles = articles.sort_by(&:date).reverse
         Sitemap::ProxyResource.new(@sitemap, path, @page_template).tap do |p|
-          p.add_metadata locals: {
+          p.add_metadata_locals(
             "page_type"       => property.to_s,
             property          => value,
             "articles"        => articles,
             "blog_controller" => @blog_controller
-          }
+          )
         end
       end
     end
