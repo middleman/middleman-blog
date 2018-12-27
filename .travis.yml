@@ -10,14 +10,15 @@ rvm:
 os:
   - linux
 
+gemfile:
+  - Gemfile
+  - Gemfile-4.x
+
 matrix :
   fast_finish: true
   allow_failures:
     - rvm: ruby-head
-
-gemfile:
-  - Gemfile
-  - Gemfile-4.x
+    - gemfile: Gemfile
 
 script: bundle exec rake test
 

@@ -38,7 +38,6 @@ Additionally, up-to-date generated code documentation is available on [RubyDoc].
 
 [![Gem Version](https://badge.fury.io/rb/middleman-blog.svg)][gem]
 [![Build Status](https://travis-ci.org/middleman/middleman-blog.svg)][travis]
-[![Dependency Status](https://gemnasium.com/middleman/middleman-blog.svg?travis)][gemnasium]
 
 ## Community
 
@@ -96,6 +95,5 @@ Copyright (c) 2010-2017 Thomas Reynolds. MIT Licensed, see [LICENSE] for details
 [middleman]: http://middlemanapp.com
 [gem]: https://rubygems.org/gems/middleman-blog
 [travis]: http://travis-ci.org/middleman/middleman-blog
-[gemnasium]: https://gemnasium.com/middleman/middleman-blog
 [rubydoc]: http://rubydoc.info/github/middleman/middleman-blog/master
 [LICENSE]: https://github.com/middleman/middleman-blog/blob/master/LICENSE.md
