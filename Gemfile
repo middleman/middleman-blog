@@ -23,12 +23,12 @@ gem 'pry'
 gem 'pry-rescue'
 gem 'pry-stack_explorer'
 
-gem 'kramdown'            # Latest 1.13.2
-gem 'nokogiri'            # Latest 1.7.1
-gem 'timecop', '~> 0.6.3' # Latest 0.8.1
+gem 'kramdown'
+gem 'nokogiri', '~> 1.9.1'
+gem 'timecop', '~> 0.6.3'
 
 # Code Quality
-gem 'rubocop', '~> 0.59', require: false
+gem 'rubocop', '~> 0.61.1', require: false
 gem 'simplecov', '~> 0.10', require: false
 
 # Set the ruby platform - not windows

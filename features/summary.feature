@@ -83,14 +83,11 @@ Feature: Article summary generation
 
   Scenario: Summary limited by length only
     Given a fixture app "summary-app"
-    And a file named "config.rb" with:
-      """
-      activate :blog
-      """
     And a file named "source/index.html.erb" with:
       """
       <% @i = 0 %>
-      <% blog.articles.each do |article| %>
+      <%= blog.articles.size %>
+      <% blog.articles.sort_by(&:title).each do |article| %>
         <article>
           <%= article.summary(7, (@i += 1).to_s) %>
         </article>
@@ -101,6 +98,6 @@ Feature: Article summary generation
     Then I should see "Summary1"
     Then I should see "Summary2"
     Then I should see "Summary3"
+    Then I should see "Summary4"
     # it has a custom separator, which overrides explicit length, so we show up to the separator
     Then I should see "Summary from article with separator."
-    Then I should see "Summary5"
