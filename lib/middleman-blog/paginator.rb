@@ -7,7 +7,7 @@ module Middleman
     class Paginator
       include UriTemplates
 
-      def initialize( app, blog_controller )
+      def initialize(app, blog_controller)
         @app             = app
         @blog_controller = blog_controller
         @per_page        = blog_controller.options.per_page
@@ -33,8 +33,8 @@ module Middleman
           # "articles" local variable is populated by Calendar and Tag page generators
           # If it's not set then use the complete list of articles
           # TODO: Some way to allow the frontmatter to specify the article filter?
-          articles = md[:locals]["articles"] || @blog_controller.data.articles
-          articles.select!{|article| article.lang == md[:options][:locale]} if md.fetch(:options, false) and md[:options].fetch(:locale, false)
+          articles = md[:locals]['articles'] || @blog_controller.data.articles
+          articles.select! { |article| article.lang == md[:options][:locale] } if md.fetch(:options, false) && md[:options].fetch(:locale, false)
 
           # Allow blog.per_page and blog.page_link to be overridden in the frontmatter
           per_page  = md[:page][:per_page] || @per_page
@@ -72,8 +72,9 @@ module Middleman
       # Does this resource match the blog controller for this paginator?
       # @return [Boolean]
       def match_blog(res, md)
-        res_controller = md[:locals]["blog_controller"] || (res.respond_to?(:blog_controller) && res.blog_controller)
+        res_controller = md[:locals]['blog_controller'] || (res.respond_to?(:blog_controller) && res.blog_controller)
         return false if res_controller && res_controller != @blog_controller
+
         override_controller = md[:page][:blog]
         return false if override_controller && override_controller.to_s != @blog_controller.name.to_s
 

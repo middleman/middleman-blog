@@ -26,25 +26,21 @@ module Middleman
       #
       # @param [Symbol, String] blog_name Optional name of the blog to get a controller for.
       # @return [BlogExtension]
-      def blog_controller(blog_name=nil)
+      def blog_controller(blog_name = nil)
         if !blog_name && current_resource
           blog_name = current_resource.metadata[:page][:blog]
 
-          if !blog_name
+          unless blog_name
             blog_controller = current_resource.blog_controller if current_resource.respond_to?(:blog_controller)
             return blog_controller if blog_controller
           end
         end
 
         # In multiblog situations, force people to specify the blog
-        if !blog_name && blog_instances.size > 1
-          raise "You have more than one blog so you must either use the flag --blog (ex. --blog 'myBlog') when calling this method, or add blog: [blog_name] to your page's frontmatter"
-        end
+        raise "You have more than one blog so you must either use the flag --blog (ex. --blog 'myBlog') when calling this method, or add blog: [blog_name] to your page's frontmatter" if !blog_name && blog_instances.size > 1
 
         # Warn if a non-existent blog name provided
-        if blog_name && !blog_instances.keys.include?(blog_name.to_sym)
-          raise "Non-existent blog name provided: #{blog_name}."
-        end
+        raise "Non-existent blog name provided: #{blog_name}." if blog_name && !blog_instances.key?(blog_name.to_sym)
 
         blog_name ||= blog_instances.keys.first
         blog_instances[blog_name.to_sym]
@@ -56,14 +52,14 @@ module Middleman
       # @param [Symbol, String] blog_name Optional name of the blog to get data for.
       #   Blogs can be named as an option or will default to 'blog0', 'blog1', etc..
       # @return [BlogData]
-      def blog(blog_name=nil)
+      def blog(blog_name = nil)
         blog_controller(blog_name).data
       end
 
       # Determine whether the currently rendering template is a {BlogArticle}.
       # This can be useful in layouts and helpers.
       # @return [Boolean]
-      def is_blog_article?
+      def is_blog_article? # rubocop:disable Naming/PredicateName
         !current_article.nil?
       end
 
@@ -71,18 +67,14 @@ module Middleman
       # @return [BlogArticle]
       def current_article
         article = current_resource
-        if article && article.is_a?(BlogArticle)
-          article
-        else
-          nil
-        end
+        article if article&.is_a?(BlogArticle)
       end
 
       # Get a path to the given tag page, based on the +taglink+ blog setting.
       # @param [String] tag
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def tag_path(tag, blog_name=nil)
+      def tag_path(tag, blog_name = nil)
         build_url blog_controller(blog_name).tag_pages.link(tag)
       end
 
@@ -90,7 +82,7 @@ module Middleman
       # @param [Number] year
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_year_path(year, blog_name=nil)
+      def blog_year_path(year, blog_name = nil)
         build_url blog_controller(blog_name).calendar_pages.link(year)
       end
 
@@ -99,7 +91,7 @@ module Middleman
       # @param [Number] month
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_month_path(year, month, blog_name=nil)
+      def blog_month_path(year, month, blog_name = nil)
         build_url blog_controller(blog_name).calendar_pages.link(year, month)
       end
 
@@ -109,7 +101,7 @@ module Middleman
       # @param [Number] day
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [String]
-      def blog_day_path(year, month, day, blog_name=nil)
+      def blog_day_path(year, month, day, blog_name = nil)
         build_url blog_controller(blog_name).calendar_pages.link(year, month, day)
       end
 
@@ -123,13 +115,13 @@ module Middleman
       # Returns the list of articles to display on this particular page (when using pagination).
       # @param [Symbol, String] blog_name Optional name of the blog to use.
       # @return [Array<Middleman::Sitemap::Resource>]
-      def page_articles(blog_name=nil)
+      def page_articles(blog_name = nil)
         meta = current_resource.metadata
         limit = current_resource.data[:per_page]
 
         # "articles" local variable is populated by Calendar and Tag page generators
         # If it's not set then use the complete list of articles
-        articles = meta[:locals]["articles"] || blog(blog_name).articles
+        articles = meta[:locals]['articles'] || blog(blog_name).articles
 
         limit ? articles.first(limit) : articles
       end
@@ -142,12 +134,11 @@ module Middleman
       # @param [Symbol] property Custom property which is being used to collect articles on
       # @private
       def self.generate_custom_helper(property)
-        define_method :"#{property}_path" do |value, blog_name=nil|
+        define_method :"#{property}_path" do |value, blog_name = nil|
           custom_pages = blog_controller(blog_name).custom_pages
 
-          if !custom_pages.key?(property)
-            raise "This blog does not know about the custom property #{property.inspect}"
-          end
+          raise "This blog does not know about the custom property #{property.inspect}" unless custom_pages.key?(property)
+
           build_url custom_pages[property].link(value)
         end
       end

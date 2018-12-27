@@ -1,5 +1,5 @@
 begin
-  require "nokogiri"
+  require 'nokogiri'
 rescue LoadError
   raise "Nokogiri is required for blog post summaries. Add 'nokogiri' to your Gemfile."
 end
@@ -13,7 +13,7 @@ module TruncateHTML
     doc.inner_html
   end
 
-  def self.truncate_at_length(text, max_length, ellipsis = "...")
+  def self.truncate_at_length(text, max_length, ellipsis = '...')
     ellipsis_length = ellipsis.length
     text = text.encode('UTF-8') if text.respond_to?(:encode)
     doc = Nokogiri::HTML::DocumentFragment.parse text
@@ -31,12 +31,14 @@ module NokogiriTruncator
   module NodeWithChildren
     def truncate(max_length, ellipsis)
       return self if inner_text.length <= max_length
-      truncated_node = self.dup
+
+      truncated_node = dup
       truncated_node.children.remove
 
-      self.children.each do |node|
+      children.each do |node|
         remaining_length = max_length - truncated_node.inner_text.length
         break if remaining_length <= 0
+
         truncated_node.add_child node.truncate(remaining_length, ellipsis)
       end
       truncated_node
@@ -54,12 +56,11 @@ module NokogiriTruncator
   end
 
   module CommentNode
-    def truncate(*args)
+    def truncate(*_args)
       # Don't truncate comments, since they aren't visible
       self
     end
   end
-
 end
 
 Nokogiri::HTML::DocumentFragment.send(:include, NokogiriTruncator::NodeWithChildren)

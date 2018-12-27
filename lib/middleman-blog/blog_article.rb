@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 require 'active_support/time_with_zone'
 require 'active_support/core_ext/time/acts_like'
 require 'active_support/core_ext/time/calculations'
 
 module Middleman
-
   module Blog
-
     ##
     # A module that adds blog-article-specific methods to Resources. A
     # {BlogArticle} can be retrieved via {Blog::Helpers#current_article} or
@@ -15,7 +12,6 @@ module Middleman
     # @see http://rdoc.info/github/middleman/middleman/Middleman/Sitemap/Resource Middleman::Sitemap::Resource
     ##
     module BlogArticle
-
       extend Gem::Deprecate
 
       ##
@@ -49,9 +45,8 @@ module Middleman
       #
       # @return [String]
       ##
-      def render(opts={}, locs={}, &block)
-
-        unless opts.has_key?( :layout )
+      def render(opts = {}, locs = {}, &block)
+        unless opts.key?(:layout)
 
           opts[:layout] = metadata[:options][:layout]
           opts[:layout] = blog_options.layout if opts[:layout].nil? || opts[:layout] == :_auto_layout
@@ -63,9 +58,7 @@ module Middleman
 
         content = super(opts, locs, &block)
 
-        unless opts[:keep_separator]
-          content.sub!(blog_options.summary_separator, '')
-        end
+        content.sub!(blog_options.summary_separator, '') unless opts[:keep_separator]
 
         content
       end
@@ -120,7 +113,7 @@ module Middleman
       # @param [String] ellipsis The ellipsis string to use when content is trimmed.
       # @return [String]
       ##
-      def summary(length=nil, ellipsis='...')
+      def summary(length = nil, ellipsis = '...')
         rendered = render layout: false, keep_separator: true
 
         if blog_options.summary_generator
@@ -128,7 +121,6 @@ module Middleman
         else
           default_summary_generator(rendered, length, ellipsis)
         end
-
       end
 
       ##
@@ -142,7 +134,6 @@ module Middleman
       # @param [String] ellipsis The ellipsis string to use when content is trimmed.
       ##
       def default_summary_generator(rendered, length, ellipsis)
-
         if blog_options.summary_separator && rendered.match(blog_options.summary_separator)
           require 'middleman-blog/truncate_html'
           TruncateHTML.truncate_at_separator(rendered, blog_options.summary_separator)
@@ -151,14 +142,13 @@ module Middleman
           require 'middleman-blog/truncate_html'
           TruncateHTML.truncate_at_length(rendered, length, ellipsis)
 
-        elsif blog_options.summary_length && blog_options.summary_length > 0
+        elsif blog_options.summary_length&.positive?
           require 'middleman-blog/truncate_html'
           TruncateHTML.truncate_at_length(rendered, blog_options.summary_length, ellipsis)
 
         else
           rendered
         end
-
       end
 
       ##
@@ -167,7 +157,6 @@ module Middleman
       # @return [Array<String>] (never +nil+)
       ##
       def tags
-
         article_tags = data['tags']
 
         if article_tags.is_a? String
@@ -175,7 +164,6 @@ module Middleman
         else
           Array(article_tags).map(&:to_s)
         end
-
       end
 
       ##
@@ -188,21 +176,18 @@ module Middleman
       # @return [Symbol] Language code (for example, +:en+ or +:de+)
       ##
       def locale
-
         frontmatter_locale = data['locale'] || data['lang']
         filename_locale    = path_part('locale') || path_part('lang')
 
-        if frontmatter_locale && filename_locale && frontmatter_locale != filename_locale
-          raise "The locale in #{path}'s filename (#{filename_locale.inspect}) doesn't match the lang in its frontmatter (#{frontmatter_locale.inspect})"
-        end
+        raise "The locale in #{path}'s filename (#{filename_locale.inspect}) doesn't match the lang in its frontmatter (#{frontmatter_locale.inspect})" if frontmatter_locale && filename_locale && frontmatter_locale != filename_locale
 
         default_locale = I18n.default_locale if defined? ::I18n
 
         found_locale = frontmatter_locale || filename_locale || default_locale
-        found_locale && found_locale.to_sym
+        found_locale&.to_sym
       end
 
-      alias_method :lang, :locale
+      alias lang locale
 
       ##
       # Attempt to figure out the date of the post. The date should be
@@ -213,17 +198,16 @@ module Middleman
       # @return [TimeWithZone]
       ##
       def date
-
         return @_date if @_date
 
         frontmatter_date = data['date']
 
         # First get the date from frontmatter
-        if frontmatter_date.is_a? Time
-          @_date = frontmatter_date.in_time_zone
-        else
-          @_date = Time.zone.parse(frontmatter_date.to_s)
-        end
+        @_date = if frontmatter_date.is_a? Time
+                   frontmatter_date.in_time_zone
+                 else
+                   Time.zone.parse(frontmatter_date.to_s)
+                 end
 
         # Next figure out the date from the filename
         source_vars = blog_data.source_template.variables
@@ -244,7 +228,6 @@ module Middleman
         raise "Blog post #{path} needs a date in its filename or frontmatter" unless @_date
 
         @_date
-
       end
 
       ##
@@ -279,7 +262,7 @@ module Middleman
       # @return [BlogArticle]
       ##
       def previous_article
-        article_previous()
+        article_previous
       end
       deprecate :previous_article, :article_previous, 2017, 5
 
@@ -292,7 +275,7 @@ module Middleman
       # @return [Middleman::Sitemap::Resource]
       ##
       def next_article
-        article_next()
+        article_next
       end
       deprecate :next_article, :article_next, 2017, 5
 
@@ -303,7 +286,7 @@ module Middleman
       # @return [BlogArticle]
       ##
       def article_previous
-        blog_data.articles.find { |a| a.date < self.date }
+        blog_data.articles.find { |a| a.date < date }
       end
 
       ##
@@ -313,7 +296,7 @@ module Middleman
       # @return [Middleman::Sitemap::Resource]
       ##
       def article_next
-        blog_data.articles.reverse.find { |a| a.date > self.date }
+        blog_data.articles.reverse.find { |a| a.date > date }
       end
 
       ##
@@ -323,7 +306,7 @@ module Middleman
       # @return [BlogArticle]
       ##
       def article_locale_previous
-        blog_data.local_articles.find { |a| a.date < self.date }
+        blog_data.local_articles.find { |a| a.date < date }
       end
 
       ##
@@ -333,7 +316,7 @@ module Middleman
       # @return [Middleman::Sitemap::Resource]
       ##
       def article_locale_next
-        blog_data.local_articles.reverse.find { |a| a.date > self.date }
+        blog_data.local_articles.reverse.find { |a| a.date > date }
       end
 
       ##
@@ -357,9 +340,6 @@ module Middleman
         @_path_parts ||= Blog::UriTemplates.extract_params(blog_data.source_template, path)
         @_path_parts[part.to_s]
       end
-
     end
-
   end
-
 end

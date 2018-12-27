@@ -39,7 +39,7 @@ module Middleman
     option :publish_future_dated, false, 'Whether articles with a date in the future should be considered published'
     option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options (link, template)'
     option :preserve_locale, false, 'Use the global Middleman I18n.locale instead of the lang in the article\'s frontmatter'
-    option :new_article_template, File.expand_path('../commands/article.tt', __FILE__), 'Path (relative to project root) to an ERb template that will be used to generate new articles from the "middleman article" command.'
+    option :new_article_template, File.expand_path('commands/article.tt', __dir__), 'Path (relative to project root) to an ERb template that will be used to generate new articles from the "middleman article" command.'
     option :default_extension, '.markdown', 'Default template extension for articles (used by "middleman article")'
 
     # @return [BlogData] blog data for this blog, which has all information about the blog articles
@@ -61,9 +61,9 @@ module Middleman
     attr_reader :custom_pages
 
     # Helpers for use within templates and layouts.
-    self.defined_helpers = [ Middleman::Blog::Helpers ]
+    self.defined_helpers = [Middleman::Blog::Helpers]
 
-    def initialize(app, options_hash={}, &block)
+    def initialize(app, options_hash = {}, &block)
       super
 
       @custom_pages = {}
@@ -88,7 +88,7 @@ module Middleman
         options.month_link = File.join(options.prefix, options.month_link)
         options.day_link = File.join(options.prefix, options.day_link)
 
-        options.custom_collections.each do |key, opts|
+        options.custom_collections.each do |_key, opts|
           opts[:link] = File.join(options.prefix, opts[:link])
         end
       end
@@ -99,7 +99,7 @@ module Middleman
         found_name = nil
 
         app.extensions[:blog].values.each_with_index do |ext, i|
-          found_name = "blog#{i+1}" if ext == self
+          found_name = "blog#{i + 1}" if ext == self
         end
 
         found_name
@@ -119,9 +119,8 @@ module Middleman
       Time.zone = app.config[:time_zone] if app.config[:time_zone]
       time_zone = Time.zone || 'UTC'
       zone_default = Time.find_zone!(time_zone)
-      unless zone_default
-        raise 'Value assigned to time_zone not recognized.'
-      end
+      raise 'Value assigned to time_zone not recognized.' unless zone_default
+
       Time.zone_default = zone_default
 
       # Initialize blog with options

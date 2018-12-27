@@ -29,7 +29,7 @@ module Middleman
       # @param [Number] month
       # @param [Number] day
       # @return [String]
-      def link(year, month=nil, day=nil)
+      def link(year, month = nil, day = nil)
         template = if day
                      @day_link_template
                    elsif month
@@ -47,20 +47,14 @@ module Middleman
         new_resources = []
 
         # Set up date pages if the appropriate templates have been specified
-        @blog_data.articles.group_by {|a| a.date.year }.each do |year, year_articles|
-          if @generate_year_pages && @year_template
-            new_resources << year_page_resource(year, year_articles)
-          end
+        @blog_data.articles.group_by { |a| a.date.year }.each do |year, year_articles|
+          new_resources << year_page_resource(year, year_articles) if @generate_year_pages && @year_template
 
-          year_articles.group_by {|a| a.date.month }.each do |month, month_articles|
-            if @generate_month_pages && @month_template
-              new_resources << month_page_resource(year, month, month_articles)
-            end
+          year_articles.group_by { |a| a.date.month }.each do |month, month_articles|
+            new_resources << month_page_resource(year, month, month_articles) if @generate_month_pages && @month_template
 
-            month_articles.group_by {|a| a.date.day }.each do |day, day_articles|
-              if @generate_day_pages && @day_template
-                new_resources << day_page_resource(year, month, day, day_articles)
-              end
+            month_articles.group_by { |a| a.date.day }.each do |day, day_articles|
+              new_resources << day_page_resource(year, month, day, day_articles) if @generate_day_pages && @day_template
             end
           end
         end

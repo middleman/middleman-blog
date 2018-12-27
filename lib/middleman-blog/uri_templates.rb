@@ -4,12 +4,9 @@ require 'active_support/inflector'
 require 'active_support/inflector/transliterate'
 
 module Middleman
-
   module Blog
-
     # Handy methods for dealing with URI templates. Mix into whatever class.
     module UriTemplates
-
       module_function
 
       ##
@@ -22,9 +19,7 @@ module Middleman
       ##
       def uri_template(tmpl_src)
         # Support the RFC6470 templates directly if people use them
-        if tmpl_src.include?(':')
-          tmpl_src = tmpl_src.gsub(/:([A-Za-z0-9]+)/, '{\1}')
-        end
+        tmpl_src = tmpl_src.gsub(/:([A-Za-z0-9]+)/, '{\1}') if tmpl_src.include?(':')
 
         Addressable::Template.new ::Middleman::Util.normalize_path(tmpl_src)
       end
@@ -57,7 +52,6 @@ module Middleman
       #
       # @see http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize
       def safe_parameterize(str, sep = '-')
-
         # Remove ending ?
         str = str.to_s.gsub(/\?$/, '')
 
@@ -68,6 +62,7 @@ module Middleman
         # Check for multibytes and sub back in
         parameterized_string.chars.to_a.each_with_index do |char, i|
           next unless char == '?' && str[i].bytes.count != 1
+
           parameterized_string[i] = str[i]
         end
 
@@ -78,8 +73,8 @@ module Middleman
 
         # Remove leading/trailing separator.
         parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
-        parameterized_string.gsub!('_', '-')
-        parameterized_string.gsub!('?', '')
+        parameterized_string.tr!('_', '-')
+        parameterized_string.delete!('?')
 
         # Replace all ?
         parameterized_string
@@ -93,7 +88,7 @@ module Middleman
       # @return [Hash] parameters
       ##
       def date_to_params(date)
-        return {
+        {
           year: date.year.to_s,
           month: date.month.to_s.rjust(2, '0'),
           day: date.day.to_s.rjust(2, '0')
@@ -103,13 +98,12 @@ module Middleman
       ##
       #
       ##
-      def extract_directory_path( article_path )
+      def extract_directory_path(article_path)
         uri = Addressable::URI.parse article_path
 
         # Remove file extension from the article path
-        directory_path = uri.path.gsub( uri.extname, '' )
+        uri.path.gsub(uri.extname, '')
       end
-
     end
 
     ##
@@ -128,7 +122,5 @@ module Middleman
         end
       end
     end
-
   end
-
 end

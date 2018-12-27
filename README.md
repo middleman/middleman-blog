@@ -39,8 +39,6 @@ Additionally, up-to-date generated code documentation is available on [RubyDoc].
 [![Gem Version](https://badge.fury.io/rb/middleman-blog.svg)][gem]
 [![Build Status](https://travis-ci.org/middleman/middleman-blog.svg)][travis]
 [![Dependency Status](https://gemnasium.com/middleman/middleman-blog.svg?travis)][gemnasium]
-[![Code Quality](https://codeclimate.com/github/middleman/middleman-blog.svg)][codeclimate]
-[![Code Coverage](https://coveralls.io/repos/middleman/middleman-blog/badge.svg?branch=master)][coveralls]
 
 ## Community
 
@@ -99,7 +97,5 @@ Copyright (c) 2010-2017 Thomas Reynolds. MIT Licensed, see [LICENSE] for details
 [gem]: https://rubygems.org/gems/middleman-blog
 [travis]: http://travis-ci.org/middleman/middleman-blog
 [gemnasium]: https://gemnasium.com/middleman/middleman-blog
-[codeclimate]: https://codeclimate.com/github/middleman/middleman-blog
-[coveralls]: https://coveralls.io/r/middleman/middleman-blog
 [rubydoc]: http://rubydoc.info/github/middleman/middleman-blog/master
 [LICENSE]: https://github.com/middleman/middleman-blog/blob/master/LICENSE.md

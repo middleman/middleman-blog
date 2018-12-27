@@ -1,8 +1,9 @@
+
 source 'https://rubygems.org'
 
 # Middleman Gems
-gem 'middleman-cli',  git: 'https://github.com/middleman/middleman.git', branch: 'master'
-gem 'middleman-core', git: 'https://github.com/middleman/middleman.git', branch: 'master'
+gem 'middleman-cli', '~> 4.2'
+gem 'middleman-core', '~> 4.2'
 
 # Specify your gem's dependencies in middleman-blog.gemspec
 gemspec

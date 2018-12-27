@@ -1,16 +1,13 @@
 require 'middleman-blog/uri_templates'
 
 module Middleman
-
   module Blog
-
     ##
     # A store of all the blog articles in the site, with accessors
     # for the articles by various dimensions. Accessed via "blog" in
     # templates.
     ##
     class BlogData
-
       include UriTemplates
       extend Gem::Deprecate
 
@@ -42,8 +39,8 @@ module Middleman
 
         @source_template           = uri_template options.sources
         @permalink_template        = uri_template options.permalink
-        @subdir_template           = uri_template options.sources.sub(/(\.[^.{}\/]+)?$/, "/{+path}" )
-        @subdir_permalink_template = uri_template options.permalink.sub(/(\.[^.{}\/]+)?$/, "/{+path}" )
+        @subdir_template           = uri_template options.sources.sub(/(\.[^.{}\/]+)?$/, '/{+path}')
+        @subdir_permalink_template = uri_template options.permalink.sub(/(\.[^.{}\/]+)?$/, '/{+path}')
       end
 
       ##
@@ -52,7 +49,7 @@ module Middleman
       # @return [Array<Middleman::Sitemap::Resource>]
       ##
       def articles
-        @_articles.select( &( options.filter || proc { | a | a } ) ).sort_by( &:date ).reverse
+        @_articles.select(&(options.filter || proc { |a| a })).sort_by(&:date).reverse
       end
 
       ##
@@ -64,8 +61,8 @@ module Middleman
       # @param  [Symbol] locale Language to match (optional, defaults to I18n.locale).
       # @return [Array<Middleman::Sitemap::Resource>]
       ##
-      def local_articles( locale = ::I18n.locale )
-          articles_by_locale( locale )
+      def local_articles(locale = ::I18n.locale)
+        articles_by_locale(locale)
       end
       deprecate :local_articles, :articles_by_locale, 2017, 5
 
@@ -78,9 +75,9 @@ module Middleman
       #
       # @todo should use the @_articles if represented in this method.
       ##
-      def articles_by_locale( locale = ::I18n.locale )
-        locale = locale.to_sym if locale.kind_of? String
-        articles.select { | article | article.locale == locale }
+      def articles_by_locale(locale = ::I18n.locale)
+        locale = locale.to_sym if locale.is_a? String
+        articles.select { |article| article.locale == locale }
       end
 
       ##
@@ -90,19 +87,16 @@ module Middleman
       # @return [Hash<String, Array<Middleman::Sitemap::Resource>>]
       ##
       def tags
-
         tags = {}
 
         # Reference the filtered articles
         articles.each do |article|
-
           # Reference the tags assigned to an article
           article.tags.each do |tag|
             # tag = safe_parameterize(tag)
             tags[tag] ||= []
             tags[tag] << article
           end
-
         end
 
         # Return tags
@@ -144,7 +138,7 @@ module Middleman
             next unless publishable?(article)
 
             # Add extra parameters from the URL to the page metadata
-            extra_data = params.except *%w(year month day title lang locale)
+            extra_data = params.except 'year', 'month', 'day', 'title', 'lang', 'locale'
             article.add_metadata page: extra_data unless extra_data.empty?
 
             # compute output path: substitute date parts to path pattern
@@ -158,13 +152,13 @@ module Middleman
             # figure out the matching article for this subdirectory file
             article_path = @source_template.expand(params).to_s
 
-            if article = @app.sitemap.find_resource_by_path(article_path)
+            if (article = @app.sitemap.find_resource_by_path(article_path))
               # The article may not yet have been processed, so convert it here.
               article = convert_to_article(article)
               next unless publishable?(article)
 
               # Add extra parameters from the URL to the page metadata
-              extra_data = params.except *%w(year month day title lang locale)
+              extra_data = params.except 'year', 'month', 'day', 'title', 'lang', 'locale'
               article.add_metadata page: extra_data unless extra_data.empty?
 
               # The subdir path is the article path with the index file name
@@ -208,25 +202,25 @@ module Middleman
       # @param [Hash] extra More options to be merged in on top.
       # @return [Hash] options
       ##
-      def permalink_options(resource, extra={})
+      def permalink_options(resource, extra = {})
         # Allow any frontmatter data to be substituted into the permalink URL
-        params = resource.metadata[:page].slice *@permalink_template.variables.map(&:to_sym)
+        params = resource.metadata[:page].slice(*@permalink_template.variables.map(&:to_sym))
 
         params.each do |k, v|
           params[k] = safe_parameterize(v)
         end
 
-        params.
-          merge(date_to_params(resource.date)).
-          merge(lang: resource.lang.to_s, locale: resource.locale.to_s, title: resource.slug).
-          merge(extra)
+        params
+          .merge(date_to_params(resource.date))
+          .merge(lang: resource.lang.to_s, locale: resource.locale.to_s, title: resource.slug)
+          .merge(extra)
       end
 
       ##
       #
       ##
-      def convert_to_article( resource )
-        return resource if resource.is_a?( BlogArticle )
+      def convert_to_article(resource)
+        return resource if resource.is_a?(BlogArticle)
 
         resource.extend BlogArticle
         resource.blog_controller = controller
@@ -241,10 +235,9 @@ module Middleman
       ##
       #
       ##
-      def template_path(template, article, extras={})
+      def template_path(template, article, extras = {})
         apply_uri_template template, permalink_options(article, extras)
       end
-
     end
   end
 end

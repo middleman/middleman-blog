@@ -1,10 +1,11 @@
 # Changelog
 
-$ gem push squid-utils-0.1.0.gem
-
 ## 4.0.3
 
-* 
+* Loosen dependencies and test against Middlman v5 betas
+* Adapt to core Rubocop standards
+* Title should be always a string (#351)
+* Fixed multibyte tags.
 
 ## 4.0.2
 

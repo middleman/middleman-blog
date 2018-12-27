@@ -102,7 +102,7 @@ Feature: Tag pages
         Newer Article Content
         """
 
-    When I go to "/tags/.html"
+    When I go to "/tags/☆☆☆.html"
     Then I should see "/2011-01-01-new-article.html"
 
   Scenario: Tag pages are not added when disabled in configuration

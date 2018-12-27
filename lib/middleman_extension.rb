@@ -1,1 +1,1 @@
-require "middleman-blog"
+require 'middleman-blog'
