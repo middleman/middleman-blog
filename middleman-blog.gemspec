@@ -16,7 +16,7 @@ Gem::Specification.new do | s |
   s.files                 = `git ls-files -z`.split( "\0" )
   s.test_files            = `git ls-files -z -- {fixtures,features}/*`.split( "\0" )
   s.require_paths         = [ "lib" ]
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 2.3.0'
 
   s.add_dependency( "middleman-core", [ ">= 4.0.0" ] )
   s.add_dependency( "tzinfo",         [ ">= 0.3.0" ] )
