@@ -38,6 +38,7 @@ Additionally, up-to-date generated code documentation is available on [RubyDoc].
 
 [![Gem Version](https://badge.fury.io/rb/middleman-blog.svg)][gem]
 [![Build Status](https://travis-ci.org/middleman/middleman-blog.svg)][travis]
+[![Open Source Helpers](https://www.codetriage.com/middleman/middleman-blog/badges/users.svg)](https://www.codetriage.com/middleman/middleman-blog)
 
 ## Community
 
