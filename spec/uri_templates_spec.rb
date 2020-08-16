@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'middleman-blog/uri_templates'
 
 describe 'Middleman::Blog::UriTemplates' do

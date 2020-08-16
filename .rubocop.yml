@@ -1,5 +1,9 @@
+require:
+  - rubocop-performance
+
 AllCops:
-  TargetRubyVersion: 2.3
+  NewCops: disable
+  TargetRubyVersion: 2.5
   Include:
     - '**/*.rb'
     - '**/Rakefile'
@@ -9,11 +13,16 @@ AllCops:
     - 'vendor/**/*'
     - '**/tmp/**/*'
     - 'middleman-cli/lib/middleman-cli/templates/**/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
 Security/YAMLLoad:
   Enabled: false
 Style/GuardClause:
   Enabled: false
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 Metrics/MethodLength:
   Enabled: false
@@ -37,13 +46,13 @@ Lint/AmbiguousBlockAssociation:
   Enabled: false
 Lint/UriEscapeUnescape:
   Enabled: false
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Enabled: false
 Lint/ShadowedException:
   Enabled: false
 Naming/FileName:
   Enabled: false
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 Naming/MemoizedInstanceVariableName:
   Enabled: false
@@ -57,9 +66,7 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/MissingRespondToMissing:
   Enabled: false
-Style/MethodMissingSuper:
-  Enabled: false
-Style/FrozenStringLiteralComment:
+Lint/MissingSuper:
   Enabled: false
 Style/EvalWithLocation:
   Enabled: false

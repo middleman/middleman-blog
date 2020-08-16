@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+
 # Middleman Gems
-gem 'middleman-cli',  git: 'https://github.com/middleman/middleman.git', branch: 'master'
-gem 'middleman-core', git: 'https://github.com/middleman/middleman.git', branch: 'master'
+gem 'middleman-cli',  github: 'middleman/middleman', branch: 'master'
+gem 'middleman-core', github: 'middleman/middleman', branch: 'master'
 
 # Specify your gem's dependencies in middleman-blog.gemspec
 gemspec
@@ -28,7 +32,8 @@ gem 'nokogiri', '~> 1.9.1'
 gem 'timecop', '~> 0.6.3'
 
 # Code Quality
-gem 'rubocop', '~> 0.61.1', require: false
+gem 'rubocop', '~> 0.89', require: false
+gem 'rubocop-performance', '~> 1.7', require: false
 gem 'simplecov', '~> 0.10', require: false
 
 # Set the ruby platform - not windows

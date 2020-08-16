@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'timecop'
 require 'active_support/core_ext/time/calculations'
 

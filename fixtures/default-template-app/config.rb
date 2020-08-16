@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'zurb-foundation'
 
 spec = Gem::Specification.find_by_name('zurb-foundation')
@@ -21,9 +23,9 @@ helpers do
   def page_title
     title = blog_name.dup
     if current_page.data.title
-      title << ": #{current_page.data.title}"
+      title = "#{title}: #{current_page.data.title}"
     elsif is_blog_article?
-      title << ": #{current_article.title}"
+      title = "#{title}: #{current_article.title}"
     end
     title
   end

@@ -29,7 +29,8 @@ gem 'nokogiri', '~> 1.9.1'
 gem 'timecop', '~> 0.6.3'
 
 # Code Quality
-gem 'rubocop', '~> 0.61.1', require: false
+gem 'rubocop', '~> 0.89', require: false
+gem 'rubocop-performance', '~> 1.7', require: false
 gem 'simplecov', '~> 0.10', require: false
 
 # Set the ruby platform - not windows
