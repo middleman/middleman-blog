@@ -63,9 +63,9 @@ Our internal tests are passed through Travis, testing against the following
 Ruby versions on Linux :
 
 - ruby-head
-- 2.4.0
-- 2.3.1
-- 2.2.4
+- 2.7
+- 2.6
+- 2.5
 
 ### Running tests
 

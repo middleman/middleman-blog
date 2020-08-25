@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 activate :blog do |blog|
   blog.permalink = '{year}.{month}.{day}/{title}'
   blog.sources = 'blog/:year-:month-:day-:title.html'

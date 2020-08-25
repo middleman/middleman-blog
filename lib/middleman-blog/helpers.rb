@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Middleman
   module Blog
     # Blog-related helpers that are available to the Middleman application in +config.rb+ and in templates.

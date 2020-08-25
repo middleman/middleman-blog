@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'middleman-blog'
 activate :blog do |blog|
   blog.prefix       = 'blog/'

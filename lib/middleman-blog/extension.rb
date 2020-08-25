@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/time/zones'
 require 'middleman-blog/blog_data'
 require 'middleman-blog/blog_article'

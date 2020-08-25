@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'middleman-core/cli'
 require 'date'
 require 'middleman-blog/uri_templates'
@@ -84,7 +86,7 @@ module Middleman
 
         unless blog_inst
           msg = 'Could not find an active blog instance'
-          msg << " named #{options[:blog]}" if options[:blog]
+          msg = "#{msg} named #{options[:blog]}" if options[:blog]
           throw msg
         end
 

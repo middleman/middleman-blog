@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 activate :blog do |blog|
   blog.name         = 'blog_name_1'
   blog.prefix       = 'blog1'

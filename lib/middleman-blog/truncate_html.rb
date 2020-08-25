@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 begin
   require 'nokogiri'
 rescue LoadError
@@ -63,7 +65,7 @@ module NokogiriTruncator
   end
 end
 
-Nokogiri::HTML::DocumentFragment.send(:include, NokogiriTruncator::NodeWithChildren)
-Nokogiri::XML::Element.send(:include, NokogiriTruncator::NodeWithChildren)
-Nokogiri::XML::Text.send(:include, NokogiriTruncator::TextNode)
-Nokogiri::XML::Comment.send(:include, NokogiriTruncator::CommentNode)
+Nokogiri::HTML::DocumentFragment.include NokogiriTruncator::NodeWithChildren
+Nokogiri::XML::Element.include NokogiriTruncator::NodeWithChildren
+Nokogiri::XML::Text.include NokogiriTruncator::TextNode
+Nokogiri::XML::Comment.include NokogiriTruncator::CommentNode
