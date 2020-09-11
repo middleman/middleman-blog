@@ -1,7 +1,7 @@
 ---
 
 title: <%= @title %>
-date: <%= @date.strftime('%F %R %Z') %>
+date: <%= @date.strftime('%F %R %z') %>
 tags: <%= @tags.join(",") %>
 
 ---
