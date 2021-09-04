@@ -22,6 +22,10 @@ Feature: Tag pages
     Then I should see "/2011-01-02-another-article.html"
     Then I should see "Tag: 120"
 
+    When I go to "/tags/日本語.html"
+    Then I should see "/2011-01-02-another-article.html"
+    Then I should see "Tag: 日本語"
+
     When I go to "/index.html"
     Then I should see "Tag Path: '/tags/foo.html'"
 
