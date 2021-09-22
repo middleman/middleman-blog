@@ -2,8 +2,8 @@
 source 'https://rubygems.org'
 
 # Middleman Gems
-gem 'middleman-cli', '~> 4.2'
-gem 'middleman-core', '~> 4.2'
+gem 'middleman-cli', '~> 4.4'
+gem 'middleman-core', '~> 4.4'
 
 # Specify your gem's dependencies in middleman-blog.gemspec
 gemspec
