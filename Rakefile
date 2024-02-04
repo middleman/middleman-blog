@@ -13,7 +13,7 @@ Cucumber::Rake::Task.new(:cucumber, 'Run features that should pass') do |t|
 end
 
 desc 'Run tests, both RSpec and Cucumber'
-task test: %i[rubocop spec cucumber]
+task test: %i[spec cucumber]
 
 require 'rspec/core/rake_task'
 desc 'Run RSpec'

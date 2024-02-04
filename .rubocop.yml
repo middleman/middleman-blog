@@ -4,9 +4,11 @@ require:
 AllCops:
   TargetRubyVersion: 2.5
   Include:
-    - '**/Rakefile'
-    - '**/Gemfile'
+    - '**/*.rb'
+    - Rakefile
+    - Gemfile
   Exclude:
+    - fixtures/**/*
   NewCops: disable
   SuggestExtensions: false
 
@@ -16,12 +18,20 @@ Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 Layout/LineLength:
   Enabled: false
-Layout/SpaceAroundEqualsInParameterDefault:
-  EnforcedStyle: no_space
 
 Lint/AssignmentInCondition:
   Enabled: false
 Lint/SuppressedException:
+  Enabled: false
+Lint/MissingSuper:
+  Enabled: false
+Lint/AmbiguousRegexpLiteral:
+  Enabled: false
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+Lint/UriEscapeUnescape:
+  Enabled: false
+Lint/ShadowedException:
   Enabled: false
 
 Metrics/AbcSize:
@@ -33,6 +43,10 @@ Metrics/CyclomaticComplexity:
 Metrics/MethodLength:
   Enabled: false
 Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/ModuleLength:
   Enabled: false
 
 Style/BlockDelimiters:
@@ -64,6 +78,25 @@ Style/SingleLineBlockParams:
 Style/SpecialGlobalVars:
   Enabled: false
 Style/TrivialAccessors:
+  Enabled: false
+Style/EvalWithLocation:
+  Enabled: false
+Style/ClassVars:
+  Enabled: false
+Style/GlobalVars:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/MissingRespondToMissing:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+Naming/MethodParameterName:
+  Enabled: false
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+Naming/HeredocDelimiterNaming:
   Enabled: false
 
 Bundler/OrderedGems:

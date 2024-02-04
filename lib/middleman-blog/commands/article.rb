@@ -79,10 +79,10 @@ module Middleman
         end
 
         blog_inst = if options[:blog]
-                      app.extensions[:blog].find { |_key, instance| instance.options[:name] == options[:blog] }[ 1 ]
-                    else
-                      app.extensions[:blog].values.first
-                    end
+          app.extensions[:blog].find { |_key, instance| instance.options[:name] == options[:blog] }[ 1 ]
+        else
+          app.extensions[:blog].values.first
+        end
 
         unless blog_inst
           msg = 'Could not find an active blog instance'

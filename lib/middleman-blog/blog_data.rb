@@ -51,7 +51,7 @@ module Middleman
       # @return [Array<Middleman::Sitemap::Resource>]
       ##
       def articles
-        @_articles.select(&(options.filter || proc { |a| a })).sort_by(&:date).reverse
+        @_articles.select(&options.filter || proc { |a| a }).sort_by(&:date).reverse
       end
 
       ##

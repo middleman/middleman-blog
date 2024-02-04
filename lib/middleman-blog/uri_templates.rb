@@ -60,7 +60,7 @@ module Middleman
 
         # Reimplementation of http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize that preserves un-transliterate-able multibyte chars.
         parameterized_string = ::ActiveSupport::Inflector.transliterate(str.to_s).downcase
-        parameterized_string.gsub!(/[^a-z0-9\-_\?]+/, sep)
+        parameterized_string.gsub!(/[^a-z0-9\-_?]+/, sep)
 
         # Check for multibytes and sub back in
         parameterized_string.chars.to_a.each_with_index do |char, i|

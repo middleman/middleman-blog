@@ -26,4 +26,4 @@ gem 'nokogiri', RUBY_VERSION < '2.6' ? '~> 1.12.0' : '>= 0', require: false
 # Code Quality
 gem 'rubocop', require: false
 gem 'rubocop-performance', require: false
-gem 'simplecov', '~> 0.10', require: false
+gem 'simplecov', require: false

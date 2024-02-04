@@ -206,10 +206,10 @@ module Middleman
 
         # First get the date from frontmatter
         @_date = if frontmatter_date.is_a? Time
-                   frontmatter_date.in_time_zone
-                 else
-                   Time.zone.parse(frontmatter_date.to_s)
-                 end
+          frontmatter_date.in_time_zone
+        else
+          Time.zone.parse(frontmatter_date.to_s)
+        end
 
         # Next figure out the date from the filename
         source_vars = blog_data.source_template.variables
