@@ -1,38 +1,44 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## Unreleased
+
+* Migrate CI to GitHub Actions (#386).
+
 ## 4.0.3
 
-* Loosen dependencies and test against Middlman v5 betas
-* Adapt to core Rubocop standards
-* Title should be always a string (#351)
+* Loosen dependencies and test against Middlman v5 betas.
+* Adapt to core Rubocop standards.
+* Title should be always a string (#351).
 * Fixed multibyte tags.
 
 ## 4.0.2
 
-* Pushed Gem 2017-05-22
-* Updated safe_parameterize - needs heavy testing from community
-* Deprecating previous_article and next_article in favour of article_previous article_next
-* Deprecating local_articles in favour of articles_by_locale
-* Pull request #336 Add article_locale_next and article_locale_previous
-* Pull request #312 Generating a blog article can optional create article subdirectory added manually
-* Updated Gemfile for testing tools to remove the deprecation warnings from Aruba
-* Added myself to GemSpec so I can push Gem live
-* Edited Travis.yml to be inline with middleman core and the Ruby versions it tests against
-* Created an GitHub Issue Template
-* Created an Editor config
-* Ruby 2.3.1 - middleman-core (master/4.2.1) - middleman-cli (master/4.2.1) - middleman-blog (local) - All tests pass
-* Updated the Gemfile to use https to remove security warning - upped gem versions to match core
-* Updated the license and readme
+* Pushed Gem 2017-05-22.
+* Updated safe_parameterize - needs heavy testing from community.
+* Deprecating previous_article and next_article in favour of article_previous article_next.
+* Deprecating local_articles in favour of articles_by_locale.
+* Pull request #336 Add article_locale_next and article_locale_previous.
+* Pull request #312 Generating a blog article can optional create article subdirectory added manually.
+* Updated Gemfile for testing tools to remove the deprecation warnings from Aruba.
+* Added myself to GemSpec so I can push Gem live.
+* Edited Travis.yml to be inline with middleman core and the Ruby versions it tests against.
+* Created an GitHub Issue Template.
+* Created an Editor config.
+* Ruby 2.3.1 - middleman-core (master/4.2.1) - middleman-cli (master/4.2.1) - middleman-blog (local) - All tests pass.
+* Updated the Gemfile to use https to remove security warning - upped gem versions to match core.
+* Updated the license and readme.
 
 ## 4.0.1
 
-* Pull in article command from v3.5.3 tag
-* Summary fix
-* Add address parse cache
-* Add filter option
-* Make sure to not generate invalid html when creating article summary
-* If a summary_generator is defined, always use it to generate summaries
-* Fix issue #269: duplicated key
+* Pull in article command from v3.5.3 tag.
+* Summary fix.
+* Add address parse cache.
+* Add filter option.
+* Make sure to not generate invalid html when creating article summary.
+* If a summary_generator is defined, always use it to generate summaries.
+* Fix issue #269: duplicated key.
 
 ## 4.0.0.rc.1
 
@@ -40,49 +46,49 @@
 
 ## 3.5.3
 
-* Update blog_article active_support requires. Fixes #205
+* Update blog_article active_support requires. Fixes #205.
 
 ## 3.5.2
 
 * Ignored pages won't be processed by the blog extension.
-* Avoid creating an empty-string collection when a post does not have a custom collection property set. #192
-* Fix blog sources matching blog entries that are in a subdirectory that's not explicitly stated as part of the blog.sources template. #196
-* Fixed tag and year links in blog template. #195
-* An article's language can be set via the {lang} parameter in its sources URL template. #187
-* Tags that are just a number work now. #188
+* Avoid creating an empty-string collection when a post does not have a custom collection property set (#192).
+* Fix blog sources matching blog entries that are in a subdirectory that's not explicitly stated as part of the blog.sources template (#196).
+* Fixed tag and year links in blog template (#195).
+* An article's language can be set via the {lang} parameter in its sources URL template (#187).
+* Tags that are just a number work now (#188).
 
 ## 3.5.1
 
-* Remove a broken bracket in the blog template. #181
-* Fix transliteration of strings into URL slugs to still transliterate when it can but not smash multibyte chars. #183
-* Only match source URI templates if the date components match what a date would look like, and avoid throwing when companion files do not have an article. #184
-* Re-support spaces in blog article source paths. #185
+* Remove a broken bracket in the blog template (#181)
+* Fix transliteration of strings into URL slugs to still transliterate when it can but not smash multibyte chars (#183)
+* Only match source URI templates if the date components match what a date would look like, and avoid throwing when companion files do not have an article (#184).
+* Re-support spaces in blog article source paths (#185).
 
 ## 3.5.0
 
-* Add support for internationalization and locale-specific articles. #156
+* Add support for internationalization and locale-specific articles (#156).
 * Drop support for Ruby 1.8 and Middleman 3.0.
 * Removed backwards compatibility patch that set instance variables for tag and calendar pages. Use locals instead.
 * Templated paths like :sources, :taglink, :year_link, :month_link, :day_link, :page_link, and custom_collections links can now be optionally expressed as RFC 6570 URI templates.
 * Arbitrary data from page frontmatter can be used in the :permalink template. Simply add a key to your :permalink template that matches a field from your frontmatter.
 * Data extracted from the :sources URL template can be used in the :permalink template. This information can also be used from templates via current_article.metadata[:page][<key>].
-* UTF-8 strings substituted into URLs are now preserved rather than being omitted. #176
+* UTF-8 strings substituted into URLs are now preserved rather than being omitted (#176)
 * "middleman article" command now works even when there are multiple blogs. Specify the blog you want using "--blog".
 * The template used to generate new articles via "middleman article" can be overridden by setting :new_article_template.
 * Removed `:blog_name`, `:blog_author`, `:blog_avatar` options and the `page_title` helper.
 
 ## 3.4.1
 
-* Require Middleman 3.2
+* Require Middleman 3.2.
 
 ## 3.4.0
 
-* Add `inspect` methods to `BlogData` and `BlogArticle` to avoid hangs on exceptions. #157
-* Generated feed.xml now works on blogs with no posts. #155
+* Add `inspect` methods to `BlogData` and `BlogArticle` to avoid hangs on exceptions (#157).
+* Generated feed.xml now works on blogs with no posts (#155).
 * No longer depend on `middleman-more`.
-* Don't try to replace tokens that don't exist in the source path. #161
-* Support for including arbitrary frontmatter data in blog permalinks. #164
-* When using multiblog, fail immediately if the blog name isn't specified. #168
+* Don't try to replace tokens that don't exist in the source path (#161).
+* Support for including arbitrary frontmatter data in blog permalinks (#164).
+* When using multiblog, fail immediately if the blog name isn't specified (#168).
 
 ## 3.3.0
 
@@ -92,19 +98,19 @@
 * Add `:blog_name`, `:blog_author`, `:blog_avatar` options and a `page_title` helper
   that incorporates `:blog_name`.
 * Allow options.sources to contain the same date component multiple
-  times. #112
-* Improve `feed.xml.builder` template to support `blog.prefix`. #126
-* Hide page numbers in template if only one page per index. #125
-* URLs in the feed.xml template are now absolute. #130
+  times (#112).
+* Improve `feed.xml.builder` template to support `blog.prefix` (#126).
+* Hide page numbers in template if only one page per index (#125).
+* URLs in the feed.xml template are now absolute (#130).
 * ASCII-8BIT text is reencoded to UTF-8 to avoid Nokogiri problems when
   generating summaries.
 * `summary` will no longer explode when encountering comments in the
-  article. #136
-* Fix setting time zone with `set :time_zone` in `config.rb`. #140
+  article (#136).
+* Fix setting time zone with `set :time_zone` in `config.rb` (#140).
 * Articles can omit their :title from the filename and specify it in frontmatter
-  instead. #148
+  instead (#148).
 * Pages can choose which blog to use in multi-blog mode by specifying the correct
-  blog in frontmatter. #150
+  blog in frontmatter (#150).
 
 ## 3.2.0
 
@@ -120,20 +126,20 @@
 
 ## 3.1.1
 
-* Correctly handle time zone, allow setting time zone with `set :time_zone`. #76
-* Fix using `page_articles` in when `paginate` is false. #78
+* Correctly handle time zone, allow setting time zone with `set :time_zone` (#76).
+* Fix using `page_articles` in when `paginate` is false (#78).
 
 ## 3.1.0
 
-* Don't publish future-dated articles. #74
-* Create summary from source instead of output. #70
-* Deprecate instance variables in templates in favor of locals. #66
+* Don't publish future-dated articles (#74).
+* Create summary from source instead of output (#70).
+* Deprecate instance variables in templates in favor of locals (#66).
 * Allow articles to set "published: false" in frontmatter and show up in preview but not in build/production.
-* Allow articles to have their own layout set in the YAML front matter. #59
-* Per-article content subdirectories. #60
-* Allow article date to be in any order in permalink. #60
-* Use `link_to` in blog templates. #62
-* Pagination for index, tag, and calendar pages. #57
+* Allow articles to have their own layout set in the YAML front matter (#59).
+* Per-article content subdirectories (#60).
+* Allow article date to be in any order in permalink (#60).
+* Use `link_to` in blog templates (#62).
+* Pagination for index, tag, and calendar pages (#57).
 
 ## 3.0.0
 
