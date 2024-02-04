@@ -5,8 +5,6 @@ AllCops:
   TargetRubyVersion: 2.5
   Include:
     - '**/*.rb'
-    - Rakefile
-    - Gemfile
   Exclude:
     - fixtures/**/*
   NewCops: disable
@@ -95,7 +93,4 @@ Naming/MethodParameterName:
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 Naming/HeredocDelimiterNaming:
-  Enabled: false
-
-Bundler/OrderedGems:
   Enabled: false

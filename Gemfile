@@ -13,8 +13,8 @@ gem 'rake', '~> 13.1', require: false
 gem 'yard', '~> 0.9', require: false
 
 # Test tools
-gem 'aruba', '~> 0.14', require: false
-gem 'capybara', '~> 2.5', require: false
+gem 'aruba', '~> 1.0', require: false
+gem 'capybara', '~> 3', require: false
 gem 'cucumber', '~> 3.0', require: false
 gem 'rspec', '~> 3.0', require: false
 gem 'timecop', '~> 0.6', require: false
