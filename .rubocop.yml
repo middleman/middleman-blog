@@ -85,8 +85,6 @@ Style/ClassVars:
   Enabled: false
 Style/GlobalVars:
   Enabled: false
-Style/ClassAndModuleChildren:
-  Enabled: false
 Style/MissingRespondToMissing:
   Enabled: false
 
