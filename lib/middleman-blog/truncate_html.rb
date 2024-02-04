@@ -50,7 +50,7 @@ module NokogiriTruncator
   module TextNode
     def truncate(max_length, ellipsis)
       # Don't break in the middle of a word
-      trimmed_content = content.match(/(.{1,#{max_length}}[\w]*)/m).to_s
+      trimmed_content = content.match(/(.{1,#{max_length}}\w*)/m).to_s
       trimmed_content << ellipsis if trimmed_content.length < content.length
 
       Nokogiri::XML::Text.new(trimmed_content, parent)

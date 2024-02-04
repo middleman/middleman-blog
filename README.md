@@ -1,7 +1,10 @@
 # Middleman-Blog extension
 
-middleman-blog is an extension for the [Middleman] static site generator that
-adds blog-specific functionality. This includes :
+[![Gem Version](https://badge.fury.io/rb/middleman-blog.svg)][gem]
+[![CI](https://github.com/middleman/middleman-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/middleman/middleman-blog/actions/workflows/ci.yml)
+
+`middleman-blog` is an extension for the [Middleman] static site generator that
+adds blog-specific functionality. This includes:
 
 - Handling blog articles
 - Helpers for listing articles
@@ -17,8 +20,8 @@ gem install middleman
 middleman init MY_PROJECT --template=blog
 ```
 
-If you already have a Middleman project: Add `gem "middleman-blog"` to your
-`Gemfile` and run `bundle install`
+If you already have a Middleman project, add the `gem "middleman-blog"` line to your
+`Gemfile` and then run `bundle install`.
 
 ## Configuration
 
@@ -28,16 +31,9 @@ Within the config.rb of the middleman project, include the line
 activate :blog
 ```
 
-A more extensive guide can be found here :
-[Middleman blogging guide](http://middlemanapp.com/basics/blogging/) it includes
-more detailed information on configuring and using the blog extension.
+A more extensive guide can be found in the [Middleman blogging guide](http://middlemanapp.com/basics/blogging/).
 
 Additionally, up-to-date generated code documentation is available on [RubyDoc].
-
-## Build & Dependency Status
-
-[![Gem Version](https://badge.fury.io/rb/middleman-blog.svg)][gem]
-[![Build Status](https://travis-ci.org/middleman/middleman-blog.svg)][travis]
 
 ## Community
 
@@ -59,22 +55,14 @@ you are submitting.
 
 ## Testing
 
-Our internal tests are passed through Travis, testing against the following
-Ruby versions on Linux :
-
-- ruby-head
-- 2.7
-- 2.6
-- 2.5
-
-### Running tests
+You can run all the tests by:
 
 1. Checkout Repository: `git clone https://github.com/middleman/middleman-blog.git`
 2. Install Bundler: `gem install bundler`
 3. Run `bundle install` inside the project root to install the gem dependencies.
 4. Run test cases: `bundle exec rake test`
 
-NB// To run an individual test use :
+To run an individual test use:
 
 1. `bundle exec cucumber features/blog_sources.feature`
 
@@ -86,7 +74,7 @@ If you have suggestions for testing practices please submit a request.
 
 ## Donate
 
-[Click here to lend your support to Middleman](https://plasso.com/s/4dXbHBorC3)
+[Click here to lend your support to Middleman](https://github.com/sponsors/tdreyno)
 
 ## License
 
@@ -94,6 +82,5 @@ Copyright (c) 2010-2017 Thomas Reynolds. MIT Licensed, see [LICENSE] for details
 
 [middleman]: http://middlemanapp.com
 [gem]: https://rubygems.org/gems/middleman-blog
-[travis]: http://travis-ci.org/middleman/middleman-blog
 [rubydoc]: http://rubydoc.info/github/middleman/middleman-blog/master
 [LICENSE]: https://github.com/middleman/middleman-blog/blob/master/LICENSE.md

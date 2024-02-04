@@ -81,18 +81,18 @@ module Middleman
       end
 
       # If "prefix" option is specified, all other paths are relative to it.
-      if options.prefix
-        options.prefix = "/#{options.prefix}" unless options.prefix.start_with? '/'
-        options.permalink = File.join(options.prefix, options.permalink)
-        options.sources = File.join(options.prefix, options.sources)
-        options.taglink = File.join(options.prefix, options.taglink)
-        options.year_link = File.join(options.prefix, options.year_link)
-        options.month_link = File.join(options.prefix, options.month_link)
-        options.day_link = File.join(options.prefix, options.day_link)
+      return unless options.prefix
 
-        options.custom_collections.each do |_key, opts|
-          opts[:link] = File.join(options.prefix, opts[:link])
-        end
+      options.prefix = "/#{options.prefix}" unless options.prefix.start_with? '/'
+      options.permalink = File.join(options.prefix, options.permalink)
+      options.sources = File.join(options.prefix, options.sources)
+      options.taglink = File.join(options.prefix, options.taglink)
+      options.year_link = File.join(options.prefix, options.year_link)
+      options.month_link = File.join(options.prefix, options.month_link)
+      options.day_link = File.join(options.prefix, options.day_link)
+
+      options.custom_collections.each do |_key, opts|
+        opts[:link] = File.join(options.prefix, opts[:link])
       end
     end
 

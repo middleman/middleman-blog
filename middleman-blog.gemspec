@@ -1,9 +1,6 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path( "../lib", __FILE__ )
-require "middleman-blog/version"
+require "./lib/middleman-blog/version"
 
 Gem::Specification.new do | s |
-
   s.name                  = "middleman-blog"
   s.version               = Middleman::Blog::VERSION
   s.platform              = Gem::Platform::RUBY
@@ -16,10 +13,7 @@ Gem::Specification.new do | s |
   s.files                 = `git ls-files -z`.split( "\0" )
   s.test_files            = `git ls-files -z -- {fixtures,features}/*`.split( "\0" )
   s.require_paths         = [ "lib" ]
-  s.required_ruby_version = '>= 2.3.0'
-
-  s.add_dependency( "middleman-core", [ ">= 4.0.0" ] )
-  s.add_dependency( "tzinfo",         [ ">= 0.3.0" ] )
-  s.add_dependency( "addressable",    [ "~> 2.3"   ] )
-
+  s.add_dependency("middleman-core", ">= 4.0.0")
+  s.add_dependency("tzinfo", ">= 0.3.0")
+  s.add_dependency("addressable", "~> 2.3")
 end

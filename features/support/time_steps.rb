@@ -11,13 +11,13 @@ end
 
 Given /the (date|time|date and time) is (.+?)$/ do |datetime, value|
   time = case datetime
-         when 'date'
-           Date.parse(value)
-         when 'time'
-           Time.parse(value)
-         when 'date and time'
-           Time.zone.parse(value)
-         end
+  when 'date'
+    Date.parse(value)
+  when 'time'
+    Time.parse(value)
+  when 'date and time'
+    Time.zone.parse(value)
+  end
 
   Timecop.travel time
 end

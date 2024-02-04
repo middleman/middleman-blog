@@ -33,12 +33,12 @@ module Middleman
       # @return [String]
       def link(year, month = nil, day = nil)
         template = if day
-                     @day_link_template
-                   elsif month
-                     @month_link_template
-                   else
-                     @year_link_template
-                   end
+          @day_link_template
+        elsif month
+          @month_link_template
+        else
+          @year_link_template
+        end
 
         apply_uri_template template, date_to_params(Date.new(year, month || 1, day || 1))
       end
