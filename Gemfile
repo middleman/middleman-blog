@@ -2,41 +2,28 @@
 
 source 'https://rubygems.org'
 
-git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
-
-# Middleman Gems
-gem 'middleman-cli',  github: 'middleman/middleman', branch: 'master'
-gem 'middleman-core', github: 'middleman/middleman', branch: 'master'
+gem 'middleman-core', '~> 4.5'
+gem 'middleman-cli', '~> 4.5'
 
 # Specify your gem's dependencies in middleman-blog.gemspec
 gemspec
 
 # Build and doc tools
-gem 'rake', '~> 12.3', require: false
-gem 'yard', '~> 0.9.11', require: false
+gem 'rake', '~> 13.1', require: false
+gem 'yard', '~> 0.9', require: false
 
 # Test tools
-gem 'aruba', '~> 0.14.0', require: false
-gem 'byebug'
-gem 'capybara', '~> 2.5.0', require: false
+gem 'aruba', '~> 0.14', require: false
+gem 'capybara', '~> 2.5', require: false
 gem 'cucumber', '~> 3.0', require: false
 gem 'rspec', '~> 3.0', require: false
+gem 'timecop', '~> 0.6', require: false
 
-# Pry tools
-gem 'pry'
-gem 'pry-rescue'
-gem 'pry-stack_explorer'
-
+# Optional dependencies, included for tests
 gem 'kramdown'
-gem 'nokogiri', '~> 1.9.1'
-gem 'timecop', '~> 0.6.3'
+gem 'nokogiri', RUBY_VERSION < '2.6' ? '~> 1.12.0' : '>= 0', require: false
 
 # Code Quality
-gem 'rubocop', '~> 0.89', require: false
-gem 'rubocop-performance', '~> 1.7', require: false
+gem 'rubocop', require: false
+gem 'rubocop-performance', require: false
 gem 'simplecov', '~> 0.10', require: false
-
-# Set the ruby platform - not windows
-platforms :ruby do
-  gem 'redcarpet', '~> 3.1' # Latest 3.4.0
-end

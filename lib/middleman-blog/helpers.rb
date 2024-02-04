@@ -61,7 +61,7 @@ module Middleman
       # Determine whether the currently rendering template is a {BlogArticle}.
       # This can be useful in layouts and helpers.
       # @return [Boolean]
-      def is_blog_article? # rubocop:disable Naming/PredicateName
+      def is_blog_article?
         !current_article.nil?
       end
 
