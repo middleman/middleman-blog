@@ -91,7 +91,7 @@ module Middleman
       options.month_link = File.join(options.prefix, options.month_link)
       options.day_link = File.join(options.prefix, options.day_link)
 
-      options.custom_collections.each do |_key, opts|
+      options.custom_collections.each_value do |opts|
         opts[:link] = File.join(options.prefix, opts[:link])
       end
     end

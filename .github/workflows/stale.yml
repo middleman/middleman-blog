@@ -12,4 +12,3 @@ jobs:
         with:
           days-before-stale: 90
           days-before-close: 30
-

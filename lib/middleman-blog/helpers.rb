@@ -69,7 +69,7 @@ module Middleman
       # @return [BlogArticle]
       def current_article
         article = current_resource
-        article if article&.is_a?(BlogArticle)
+        article if article.is_a?(BlogArticle)
       end
 
       # Get a path to the given tag page, based on the +taglink+ blog setting.
