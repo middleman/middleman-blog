@@ -76,10 +76,13 @@ module Middleman
 
         # Remove leading/trailing separator.
         parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
+
+        # Replace all _ with -
         parameterized_string.tr!('_', '-')
+
+        # Delete all ?
         parameterized_string.delete!('?')
 
-        # Replace all ?
         parameterized_string
       end
 
