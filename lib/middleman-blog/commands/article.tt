@@ -1,6 +1,6 @@
 ---
 
-title: <%= @title %>
+title: "<%= %Q[#{@title}] %>"
 date: <%= @date.strftime('%F %R %z') %>
 tags: <%= @tags.join(",") %>
 
