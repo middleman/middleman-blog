@@ -71,6 +71,9 @@ module Middleman
           # Detect "formated" tag in first article - trying to
           # guess the correct format to show
           tagname = articles.first.tags.detect { |article_tag| safe_parameterize(article_tag) == tag }
+          if different_article = articles.find { |article| article.tags.detect { |article_tag| safe_parameterize(article_tag) == tagname && article_tag != tagname } }
+            raise "Article #{different_article.path} has tag #{tagname} with a different spelling - fix it to avoid misstagging (see middleman/middleman-blog#313)"
+          end
 
           # Add metadata in local variables so it's accessible to
           # later extensions
