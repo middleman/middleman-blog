@@ -15,13 +15,13 @@ gem 'yard', '~> 0.9', require: false
 # Test tools
 gem 'aruba', '~> 1.0', require: false
 gem 'capybara', '~> 3', require: false
-gem 'cucumber', '~> 3.0', require: false
+gem 'cucumber', require: false
 gem 'rspec', '~> 3.0', require: false
 gem 'timecop', '~> 0.6', require: false
 
 # Optional dependencies, included for tests
 gem 'kramdown'
-gem 'nokogiri', RUBY_VERSION < '2.6' ? '~> 1.12.0' : '>= 0', require: false
+gem 'rack', '< 3'
 
 # Code Quality
 gem 'rubocop', require: false
