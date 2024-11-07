@@ -16,9 +16,6 @@ module Middleman
     module BlogArticle
       extend Gem::Deprecate
 
-      ##
-      #
-      ##
       def self.extended(base)
         base.class.send(:attr_accessor, :blog_controller)
       end

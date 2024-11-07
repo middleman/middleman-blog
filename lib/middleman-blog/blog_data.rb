@@ -218,9 +218,6 @@ module Middleman
           .merge(extra)
       end
 
-      ##
-      #
-      ##
       def convert_to_article(resource)
         return resource if resource.is_a?(BlogArticle)
 
@@ -234,9 +231,6 @@ module Middleman
         resource
       end
 
-      ##
-      #
-      ##
       def template_path(template, article, extras = {})
         apply_uri_template template, permalink_options(article, extras)
       end
