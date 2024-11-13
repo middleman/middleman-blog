@@ -22,10 +22,6 @@ RSpec::Core::RakeTask.new do |spec|
   spec.rspec_opts = ['--color', '--format documentation']
 end
 
-require 'rubocop/rake_task'
-desc 'Run RuboCop to check code consistency'
-RuboCop::RakeTask.new(:rubocop)
-
 desc 'Build HTML documentation'
 task :doc do
   sh 'bundle exec yard'
