@@ -115,6 +115,8 @@ module Middleman
       @app.ignore(options.day_template) if options.day_template
       @app.ignore options.tag_template if options.tag_template
 
+      ActiveSupport.to_time_preserves_timezone = :zone
+
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
       # allowing people to set their desired time zone via Time.zone or
       # set :time_zone
