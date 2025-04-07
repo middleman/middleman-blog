@@ -9,13 +9,14 @@ adds blog-specific functionality. This includes:
 - Handling blog articles
 - Helpers for listing articles
 - Tagging support
+- Calendar pages
 
 ## Installation
 
 If you're just getting started, install the `middleman` gem and generate a new
 project:
 
-```
+```bash
 gem install middleman
 middleman init MY_PROJECT --template=blog
 ```
@@ -27,7 +28,7 @@ If you already have a Middleman project, add the `gem "middleman-blog"` line to 
 
 Within the config.rb of the middleman project, include the line
 
-```
+```ruby
 activate :blog
 ```
 
@@ -64,13 +65,15 @@ You can run all the tests by:
 
 To run an individual test use:
 
-1. `bundle exec cucumber features/blog_sources.feature`
-
-If you have suggestions for testing practices please submit a request.
+```bash
+bundle exec cucumber features/blog_sources.feature
+```
 
 ## Creating documentation
 
-1. `bundle exec rake doc`
+```bash
+bundle exec rake doc
+```
 
 ## Donate
 

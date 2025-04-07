@@ -2,13 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 4.1.0
 
 * Migrate CI to GitHub Actions (#386).
 * Use %z instead of %Z to format date in article (#371).
 * Fix command middleman article: it generates incorrect YAML when the title contains characters that should be escaped (#387).
 * Remove official support for Ruby 2.5 and 2.6 (#388).
+* Official support for Ruby 3.4.
 * Internal code clean up.
+* Make it work with latest Middleman (#391).
+* Add Stale bot.
+* Remove Rubocop.
 
 ## 4.0.3
 
