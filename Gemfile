@@ -22,7 +22,7 @@ gem 'timecop', '~> 0.6', require: false
 # Optional dependencies, included for tests
 gem 'kramdown'
 gem 'rack'
-gem 'activesupport', RUBY_VERSION < '3.1' ? '< 7.1' : '>= 0'
+gem 'activesupport', RUBY_VERSION < '3.2' ? '~> 7.0' : '~> 8.0'
 
 # Code Quality
 gem 'simplecov', require: false
