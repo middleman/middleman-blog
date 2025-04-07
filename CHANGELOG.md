@@ -22,8 +22,8 @@ All notable changes to this project will be documented in this file.
 * Updated safe_parameterize - needs heavy testing from community.
 * Deprecating previous_article and next_article in favour of article_previous article_next.
 * Deprecating local_articles in favour of articles_by_locale.
-* Pull request #336 Add article_locale_next and article_locale_previous.
-* Pull request #312 Generating a blog article can optional create article subdirectory added manually.
+* Add article_locale_next and article_locale_previous (#336).
+* Generating a blog article can optional create article subdirectory added manually (#312).
 * Updated Gemfile for testing tools to remove the deprecation warnings from Aruba.
 * Edited Travis.yml to be inline with middleman core and the Ruby versions it tests against.
 * Created an GitHub Issue Template.
