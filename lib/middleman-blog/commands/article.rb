@@ -67,7 +67,6 @@ module Middleman
         @content = options[:content] || ''
         @date    = options[:date] ? ::Time.zone.parse(options[:date]) : Time.zone.now
         @locale  = options[:locale] || (::I18n.default_locale if defined? ::I18n)
-        @slug    = safe_parameterize(title)
         @tags    = options[:tags]&.split(/\s*,\s*/) || []
         @title   = title
 
@@ -89,6 +88,9 @@ module Middleman
           msg = "#{msg} named #{options[:blog]}" if options[:blog]
           throw msg
         end
+
+        # Generate slug after we have access to blog options
+        @slug = safe_parameterize(title, '-', preserve_underscores: blog_inst.options.preserve_underscores_in_slugs)
 
         path_template         = blog_inst.data.source_template
         params                = date_to_params(@date).merge(locale: @locale.to_s, title: @slug)

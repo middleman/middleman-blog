@@ -41,6 +41,7 @@ module Middleman
     option :publish_future_dated, false, 'Whether articles with a date in the future should be considered published'
     option :custom_collections, {}, 'Hash of custom frontmatter properties to collect articles on and their options (link, template)'
     option :preserve_locale, false, 'Use the global Middleman I18n.locale instead of the lang in the article\'s frontmatter'
+    option :preserve_underscores_in_slugs, false, 'Whether to preserve underscores in article slugs instead of converting them to dashes'
     option :new_article_template, File.expand_path('commands/article.tt', __dir__), 'Path (relative to project root) to an ERb template that will be used to generate new articles from the "middleman article" command.'
     option :default_extension, '.markdown', 'Default template extension for articles (used by "middleman article")'
 

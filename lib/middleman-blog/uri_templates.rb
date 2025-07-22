@@ -54,7 +54,7 @@ module Middleman
       # Reimplementation of this, preserves un-transliterate-able multibyte chars.
       #
       # @see http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize
-      def safe_parameterize(str, sep = '-')
+      def safe_parameterize(str, sep = '-', preserve_underscores: false)
         # Remove ending ?
         str = str.to_s.gsub(/\?$/, '')
 
@@ -77,8 +77,8 @@ module Middleman
         # Remove leading/trailing separator.
         parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
 
-        # Replace all _ with -
-        parameterized_string.tr!('_', '-')
+        # Replace all _ with - (unless preserve_underscores is true)
+        parameterized_string.tr!('_', '-') unless preserve_underscores
 
         # Delete all ?
         parameterized_string.delete!('?')

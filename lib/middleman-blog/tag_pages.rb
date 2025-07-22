@@ -33,7 +33,7 @@ module Middleman
       # @return     [String] Safe Tag URL
       ##
       def link(tag)
-        apply_uri_template @tag_link_template, tag: safe_parameterize(tag)
+        apply_uri_template @tag_link_template, tag: safe_parameterize(tag, '-', preserve_underscores: @blog_controller.options.preserve_underscores_in_slugs)
       end
 
       ##
