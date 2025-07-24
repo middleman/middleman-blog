@@ -24,6 +24,11 @@ module Middleman
         @alias_patterns  = blog_controller.options.aliases || []
         @alias_templates = @alias_patterns.map { |pattern| uri_template(pattern) }
         @redirect_template = File.expand_path('templates/redirect.html.erb', __dir__)
+        
+        # Verify the redirect template exists
+        unless File.exist?(@redirect_template)
+          raise "Redirect template not found at #{@redirect_template}"
+        end
       end
 
       ##
@@ -84,7 +89,7 @@ module Middleman
 
         params
           .merge(date_to_params(article.date))
-          .merge(lang: (article.lang || '').to_s, locale: (article.locale || '').to_s, title: article.slug)
+          .merge(lang: article.lang.to_s, locale: article.locale.to_s, title: article.slug)
       end
 
       ##

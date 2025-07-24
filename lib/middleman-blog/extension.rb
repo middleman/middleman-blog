@@ -100,7 +100,9 @@ module Middleman
       end
 
       # Apply prefix to alias patterns if specified
-      options.aliases = options.aliases.map { |alias_pattern| File.join(options.prefix, alias_pattern) }
+      unless options.aliases.nil? || options.aliases.empty?
+        options.aliases = options.aliases.map { |alias_pattern| File.join(options.prefix, alias_pattern) }
+      end
     end
 
     def after_configuration
@@ -164,7 +166,7 @@ module Middleman
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_paginate", @paginator)
       end
 
-      unless options.aliases.empty?
+      unless options.aliases.nil? || options.aliases.empty?
         require 'middleman-blog/alias_pages'
         @alias_pages = Blog::AliasPages.new(@app, self)
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_aliases", @alias_pages)
