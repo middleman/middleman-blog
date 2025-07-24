@@ -33,12 +33,12 @@ describe 'Middleman::Blog::UriTemplates' do
     end
 
     it 'can preserve underscores when requested' do
-      expect(safe_parameterize('name_of_article', '-', preserve_underscores: true)).to eq 'name_of_article'
-      expect(safe_parameterize('some_long_file_name', '-', preserve_underscores: true)).to eq 'some_long_file_name'
+      expect(safe_parameterize('name_of_article', separator: '-', preserve_underscores: true)).to eq 'name_of_article'
+      expect(safe_parameterize('some_long_file_name', separator: '-', preserve_underscores: true)).to eq 'some_long_file_name'
     end
 
     it 'still works with mixed content when preserving underscores' do
-      expect(safe_parameterize('Some MIXED_content', '-', preserve_underscores: true)).to eq 'some-mixed_content'
+      expect(safe_parameterize('Some MIXED_content', separator: '-', preserve_underscores: true)).to eq 'some-mixed_content'
     end
   end
 

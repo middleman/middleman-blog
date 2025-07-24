@@ -90,7 +90,7 @@ module Middleman
         end
 
         # Generate slug after we have access to blog options
-        @slug = safe_parameterize(title, '-', preserve_underscores: blog_inst.options.preserve_underscores_in_slugs)
+        @slug = safe_parameterize(title, separator: '-', preserve_underscores: blog_inst.options.preserve_underscores_in_slugs)
 
         path_template         = blog_inst.data.source_template
         params                = date_to_params(@date).merge(locale: @locale.to_s, title: @slug)

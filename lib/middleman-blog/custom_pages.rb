@@ -23,7 +23,7 @@ module Middleman
       #
       # @param [String] value
       def link(value)
-        apply_uri_template @link_template, property => safe_parameterize(value, '-', preserve_underscores: @blog_controller.options.preserve_underscores_in_slugs)
+        apply_uri_template @link_template, property => safe_parameterize(value, separator: '-', preserve_underscores: @blog_controller.options.preserve_underscores_in_slugs)
       end
 
       def manipulate_resource_list(resources)
