@@ -43,6 +43,7 @@ module Middleman
     option :preserve_locale, false, 'Use the global Middleman I18n.locale instead of the lang in the article\'s frontmatter'
     option :new_article_template, File.expand_path('commands/article.tt', __dir__), 'Path (relative to project root) to an ERb template that will be used to generate new articles from the "middleman article" command.'
     option :default_extension, '.markdown', 'Default template extension for articles (used by "middleman article")'
+    option :aliases, [], 'Array of URL patterns that should redirect to the main permalink (e.g., [":year-:month-:day-:title.html"])'
 
     # @return [BlogData] blog data for this blog, which has all information about the blog articles
     attr_reader :data
@@ -61,6 +62,9 @@ module Middleman
 
     # @return [Hash<CustomPages>] custom pages handlers for this blog, indexed by property name
     attr_reader :custom_pages
+
+    # @return [AliasPages] alias page handler for this blog
+    attr_reader :alias_pages
 
     # Helpers for use within templates and layouts.
     self.defined_helpers = [Middleman::Blog::Helpers]
@@ -155,6 +159,12 @@ module Middleman
         require 'middleman-blog/paginator'
         @paginator = Blog::Paginator.new(@app, self)
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_paginate", @paginator)
+      end
+
+      unless options.aliases.empty?
+        require 'middleman-blog/alias_pages'
+        @alias_pages = Blog::AliasPages.new(@app, self)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_aliases", @alias_pages)
       end
 
       logger.info "== Blog Sources: #{options.sources} (:prefix + :sources)"

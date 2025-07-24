@@ -1,0 +1,6 @@
+---
+title: "Test Article"
+date: 2024-03-14
+---
+
+This is a test article for pi day.
