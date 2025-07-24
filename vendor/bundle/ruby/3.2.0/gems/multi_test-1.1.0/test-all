@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -e
-
-for gemfile in test/gemfiles/*; do
-	./test-gemfile $gemfile
-done
