@@ -1,0 +1,46 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_call:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        ruby: ["2.6", "2.7", "3.0", "3.1"]
+        gemfile: # These are duplicated from the test/gemfiles folder
+          - activesupport-4
+          - activesupport-5
+          - minitest-4
+          - minitest-5
+          - plain-ruby
+          - rspec-1
+          - rspec-2
+          - rspec-3
+          - test-unit-2
+          - test-unit-3
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: false
+
+      - name: Run test scenarios
+        run: |
+          ./test-gemfile test/gemfiles/${{ matrix.gemfile }}
+        shell: bash
