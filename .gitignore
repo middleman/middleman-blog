@@ -16,3 +16,4 @@ coverage
 .byebug_history
 bin/
 .config
+vendor/
