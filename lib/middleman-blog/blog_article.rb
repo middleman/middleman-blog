@@ -60,7 +60,7 @@ module Middleman
         # Handle summary separator: if not keeping separator and separator exists,
         # return only content after separator
         if blog_options.summary_separator && !opts[:keep_separator]
-          if content.match(blog_options.summary_separator)
+          if content.match?(blog_options.summary_separator)
             require 'middleman-blog/truncate_html'
             content = TruncateHTML.content_after_separator(content, blog_options.summary_separator)
           end
