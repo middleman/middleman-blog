@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'middleman-core'
+require 'middleman-core/sitemap/extensions/proxies'
 require 'middleman-blog/uri_templates'
 
 module Middleman
@@ -103,7 +105,7 @@ module Middleman
         target_url = article.destination_path
 
         # Create a proxy resource that uses our redirect template
-        Sitemap::ProxyResource.new(@sitemap, alias_path, @redirect_template).tap do |resource|
+        Middleman::Sitemap::ProxyResource.new(@sitemap, alias_path, @redirect_template).tap do |resource|
           resource.add_metadata(
             locals: {
               'redirect_to' => target_url,
