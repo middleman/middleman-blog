@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'middleman-core'
-require 'middleman-core/sitemap/extensions/proxies'
+require 'middleman-core/sitemap/resource'
 require 'middleman-blog/uri_templates'
 
 module Middleman
@@ -25,12 +25,6 @@ module Middleman
         @blog_data       = blog_controller.data
         @alias_patterns  = blog_controller.options.aliases || []
         @alias_templates = @alias_patterns.map { |pattern| uri_template(pattern) }
-        @redirect_template = File.expand_path('templates/redirect.html.erb', __dir__)
-        
-        # Verify the redirect template exists
-        unless File.exist?(@redirect_template)
-          raise "Redirect template not found at #{@redirect_template}"
-        end
       end
 
       ##
@@ -103,16 +97,45 @@ module Middleman
       ##
       def alias_page_resource(alias_path, article)
         target_url = article.destination_path
+        # Ensure target URL starts with '/' for absolute URLs
+        target_url = "/#{target_url}" unless target_url.start_with?('/')
+        AliasResource.new(@sitemap, alias_path, target_url)
+      end
+    end
 
-        # Create a proxy resource that uses our redirect template
-        Middleman::Sitemap::ProxyResource.new(@sitemap, alias_path, @redirect_template).tap do |resource|
-          resource.add_metadata(
-            locals: {
-              'redirect_to' => target_url,
-              'page_type' => 'alias'
-            }
-          )
-        end
+    ##
+    # A resource that generates redirect HTML for alias pages
+    ##
+    class AliasResource < ::Middleman::Sitemap::Resource
+      def initialize(store, path, target_url)
+        @target_url = target_url
+        super(store, path)
+      end
+
+      def template?
+        true
+      end
+
+      def render(*)
+        <<~HTML
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Redirecting...</title>
+            <meta http-equiv="refresh" content="0; url=#{@target_url}">
+            <link rel="canonical" href="#{@target_url}">
+          </head>
+          <body>
+            <p>Redirecting to <a href="#{@target_url}">#{@target_url}</a>...</p>
+            <script>window.location.href = "#{@target_url}";</script>
+          </body>
+          </html>
+        HTML
+      end
+
+      def ignored?
+        false
       end
     end
   end
