@@ -42,12 +42,12 @@ describe 'Middleman::Blog::UriTemplates' do
 
     it 'returns nil if there is no match' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
-      expect(extract_params(template, 'foo/bar.html')).nil?
+      expect(extract_params(template, 'foo/bar.html')).to be_nil
     end
 
     it 'returns nil if there is no match in the date bits' do
       template = uri_template('{year}/{month}/{day}/{title}/{+path}')
-      extract_params(template, '2a13/1a2/1s3/foo-bar/foo/bar.html')
+      expect(extract_params(template, '2a13/1a2/1s3/foo-bar/foo/bar.html')).to be_nil
     end
 
     it 'matches even when the path contains spaces' do
