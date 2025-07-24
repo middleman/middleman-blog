@@ -1,0 +1,33 @@
+name: Release ruby gem
+
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+  pre-release-check:
+    uses: cucumber/.github/.github/workflows/prerelease-checks.yml@main
+
+  test-ruby:
+    uses: ./.github/workflows/test-ruby.yml
+
+  publish-rubygem:
+    name: Publish Ruby Gem
+    needs: [pre-release-check, test-ruby]
+    runs-on: ubuntu-latest
+    environment: Release
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+
+      - name: Publish ruby gem
+        uses: cucumber/action-publish-rubygem@v1.0.0
+        with:
+          rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}

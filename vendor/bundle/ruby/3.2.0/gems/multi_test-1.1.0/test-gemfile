@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+GEMFILE_FOLDER=$1
+GEMFILE=$GEMFILE_FOLDER/Gemfile
+echo
+echo $GEMFILE
+echo
+scenarios=$(cat $GEMFILE_FOLDER/scenarios)
+
+PLATFORM="$(BUNDLE_GEMFILE=$GEMFILE bundle platform)"
+if [[ "$PLATFORM" =~ "Your Ruby version is" ]]; then
+	echo "$PLATFORM"
+	echo
+	echo "Skipping."
+	exit 0
+fi
+
+for scenario in $scenarios; do
+	echo
+	echo $scenario
+	echo
+	scenario_path=test/scenarios/$scenario
+	BUNDLE_GEMFILE=$GEMFILE bundle install
+	output=$(BUNDLE_GEMFILE=$GEMFILE bundle exec ruby -I lib test/scenarios/$scenario)
+	if [[ ! -z $output ]]; then
+		echo "Expected output to be empty, but was:"
+		echo "$output"
+		exit 1
+	fi
+done

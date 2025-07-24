@@ -1,5 +1,5 @@
 Feature: Article summary generation
-  Scenario: Article has no summary separator
+  Scenario: Article has standard summary separator
     Given the Server is running at "summary-app"
     When I go to "/index.html"
     Then I should see:
@@ -7,9 +7,20 @@ Feature: Article summary generation
       <p>Summary from article with separator.
       </p>
       """
-    Then I should not see "Extended part from article with separator."
+    And I should not see "Extended part from article with separator."
+    When I go to "/2011/01/01/article-with-standard-summary-separator.html"
+    Then I should see "Extended part from article with separator."
+    And I should not see "READMORE"
+    And I should not see "Summary from article with separator."
+
+  Scenario: Article has no summary separator
+    Given the Server is running at "summary-app"
+    When I go to "/index.html"
     Then I should see "<p>Summary from article with no separator.</p>"
     Then I should not see "Extended part from article with no separator."
+    When I go to "/2012/06/19/article-with-no-summary-separator.html"
+    And I should see "Summary from article with no separator."
+    Then I should see "Extended part from article with no separator."
 
   Scenario: Article has custom summary separator
     Given a fixture app "summary-app"
@@ -28,6 +39,10 @@ Feature: Article summary generation
       """
     Then I should not see "Extended part from article with custom separator."
     Then I should see "Extended part from article with separator."
+    When I go to "/2013/05/08/article-with-custom-separator.html"
+    And I should see "Extended part from article with custom separator."
+    Then I should not see "SPLIT_SUMMARY_BEFORE_THIS"
+    Then I should not see "Summary from article with custom separator."
 
   Scenario: Article has custom summary separator that's an HTML comment
     Given a fixture app "summary-app"
@@ -46,6 +61,10 @@ Feature: Article summary generation
       """
     Then I should not see "Extended part from article with HTML comment separator."
     Then I should see "Extended part from article with separator."
+    When I go to "/2016/05/21/article-with-comment-separator.html"
+    And I should see "Extended part from article with HTML comment separator."
+    Then I should not see "<!--more-->"
+    Then I should not see "Summary from article with HTML comment separator."
 
   Scenario: Using a custom summary generator
     Given a fixture app "summary-app"
