@@ -98,6 +98,9 @@ module Middleman
       options.custom_collections.each_value do |opts|
         opts[:link] = File.join(options.prefix, opts[:link])
       end
+
+      # Apply prefix to alias patterns if specified
+      options.aliases = options.aliases.map { |alias_pattern| File.join(options.prefix, alias_pattern) }
     end
 
     def after_configuration

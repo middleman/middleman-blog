@@ -23,6 +23,7 @@ module Middleman
         @blog_data       = blog_controller.data
         @alias_patterns  = blog_controller.options.aliases || []
         @alias_templates = @alias_patterns.map { |pattern| uri_template(pattern) }
+        @redirect_template = File.expand_path('templates/redirect.html.erb', __dir__)
       end
 
       ##
@@ -70,9 +71,12 @@ module Middleman
       # @return [Hash] Parameters for URL generation
       ##
       def permalink_options(article)
-        # Allow any frontmatter data to be substituted into the permalink URL
+        # Get variables from all alias templates
+        all_variables = @alias_templates.flat_map(&:variables).uniq
+        
+        # Allow any frontmatter data to be substituted into the alias URL
         page_data = article.metadata[:page] || {}
-        params = page_data.slice(*template_variables.map(&:to_sym))
+        params = page_data.slice(*all_variables.map(&:to_sym))
 
         params.each do |k, v|
           params[k] = safe_parameterize(v)
@@ -80,16 +84,7 @@ module Middleman
 
         params
           .merge(date_to_params(article.date))
-          .merge(lang: article.lang.to_s, locale: article.locale.to_s, title: article.slug)
-      end
-
-      ##
-      # Get all template variables from all alias templates
-      #
-      # @return [Array<String>] Variable names
-      ##
-      def template_variables
-        @template_variables ||= @alias_templates.flat_map(&:variables).uniq
+          .merge(lang: (article.lang || '').to_s, locale: (article.locale || '').to_s, title: article.slug)
       end
 
       ##
@@ -102,30 +97,8 @@ module Middleman
       def alias_page_resource(alias_path, article)
         target_url = article.destination_path
 
-        # Create the redirect HTML content
-        redirect_content = <<~HTML
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="utf-8">
-            <title>Redirecting...</title>
-            <meta http-equiv="refresh" content="0; url=#{target_url}">
-            <link rel="canonical" href="#{target_url}">
-          </head>
-          <body>
-            <p>Redirecting to <a href="#{target_url}">#{target_url}</a>...</p>
-            <script>window.location.href = "#{target_url}";</script>
-          </body>
-          </html>
-        HTML
-
-        # Create a proxy resource that returns our redirect content
-        Sitemap::ProxyResource.new(@sitemap, alias_path, nil).tap do |resource|
-          # Override the render method to return redirect content
-          resource.define_singleton_method(:render) do |*args|
-            redirect_content
-          end
-
+        # Create a proxy resource that uses our redirect template
+        Sitemap::ProxyResource.new(@sitemap, alias_path, @redirect_template).tap do |resource|
           resource.add_metadata(
             locals: {
               'redirect_to' => target_url,

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <meta http-equiv="refresh" content="0; url=<%= locals['redirect_to'] %>">
+  <link rel="canonical" href="<%= locals['redirect_to'] %>">
+</head>
+<body>
+  <p>Redirecting to <a href="<%= locals['redirect_to'] %>"><%= locals['redirect_to'] %></a>...</p>
+  <script>window.location.href = "<%= locals['redirect_to'] %>";</script>
+</body>
+</html>
