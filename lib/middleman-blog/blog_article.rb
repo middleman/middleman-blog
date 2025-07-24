@@ -238,13 +238,13 @@ module Middleman
       ##
       def slug
         if data['slug']
-          Blog::UriTemplates.safe_parameterize(data['slug'], separator: '-', preserve_underscores: blog_options.preserve_underscores_in_slugs)
+          Blog::UriTemplates.safe_parameterize(data['slug'], preserve_underscores: blog_options.preserve_underscores_in_slugs)
 
         elsif blog_data.source_template.variables.include?('title')
-          Blog::UriTemplates.safe_parameterize(path_part('title'), separator: '-', preserve_underscores: blog_options.preserve_underscores_in_slugs)
+          Blog::UriTemplates.safe_parameterize(path_part('title'), preserve_underscores: blog_options.preserve_underscores_in_slugs)
 
         elsif title
-          Blog::UriTemplates.safe_parameterize(title, separator: '-', preserve_underscores: blog_options.preserve_underscores_in_slugs)
+          Blog::UriTemplates.safe_parameterize(title, preserve_underscores: blog_options.preserve_underscores_in_slugs)
 
         else
           raise "Can't generate a slug for #{path} because it has no :title in its path pattern or title/slug in its frontmatter."
