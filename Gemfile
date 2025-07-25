@@ -19,10 +19,5 @@ gem 'cucumber', require: false
 gem 'rspec', require: false
 gem 'timecop', require: false
 
-# Optional dependencies, included for tests
-gem 'kramdown'
-gem 'rack'
-gem 'activesupport', RUBY_VERSION < '3.2' ? '~> 7.0' : '~> 8.0'
-
 # Code Quality
 gem 'simplecov', require: false
