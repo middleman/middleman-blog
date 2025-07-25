@@ -1,13 +1,11 @@
 *.gem
 .bundle
-vendor/bundle
 Gemfile*.lock
 pkg/*
 .rvmrc
 .DS_Store
 .rbenv-version
 .ruby-version
-.ruby-gemset
 tmp
 doc
 .yardoc
@@ -15,6 +13,4 @@ build/
 .sass-cache
 coverage
 .byebug_history
-bin/
-.config
 vendor/
