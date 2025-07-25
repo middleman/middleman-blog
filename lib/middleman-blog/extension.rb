@@ -44,6 +44,7 @@ module Middleman
     option :preserve_underscores_in_slugs, false, 'Whether to preserve underscores in article slugs instead of converting them to dashes'
     option :new_article_template, File.expand_path('commands/article.tt', __dir__), 'Path (relative to project root) to an ERb template that will be used to generate new articles from the "middleman article" command.'
     option :default_extension, '.markdown', 'Default template extension for articles (used by "middleman article")'
+    option :aliases, [], 'Array of URL patterns that should redirect to the main permalink (e.g., [":year-:month-:day-:title.html"])'
 
     # @return [BlogData] blog data for this blog, which has all information about the blog articles
     attr_reader :data
@@ -62,6 +63,9 @@ module Middleman
 
     # @return [Hash<CustomPages>] custom pages handlers for this blog, indexed by property name
     attr_reader :custom_pages
+
+    # @return [AliasPages] alias page handler for this blog
+    attr_reader :alias_pages
 
     # Helpers for use within templates and layouts.
     self.defined_helpers = [Middleman::Blog::Helpers]
@@ -94,6 +98,11 @@ module Middleman
 
       options.custom_collections.each_value do |opts|
         opts[:link] = File.join(options.prefix, opts[:link])
+      end
+
+      # Apply prefix to alias patterns if specified
+      unless options.aliases.nil? || options.aliases.empty?
+        options.aliases = options.aliases.map { |alias_pattern| File.join(options.prefix, alias_pattern) }
       end
     end
 
@@ -156,6 +165,12 @@ module Middleman
         require 'middleman-blog/paginator'
         @paginator = Blog::Paginator.new(@app, self)
         @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_paginate", @paginator)
+      end
+
+      unless options.aliases.nil? || options.aliases.empty?
+        require 'middleman-blog/alias_pages'
+        @alias_pages = Blog::AliasPages.new(@app, self)
+        @app.sitemap.register_resource_list_manipulator(:"blog_#{name}_aliases", @alias_pages)
       end
 
       logger.info "== Blog Sources: #{options.sources} (:prefix + :sources)"
