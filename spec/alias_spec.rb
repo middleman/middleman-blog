@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'middleman-blog/alias_pages'
 require 'middleman-blog/uri_templates'
 
