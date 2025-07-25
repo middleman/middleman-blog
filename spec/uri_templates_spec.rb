@@ -26,6 +26,18 @@ describe 'Middleman::Blog::UriTemplates' do
     it 'can handle numbers' do
       expect(safe_parameterize(1)).to eq '1'
     end
+
+    it 'converts underscores to dashes by default' do
+      expect(safe_parameterize('name_of_article')).to eq 'name-of-article'
+    end
+
+    it 'can preserve underscores when requested' do
+      expect(safe_parameterize('name_of_article', preserve_underscores: true)).to eq 'name_of_article'
+    end
+
+    it 'still works with mixed content when preserving underscores' do
+      expect(safe_parameterize('Some MIXED_content', preserve_underscores: true)).to eq 'some-mixed_content'
+    end
   end
 
   describe 'extract_params' do

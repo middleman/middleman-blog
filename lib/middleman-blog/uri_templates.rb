@@ -54,13 +54,13 @@ module Middleman
       # Reimplementation of this, preserves un-transliterate-able multibyte chars.
       #
       # @see http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize
-      def safe_parameterize(str, sep = '-')
+      def safe_parameterize(str, separator: '-', preserve_underscores: false)
         # Remove ending ?
         str = str.to_s.gsub(/\?$/, '')
 
         # Reimplementation of http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-parameterize that preserves un-transliterate-able multibyte chars.
         parameterized_string = ::ActiveSupport::Inflector.transliterate(str.to_s).downcase
-        parameterized_string.gsub!(/[^a-z0-9\-_?]+/, sep)
+        parameterized_string.gsub!(/[^a-z0-9\-_?]+/, separator)
 
         # Check for multibytes and sub back in
         parameterized_string.chars.to_a.each_with_index do |char, i|
@@ -69,16 +69,16 @@ module Middleman
           parameterized_string[i] = str[i]
         end
 
-        re_sep = ::Regexp.escape(sep)
+        re_sep = ::Regexp.escape(separator)
 
         # No more than one of the separator in a row.
-        parameterized_string.gsub!(/#{re_sep}{2,}/, sep)
+        parameterized_string.gsub!(/#{re_sep}{2,}/, separator)
 
         # Remove leading/trailing separator.
         parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
 
-        # Replace all _ with -
-        parameterized_string.tr!('_', '-')
+        # Replace all _ with - (unless preserve_underscores is true)
+        parameterized_string.tr!('_', '-') unless preserve_underscores
 
         # Delete all ?
         parameterized_string.delete!('?')
