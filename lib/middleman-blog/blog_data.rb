@@ -209,7 +209,7 @@ module Middleman
         params = resource.metadata[:page].slice(*@permalink_template.variables.map(&:to_sym))
 
         params.each do |k, v|
-          params[k] = safe_parameterize(v)
+          params[k] = safe_parameterize(v, preserve_underscores: @options.preserve_underscores_in_slugs)
         end
 
         params

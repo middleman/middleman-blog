@@ -57,7 +57,14 @@ module Middleman
 
         content = super(opts, locs, &block)
 
-        content.sub!(blog_options.summary_separator, '') unless opts[:keep_separator]
+        # Handle summary separator: if not keeping separator and separator exists,
+        # return only content after separator
+        if blog_options.summary_separator && !opts[:keep_separator]
+          if content.match?(blog_options.summary_separator)
+            require 'middleman-blog/truncate_html'
+            content = TruncateHTML.content_after_separator(content, blog_options.summary_separator)
+          end
+        end
 
         content
       end
@@ -238,13 +245,13 @@ module Middleman
       ##
       def slug
         if data['slug']
-          Blog::UriTemplates.safe_parameterize(data['slug'])
+          Blog::UriTemplates.safe_parameterize(data['slug'], preserve_underscores: blog_options.preserve_underscores_in_slugs)
 
         elsif blog_data.source_template.variables.include?('title')
-          Blog::UriTemplates.safe_parameterize(path_part('title'))
+          Blog::UriTemplates.safe_parameterize(path_part('title'), preserve_underscores: blog_options.preserve_underscores_in_slugs)
 
         elsif title
-          Blog::UriTemplates.safe_parameterize(title)
+          Blog::UriTemplates.safe_parameterize(title, preserve_underscores: blog_options.preserve_underscores_in_slugs)
 
         else
           raise "Can't generate a slug for #{path} because it has no :title in its path pattern or title/slug in its frontmatter."

@@ -15,6 +15,20 @@ module TruncateHTML
     doc.inner_html
   end
 
+  def self.content_after_separator(text, separator)
+    text = text.encode('UTF-8') if text.respond_to?(:encode)
+    parts = text.split(separator, 2)
+    
+    if parts.length >= 2
+      # Take the last part (which should be after the separator)
+      content_after = parts.last
+      doc = Nokogiri::HTML::DocumentFragment.parse content_after
+      doc.inner_html
+    else
+      text
+    end
+  end
+
   def self.truncate_at_length(text, max_length, ellipsis = '...')
     ellipsis_length = ellipsis.length
     text = text.encode('UTF-8') if text.respond_to?(:encode)
