@@ -9,11 +9,11 @@ Feature: Blog aliases
 
     When I go to "/2024-03-14-pi-day.html"
     Then I should see "Redirecting"
-    And I should see "2024/03/14/pi-day.html"
+    And I should see "/2024/03/14/pi-day.html"
 
     When I go to "/2024/03-14-pi-day"
     Then I should see "Redirecting"
-    And I should see "2024/03/14/pi-day.html"
+    And I should see "/2024/03/14/pi-day.html"
 
   Scenario: Blog aliases work with prefix configuration
 

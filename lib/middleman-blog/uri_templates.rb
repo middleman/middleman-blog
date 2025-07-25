@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'addressable/template'
+require 'active_support/all'
 require 'middleman-core/util'
 require 'active_support/inflector'
 require 'active_support/inflector/transliterate'
