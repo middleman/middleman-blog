@@ -99,7 +99,7 @@ module Middleman
         target_url = article.destination_path
         # Ensure target URL starts with '/' for absolute URLs
         target_url = "/#{target_url}" unless target_url.start_with?('/')
-        AliasResource.new(@sitemap, alias_path, target_url)
+        AliasResource.new(@sitemap, alias_path, target_url, article)
       end
     end
 
@@ -107,35 +107,54 @@ module Middleman
     # A resource that generates redirect HTML for alias pages
     ##
     class AliasResource < ::Middleman::Sitemap::Resource
-      def initialize(store, path, target_url)
+      def initialize(store, path, target_url, alias_resource)
         @target_url = target_url
+        @alias_resource = alias_resource
         super(store, path)
       end
 
-      def template?
-        true
+      def source_file
+        @alias_resource.source_file
       end
 
-      def render(*)
-        <<~HTML
-          <!DOCTYPE html>
+      def template?
+        false
+      end
+
+      def render(*args, &block)
+        %[
           <html>
-          <head>
-            <meta charset="utf-8">
-            <title>Redirecting...</title>
-            <meta http-equiv="refresh" content="0; url=#{@target_url}">
-            <link rel="canonical" href="#{@target_url}">
-          </head>
-          <body>
-            <p>Redirecting to <a href="#{@target_url}">#{@target_url}</a>...</p>
-            <script>window.location.href = "#{@target_url}";</script>
-          </body>
+            <head>
+              <link rel="canonical" href="#{@target_url}" />
+              <meta name="robots" content="noindex,follow" />
+              <meta http-equiv="cache-control" content="no-cache" />
+              <script>
+                // Attempt to keep search and hash
+                window.location.replace("#{@target_url}"+window.location.search+window.location.hash);
+              </script>
+              <meta http-equiv=refresh content="0; url=#{@target_url}" />
+            </head>
+            <body>
+              <a href="#{@target_url}">You are being redirected.</a>
+            </body>
           </html>
-        HTML
+        ]
+      end
+
+      def binary?
+        false
+      end
+
+      def raw_data
+        @alias_resource.raw_data
       end
 
       def ignored?
         false
+      end
+
+      def metadata
+        @alias_resource.metadata
       end
     end
   end

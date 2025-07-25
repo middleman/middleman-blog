@@ -8,11 +8,11 @@ Feature: Blog aliases
     Then I should see "This is a test article for pi day."
 
     When I go to "/2024-03-14-pi-day.html"
-    Then I should see "Redirecting"
+    Then I should see "You are being redirected."
     And I should see "/2024/03/14/pi-day.html"
 
     When I go to "/2024/03-14-pi-day"
-    Then I should see "Redirecting"
+    Then I should see "You are being redirected."
     And I should see "/2024/03/14/pi-day.html"
 
   Scenario: Blog aliases work with prefix configuration
@@ -23,11 +23,11 @@ Feature: Blog aliases
     Then I should see "This article tests prefix functionality"
 
     When I go to "/blog/2024-01-15-prefix-test.html"
-    Then I should see "Redirecting"
+    Then I should see "You are being redirected."
     And I should see "/blog/2024/01/15/prefix-test.html"
 
     When I go to "/blog/archive/2024/prefix-test"
-    Then I should see "Redirecting"
+    Then I should see "You are being redirected."
     And I should see "/blog/2024/01/15/prefix-test.html"
 
   Scenario: Empty aliases configuration generates no redirects
