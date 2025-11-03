@@ -1,0 +1,3 @@
+# Exclude test features and fixtures from language statistics
+features/** linguist-vendored
+fixtures/** linguist-vendored
