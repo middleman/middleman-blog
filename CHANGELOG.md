@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 4.2.0
+
+* Add preserve_underscores_in_slugs option to control URL formatting (#393).
+* Fix summary separator behavior: article.body should only show content after separator (#395)
+* Add bulk alias functionality for automatic URL redirects (#396)
+
 ## 4.1.0
 
 * Migrate CI to GitHub Actions (#386).
