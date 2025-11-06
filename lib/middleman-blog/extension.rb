@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/time/zones'
+require 'active_support/version'
 require 'middleman-blog/blog_data'
 require 'middleman-blog/blog_article'
 require 'middleman-blog/helpers'
@@ -125,7 +126,11 @@ module Middleman
       @app.ignore(options.day_template) if options.day_template
       @app.ignore options.tag_template if options.tag_template
 
-      ActiveSupport.to_time_preserves_timezone = :zone
+      # Receiver zone support is the only supported method in 8.1+, and the setting triggers a
+      # deprecation warning in 8.2, so only needed on older versions.
+      if ActiveSupport.version < Gem::Version.new('8.1')
+        ActiveSupport.to_time_preserves_timezone = :zone
+      end
 
       # Make sure ActiveSupport's TimeZone stuff has something to work with,
       # allowing people to set their desired time zone via Time.zone or
