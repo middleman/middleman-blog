@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 4.2.1
+
+* Fix summary_separator stripping HTML document structure from full page renders (#401)
+
 ## 4.2.0
 
 * Add preserve_underscores_in_slugs option to control URL formatting (#393).
