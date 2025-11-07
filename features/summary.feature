@@ -124,3 +124,15 @@ Feature: Article summary generation
     Then I should see "Summary4"
     # it has a custom separator, which overrides explicit length, so we show up to the separator
     Then I should see "Summary from article with separator."
+
+  Scenario: Article with separator preserves complete HTML document structure
+    Given the Server is running at "summary-app"
+    When I go to "/2011/01/01/article-with-standard-summary-separator.html"
+    Then I should see "<!doctype html>"
+    And I should see "<html>"
+    And I should see "<body>"
+    And I should see "</body>"
+    And I should see "</html>"
+    And I should see "Summary from article with separator."
+    And I should see "Extended part from article with separator."
+    And I should not see "READMORE"
