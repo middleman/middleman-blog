@@ -46,23 +46,24 @@ module Middleman
       ##
       def render(opts = {}, locs = {}, &block)
         unless opts.key?(:layout)
-
           opts[:layout] = metadata[:options][:layout]
           opts[:layout] = blog_options.layout if opts[:layout].nil? || opts[:layout] == :_auto_layout
-
-          # Convert to a string unless it's a boolean
           opts[:layout] = opts[:layout].to_s if opts[:layout].is_a? Symbol
-
         end
 
         content = super(opts, locs, &block)
 
-        # Handle summary separator: if not keeping separator and separator exists,
-        # return only content after separator
         if blog_options.summary_separator && !opts[:keep_separator]
           if content.match?(blog_options.summary_separator)
             require 'middleman-blog/truncate_html'
-            content = TruncateHTML.content_after_separator(content, blog_options.summary_separator)
+            
+            # Only apply separator logic when rendering without layout
+            if opts[:layout] == false
+              content = TruncateHTML.content_after_separator(content, blog_options.summary_separator)
+            else
+              # When rendering with layout, just remove the separator marker but keep all content
+              content = content.gsub(blog_options.summary_separator, '')
+            end
           end
         end
 
