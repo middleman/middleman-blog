@@ -58,7 +58,7 @@ module Middleman
             require 'middleman-blog/truncate_html'
             
             # Only apply separator logic when rendering without layout
-            if opts[:layout].eql?(false)
+            if opts[:layout] == false
               content = TruncateHTML.content_after_separator(content, blog_options.summary_separator)
             else
               # When rendering with layout, just remove the separator marker but keep all content
