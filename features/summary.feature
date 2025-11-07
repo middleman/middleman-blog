@@ -9,9 +9,11 @@ Feature: Article summary generation
       """
     And I should not see "Extended part from article with separator."
     When I go to "/2011/01/01/article-with-standard-summary-separator.html"
-    Then I should see "Extended part from article with separator."
+    Then I should see "<!doctype html>"
+    And I should see "<html>"
+    And I should see "Summary from article with separator."
+    And I should see "Extended part from article with separator."
     And I should not see "READMORE"
-    And I should not see "Summary from article with separator."
 
   Scenario: Article has no summary separator
     Given the Server is running at "summary-app"
@@ -40,9 +42,10 @@ Feature: Article summary generation
     Then I should not see "Extended part from article with custom separator."
     Then I should see "Extended part from article with separator."
     When I go to "/2013/05/08/article-with-custom-separator.html"
+    Then I should see "<!doctype html>"
+    And I should see "Summary from article with custom separator."
     And I should see "Extended part from article with custom separator."
-    Then I should not see "SPLIT_SUMMARY_BEFORE_THIS"
-    Then I should not see "Summary from article with custom separator."
+    And I should not see "SPLIT_SUMMARY_BEFORE_THIS"
 
   Scenario: Article has custom summary separator that's an HTML comment
     Given a fixture app "summary-app"
@@ -62,9 +65,10 @@ Feature: Article summary generation
     Then I should not see "Extended part from article with HTML comment separator."
     Then I should see "Extended part from article with separator."
     When I go to "/2016/05/21/article-with-comment-separator.html"
+    Then I should see "<!doctype html>"
+    And I should see "Summary from article with HTML comment separator."
     And I should see "Extended part from article with HTML comment separator."
-    Then I should not see "<!--more-->"
-    Then I should not see "Summary from article with HTML comment separator."
+    And I should not see "<!--more-->"
 
   Scenario: Using a custom summary generator
     Given a fixture app "summary-app"
@@ -120,3 +124,15 @@ Feature: Article summary generation
     Then I should see "Summary4"
     # it has a custom separator, which overrides explicit length, so we show up to the separator
     Then I should see "Summary from article with separator."
+
+  Scenario: Article with separator preserves complete HTML document structure
+    Given the Server is running at "summary-app"
+    When I go to "/2011/01/01/article-with-standard-summary-separator.html"
+    Then I should see "<!doctype html>"
+    And I should see "<html>"
+    And I should see "<body>"
+    And I should see "</body>"
+    And I should see "</html>"
+    And I should see "Summary from article with separator."
+    And I should see "Extended part from article with separator."
+    And I should not see "READMORE"
