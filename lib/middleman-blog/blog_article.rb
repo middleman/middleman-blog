@@ -56,7 +56,7 @@ module Middleman
         if blog_options.summary_separator && !opts[:keep_separator]
           if content.match?(blog_options.summary_separator)
             require 'middleman-blog/truncate_html'
-            
+
             # Only apply separator logic when rendering without layout
             if opts[:layout] == false
               content = TruncateHTML.content_after_separator(content, blog_options.summary_separator)
@@ -313,7 +313,7 @@ module Middleman
       # @return [BlogArticle]
       ##
       def article_locale_previous
-        blog_data.local_articles.find { |a| a.date < date }
+        blog_data.articles_by_locale.find { |a| a.date < date }
       end
 
       ##
@@ -323,7 +323,7 @@ module Middleman
       # @return [Middleman::Sitemap::Resource]
       ##
       def article_locale_next
-        blog_data.local_articles.reverse.find { |a| a.date > date }
+        blog_data.articles_by_locale.reverse.find { |a| a.date > date }
       end
 
       ##
