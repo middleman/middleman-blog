@@ -6,8 +6,8 @@
     <% if is_blog_article? %>
       <%= yield %>
       Url: <%= current_article.url %>
-      Previous: <%= current_article.previous_article.try(:url) %>
-      Next: <%= current_article.next_article.try(:url) %>
+      Previous: <%= current_article.article_previous.try(:url) %>
+      Next: <%= current_article.article_next.try(:url) %>
     <% else %>
       <%= yield %>
     <% end %>
